@@ -1,11 +1,18 @@
 package com.tek.muleautomator.handler;
 
+import com.tek.muleautomator.service.JMSService;
+
 public class JMSHandler {
 
 	
-	public static void generateMuleFlow(String activityType) {
+	public static void generateMuleFlow(String activityType, String muleProjectLocation) {
 		
 		switch(activityType){
+		case "com.tibco.plugin.jms.JMSQueueEventSource":
+			System.out.println("com.tibco.plugin.jms.JMSQueueEventSource-----This actvity will be used to receive jms messages from jms/tibco ems servers");
+			JMSService jmsService = new JMSService();
+			jmsService.jmsSubscribe(muleProjectLocation);
+			break;
 		case "com.tibco.plugin.jms.JMSQueueSendActivity":
 			System.out.println("This is used to send jms messages to jms/tibco ems servers this is not a blocking activity i.e it will not wait for response from consumer");
 			break;
@@ -30,6 +37,7 @@ public class JMSHandler {
 		case "com.tibco.plugin.jms.JMSReplyActivity":
 			System.out.println("com.tibco.plugin.jms.JMSReplyActivity-----This activity is used while impelementing synchronous pattern, inorder to send response back to requestor");
 			break;
+		
 		}
 		
 		

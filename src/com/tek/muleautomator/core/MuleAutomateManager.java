@@ -62,24 +62,27 @@ public class MuleAutomateManager {
 	public static void generateMuleFlowFromTibcoProcess(String tibcoProcessPath, String muleProjectLocation) {
 		String pluginType=null;
 		try {
-			JMSService jmsService = new JMSService();
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document docIn = documentBuilder.parse(new File(tibcoProcessPath));
-			NodeList starterNodeList = docIn.getElementsByTagName("pd:starter");
+			
 			List<String> starterNodeTypesList=getActivityTypes(docIn, "pd:starter");
-			for(String activityType:starterNodeTypesList){
+			/*for(String activityType:starterNodeTypesList){
 				if (activityType.equals("com.tibco.plugin.jms.JMSQueueEventSource")) {
 					System.out.println("com.tibco.plugin.jms.JMSQueueEventSource-----This actvity will be used to receive jms messages from jms/tibco ems servers");
 					jmsService.jmsSubscribe(muleProjectLocation);
 				}
-			}
+			}*/
+			
 			List<String> activityNodeTypesList=getActivityTypes(docIn, "pd:activity");
+			
+			// Add Starter Nodes
+			activityNodeTypesList.addAll(starterNodeTypesList);
 			for(String activityType: activityNodeTypesList){
 
 				pluginType = getPluginType(activityType);
 				switch(pluginType){
-					case "jms": JMSHandler.generateMuleFlow(activityType);
+					case "jms": JMSHandler.generateMuleFlow(activityType, muleProjectLocation);
 						break;
 					case "file": FileHandler.generateMuleFlow(activityType, muleProjectLocation);
 					     break;
