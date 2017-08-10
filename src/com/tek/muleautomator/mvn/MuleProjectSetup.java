@@ -38,7 +38,7 @@ public class MuleProjectSetup {
 		String muleResourcesPath = Utilities.generateMuleResourcesPath(directory, projectName);
 		String testclassFilesPath = Utilities.generateMuleTestClassFilesPath(directory);
 		String cmd = Utilities.generateMavenCommand(projectName);
-                
+
 		try {
 			String outlist[] = createMuleProjectByMaven(cmd);
 			for (int i = 0; i < outlist.length; i++) {
@@ -49,14 +49,14 @@ public class MuleProjectSetup {
 			deleteDefaultTestFiles(new File(testclassFilesPath));
 
 			if (new File(muleConfigPath).exists()) {
-				//removeDefultFlow(muleConfigPath);
+				removeDefultFlow(muleConfigPath);
 				setDefaultNamespace(muleConfigPath);
 			}
 
 			List<File> tibcoFiles = new ArrayList<>();
-                        
+
 			fileFinder(new File(tibcoProjectLocationRootFolder), tibcoFiles, new String[] { "wsdl", "xsd", "xsl" });
-                        moveTibcoFilesToMuleProject(tibcoFiles, muleResourcesPath);
+			moveTibcoFilesToMuleProject(tibcoFiles, muleResourcesPath);
 		} catch (Exception e) {
 			System.err.println(e);
 		}
@@ -68,15 +68,12 @@ public class MuleProjectSetup {
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(muleConfigPath);
 			Element Mule = (Element) doc.getFirstChild();
 			Mule.setAttribute("xmlns:doc", "http://www.mulesoft.org/schema/mule/documentation");
-                        
-                        // ashish
-                        
-                        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(new File(muleConfigPath));
 			transformer.transform(source, result);
-                        
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -85,7 +82,7 @@ public class MuleProjectSetup {
 	private void moveTibcoFilesToMuleProject(List<File> tibcoFiles, String muleResourcesPath) {
 		File muleRootDirectory = new File(muleResourcesPath);
 		for (File f : tibcoFiles) {
-                    System.out.println("Copying file: "+f.getPath()+" to "+muleRootDirectory.getAbsolutePath() + seperator + f.getName());
+			System.out.println("Copying file: "+f.getPath()+" to "+muleRootDirectory.getAbsolutePath() + seperator + f.getName());
 			copyFile(f, new File(muleRootDirectory.getAbsolutePath() + seperator + f.getName()));
 		}
 	}
