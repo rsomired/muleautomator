@@ -19,6 +19,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.tek.muleautomator.util.MuleConfigConnection;
+
 public class JMSService {
 
 	private static String seperator = File.separator;
@@ -26,15 +28,9 @@ public class JMSService {
 	public void jmsConfiguration(String muleProjectLocation) {
 		try {
 
-			String filepath = muleProjectLocation + seperator + "src" + seperator + "main" + seperator
-					+ "app" + seperator + "mule-config.xml";
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder;
-			docBuilder = docFactory.newDocumentBuilder();
-			Document doc = docBuilder.parse(filepath);
-			// add doc namespace
+			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
+			Document doc=dom.getDomConfig(muleProjectLocation);
 			Element Mule = (Element) doc.getFirstChild();
-			Mule.setAttribute("xmlns:doc", "http://www.mulesoft.org/schema/mule/documentation");
 			// add jms config
 			Element jmsConfig = doc.createElement("jms:activemq-connector");
 			// add attributes
@@ -55,119 +51,66 @@ public class JMSService {
 			} else
 				Mule.appendChild(jmsConfig);
 			Mule.appendChild(springBeansConfig);
-
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(filepath));
-			transformer.transform(source, result);
-		} catch (ParserConfigurationException e) {
+			dom.trasfromData(doc,muleProjectLocation);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 
 	}
-	
+
 	public void jmsSubscribe(String muleProjectLocation) {
 		try {
-			
 			if(isJmsConfigRequired(muleProjectLocation)){
 				jmsConfiguration(muleProjectLocation);
 			}
-			
-			
-			String filepath = muleProjectLocation + seperator + "src" + seperator + "main" + seperator
-					+ "app" + seperator + "mule-config.xml";
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder;
-
-			docBuilder = docFactory.newDocumentBuilder();
-			Document doc = docBuilder.parse(filepath);
-
+			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
+			Document doc=dom.getDomConfig(muleProjectLocation);
 			Element Mule = (Element) doc.getFirstChild();
 
-			// add jms flowPublish
 			Element jmsFlow = doc.createElement("flow");
-			
 
 			// add attributes
 			jmsFlow.setAttribute("name", "jmsPoller");
-			
-			
-		/*	Element jmsFrequency=doc.createElement("fixed-frequency-scheduler");
-			jmsFrequency.setAttribute("frequency", "5000");
-			jmsFlow.appendChild(jmsFrequency);*/
-			
-			
+
 			Element jmsOutBound=doc.createElement("jms:inbound-endpoint");
 			jmsOutBound.setAttribute("queue", "sample");
 			jmsOutBound.setAttribute("connector-ref", "Active_MQ");
 			jmsOutBound.setAttribute("doc:name", "JMSSample");
 			jmsOutBound.setAttribute("exchange-pattern", "request-response");
 			jmsFlow.appendChild(jmsOutBound);
-			
+
 			Element loggerElement=doc.createElement("logger");
 			loggerElement.setAttribute("message", "#[payload]");
 			loggerElement.setAttribute("level", "INFO");
 			loggerElement.setAttribute("doc:name", "Logger");
 			jmsFlow.appendChild(loggerElement);
-			
+
 			Mule.appendChild(jmsFlow);
+			dom.trasfromData(doc,muleProjectLocation);
 
-			// Node Flow = doc.createElement("flow");
-
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(filepath));
-			transformer.transform(source, result);
-
-		} catch (ParserConfigurationException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 
 	}
-	
+
 	public boolean isJmsConfigRequired(String muleProjectLocation) throws ParserConfigurationException, SAXException, IOException {
-	    /*DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		/*DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 	    Document doc = documentBuilderFactory.newDocumentBuilder().parse(new StringReader(content));*/
-	    
-	    String filepath = muleProjectLocation + seperator + "src" + seperator + "main" + seperator
+
+		String filepath = muleProjectLocation + seperator + "src" + seperator + "main" + seperator
 				+ "app" + seperator + "mule-config.xml";
-	    System.out.println("path-----"+filepath);
+		System.out.println("path-----"+filepath);
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 
 		docBuilder = docFactory.newDocumentBuilder();
 		Document doc = docBuilder.parse(filepath);
-	    
-	    NodeList nodeList = doc.getElementsByTagName("jms:activemq-connector");
-	    return nodeList.getLength() == 0 ? true : false;
+
+		NodeList nodeList = doc.getElementsByTagName("jms:activemq-connector");
+		return nodeList.getLength() == 0 ? true : false;
 	}
 
 	/*public static void main(String[] args) {
