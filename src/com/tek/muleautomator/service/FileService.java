@@ -18,6 +18,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import com.tek.muleautomator.util.MuleConfigConnection;
+import com.tek.muleautomator.util.Utilities;
 
 public class FileService {
 
@@ -28,7 +29,7 @@ public class FileService {
 	public void fileCopy(String muleProjectLocation) {
 		try {
 			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(muleProjectLocation);
+			Document doc=dom.getDomConfig(Utilities.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
 
 			Element fileFlow = doc.createElement("flow");
@@ -63,7 +64,8 @@ public class FileService {
 	public void fileCreate(String muleProjectLocation) {
 		try {
 			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(muleProjectLocation);
+			System.out.println(muleProjectLocation);
+			Document doc=dom.getDomConfig(Utilities.generateMuleConfigPath(muleProjectLocation, ""));
 			
 			Element Mule = (Element) doc.getFirstChild();
 			Element fileCreateFlow = doc.createElement("flow");
@@ -94,7 +96,7 @@ public class FileService {
 			fileCreateFlow.appendChild(fileOutBound);
 
 			Mule.appendChild(fileCreateFlow);
-			dom.trasfromData(doc,muleProjectLocation);
+			dom.trasfromData(doc,(Utilities.generateMuleConfigPath(muleProjectLocation, "")));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,7 +106,7 @@ public class FileService {
 	public void fileDelete(String muleProjectLocation) {
 		try {
 			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(muleProjectLocation);
+			Document doc=dom.getDomConfig(Utilities.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
 
 
@@ -133,7 +135,7 @@ public class FileService {
 			fileDelteFlow.appendChild(filesetPayload);
 			Mule.appendChild(fileDelteFlow);
 			Mule.appendChild(fileConnector);
-			dom.trasfromData(doc,muleProjectLocation);
+			dom.trasfromData(doc,(Utilities.generateMuleConfigPath(muleProjectLocation, "")));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -23,9 +23,9 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		try {
 			String seperator = File.separator; 
-			String tibcoProcessLocation = "D://Migration//Sample//FileProject//ProcessDefinition.process";
-			String tibcoProjectLocationRootFolder = "D://Migration//Sample";
-			String workspace = "D://mule";
+			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Sample/FileProject//ProcessDefinition.process";
+			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
+			String workspace = "D://mule2";
 			String projectName = getProjectName(tibcoProcessLocation);
 			String muleProjectLocation = workspace+seperator+projectName;
 			createMuleProject(tibcoProjectLocationRootFolder, projectName, workspace);

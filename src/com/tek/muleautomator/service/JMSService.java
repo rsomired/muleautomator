@@ -20,6 +20,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.tek.muleautomator.util.MuleConfigConnection;
+import com.tek.muleautomator.util.Utilities;
 
 public class JMSService {
 
@@ -29,7 +30,7 @@ public class JMSService {
 		try {
 
 			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(muleProjectLocation);
+			Document doc=dom.getDomConfig(Utilities.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
 			// add jms config
 			Element jmsConfig = doc.createElement("jms:activemq-connector");
@@ -51,7 +52,7 @@ public class JMSService {
 			} else
 				Mule.appendChild(jmsConfig);
 			Mule.appendChild(springBeansConfig);
-			dom.trasfromData(doc,muleProjectLocation);
+			dom.trasfromData(doc,Utilities.generateMuleConfigPath(muleProjectLocation, ""));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,7 +66,7 @@ public class JMSService {
 				jmsConfiguration(muleProjectLocation);
 			}
 			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(muleProjectLocation);
+			Document doc=dom.getDomConfig(Utilities.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
 
 			Element jmsFlow = doc.createElement("flow");
@@ -87,7 +88,7 @@ public class JMSService {
 			jmsFlow.appendChild(loggerElement);
 
 			Mule.appendChild(jmsFlow);
-			dom.trasfromData(doc,muleProjectLocation);
+			dom.trasfromData(doc,Utilities.generateMuleConfigPath(muleProjectLocation, ""));
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
