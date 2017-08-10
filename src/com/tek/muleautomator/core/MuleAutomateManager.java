@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.tek.muleautomator.handler.JMSHandler;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
 import com.tek.muleautomator.service.FileService;
 import com.tek.muleautomator.service.JMSService;
@@ -54,7 +55,12 @@ public class MuleAutomateManager {
 		return activityTypes;
 	}
 
+	private static String getPluginType(String a){
+        return a.substring(a.indexOf("plugin.")+"plugin.".length(),a.lastIndexOf("."));
+    }
+	
 	public static void generateMuleFlowFromTibcoProcess(String tibcoProcessPath, String muleProjectLocation) {
+		String pluginType=null;
 		try {
 			JMSService jmsService = new JMSService();
 			FileService fileService = new FileService();
@@ -72,42 +78,19 @@ public class MuleAutomateManager {
 					jmsService.jmsSubscribe(muleProjectLocation);
 				}
 			}
-
+			
 			// Dealing with the Activity Tags
 			List<String> activityNodeTypesList=getActivityTypes(docIn, "pd:activity");
 			for(String activityType: activityNodeTypesList){
 
-				if(activityType.equals("com.tibco.plugin.jms.JMSQueueSendActivity")) {
-					System.out.println("This is used to send jms messages to jms/tibco ems servers this is not a blocking activity i.e it will not wait for response from consumer");
+				pluginType = getPluginType(activityType);
+				switch(pluginType){
+					case "jms": JMSHandler.generateMuleFlow(activityType);
+						break;
+					// case "file": FileHandler.generateMuleFlow(activityType);
+					// break;
 				}
-
-				if(activityType.equals("com.tibco.plugin.jms.JMSQueueRequestReplyActivity")) {
-					System.out.println("This activity is used to send request and wait for response, in request reply scenarios we use this activity");
-				}
-
-				if(activityType.equals("com.tibco.plugin.jms.JMSTopicPublishActivity")) {
-					System.out.println("This is used to send jms messages to jms/tibco ems servers this is not a blocking activity i.e it will not wait for response from consumer");
-				}
-
-				if(activityType.equals("com.tibco.plugin.jms.JMSTopicRequestReplyActivity")) {
-					System.out.println("This activity is used to send request and wait for response, In request reply scenarios we use this activity");
-				}
-
-				if(activityType.equals("com.tibco.plugin.jms.JMSTopicSignalInActivity")) {
-					System.out.println("This acitivity is used in scenarios where we have asyncronous pattern.This actvity will wait for messages on a topic");
-				}
-
-				if(activityType.equals("com.tibco.plugin.jms.JMSQueueSignalInActivity")) {
-					System.out.println("This acitiviyt is used in scenarios where we have asyncronous pattern.This actvity will wait for messages on a queue");
-				}
-
-				if(activityType.equals("com.tibco.plugin.jms.JMSQueueGetMessageActivity")) {
-					System.out.println("This activity is used in scenarios where we need to pull messages from a queue on demand");
-				}
-
-				if(activityType.equals("com.tibco.plugin.jms.JMSReplyActivity")) {
-					System.out.println("com.tibco.plugin.jms.JMSReplyActivity-----This activity is used while impelementing synchronous pattern, inorder to send response back to requestor");
-				}
+				
 
 				//**********************************File Activities*************************************
 
