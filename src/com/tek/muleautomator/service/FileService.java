@@ -4,6 +4,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.tek.muleautomator.util.MuleConfigConnection;
+import com.tek.muleautomator.element.FileElement.FileCreateActivity;
+import com.tek.muleautomator.element.FileElement.FileDeleteActivity;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
 
 public class FileService {
@@ -21,6 +23,7 @@ public class FileService {
 			fileInBound.setAttribute("responseTimeout", "10000");
 			fileInBound.setAttribute("doc:name", "File");
 			fileInBound.setAttribute("path", "C:/Users/nshaik/Desktop/source");
+			
 			fileFlow.appendChild(fileInBound);
 
 			Element loggerElement=doc.createElement("logger");
@@ -41,7 +44,7 @@ public class FileService {
 		} 
 	}
 
-	public void fileCreate(String muleProjectLocation) {
+	public void fileCreate(String muleProjectLocation, FileCreateActivity fileCreateActivity) {
 		try {
 			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
 			Document doc=dom.getDomConfig(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
@@ -49,11 +52,12 @@ public class FileService {
 			Element Mule = (Element) doc.getFirstChild();
 			Element fileCreateFlow = doc.createElement("flow");
 			fileCreateFlow.setAttribute("name", "createFile");
+			fileCreateFlow.setAttribute("fileName", fileCreateActivity.getFileName());
 			Element filesetPayload=doc.createElement("set-payload");
 			filesetPayload.setAttribute("value", "abc");
 			filesetPayload.setAttribute("doc:name", "Set Payload");
 			fileCreateFlow.appendChild(filesetPayload);
-
+			
 			Element setVariableFileName=doc.createElement("set-variable");
 			setVariableFileName.setAttribute("variableName", "fileName");
 			setVariableFileName.setAttribute("value", "abc.txt");
@@ -80,7 +84,7 @@ public class FileService {
 		} 
 	}
 
-	public void fileDelete(String muleProjectLocation) {
+	public void fileDelete(String muleProjectLocation, FileDeleteActivity fileDeleteActivity) {
 		try {
 			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
 			Document doc=dom.getDomConfig(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));

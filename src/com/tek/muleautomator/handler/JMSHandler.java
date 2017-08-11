@@ -1,12 +1,13 @@
 package com.tek.muleautomator.handler;
 
+import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.service.JMSService;
 
 public class JMSHandler {
 
 	
-	public static void generateMuleFlow(String activityType, String muleProjectLocation) {
-		
+	public static void generateMuleFlow(ActivityElement activityElement, String muleProjectLocation) {
+		String activityType=activityElement.getActivityType();
 		switch(activityType){
 		case "com.tibco.plugin.jms.JMSQueueEventSource":
 			System.out.println("com.tibco.plugin.jms.JMSQueueEventSource-----This actvity will be used to receive jms messages from jms/tibco ems servers");

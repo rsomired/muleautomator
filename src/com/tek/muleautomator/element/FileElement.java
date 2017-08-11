@@ -6,37 +6,77 @@
 package com.tek.muleautomator.element;
 
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 public class FileElement {
     
-    
-    class FileWriteActivity { 
-        private String activityType;
+	
+    public class FileWriteActivity { 
+    	
+    	private String activityType;
         private String fileName;
-
+        private String textContent;
+        private String encoding;
+        
+        public FileWriteActivity(Node node){
+        	Element rootActivityElement = (Element)node;
+        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
+        	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
+        	this.fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	Element textContentElement=(Element)rootActivityElement.getElementsByTagName("textContent").item(0);
+        	if(textContentElement!=null){
+        		this.textContent=textContentElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	}
+        	Element encodingElement=(Element)rootActivityElement.getElementsByTagName("encoding").item(0);
+        	if(encodingElement!=null){
+        		this.encoding=encodingElement.getTextContent();
+        	}
+        }
+        
+       
+        
         public FileWriteActivity(String activityType, String fileName) {
             this.activityType = activityType;
             this.fileName = fileName;
         }
 
-        public String getActivityType() {
-            return activityType;
-        }
+		public String getActivityType() {
+			return activityType;
+		}
 
-        public void setActivityType(String activityType) {
-            this.activityType = activityType;
-        }
+		public void setActivityType(String activityType) {
+			this.activityType = activityType;
+		}
 
-        public String getFileName() {
-            return fileName;
-        }
+		public String getFileName() {
+			return fileName;
+		}
 
-        public void setFileName(String fileName) {
-            this.fileName = fileName;
-        }
+		public void setFileName(String fileName) {
+			this.fileName = fileName;
+		}
+
+		public String getTextContent() {
+			return textContent;
+		}
+
+		public void setTextContent(String textContent) {
+			this.textContent = textContent;
+		}
+
+		public String getEncoding() {
+			return encoding;
+		}
+
+		public void setEncoding(String encoding) {
+			this.encoding = encoding;
+		}
+    
         
     }
     
-    class FileCreateActivity {
+    public class FileCreateActivity {
         private String activityType;
         private String fileName;
 
@@ -44,6 +84,13 @@ public class FileElement {
             this.activityType = activityType;
             this.fileName = fileName;
         }
+        
+        public FileCreateActivity(Node activityNode){
+        	Element rootActivityElement = (Element)activityNode;
+        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
+        	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
+        	this.fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        }
 
         public String getActivityType() {
             return activityType;
@@ -63,30 +110,122 @@ public class FileElement {
         
     }
     
-    class FileReadActivity {
+    public class FileReadActivity {
         private String activityType;
         private String fileName;
-
+        private String encoding;
+        
         public FileReadActivity(String activityType, String fileName) {
             this.activityType = activityType;
             this.fileName = fileName;
         }
+        
 
         public String getActivityType() {
-            return activityType;
-        }
+			return activityType;
+		}
 
-        public void setActivityType(String activityType) {
-            this.activityType = activityType;
-        }
 
-        public String getFileName() {
-            return fileName;
-        }
+		public void setActivityType(String activityType) {
+			this.activityType = activityType;
+		}
 
-        public void setFileName(String fileName) {
-            this.fileName = fileName;
+
+		public String getFileName() {
+			return fileName;
+		}
+
+
+		public void setFileName(String fileName) {
+			this.fileName = fileName;
+		}
+
+
+		public String getEncoding() {
+			return encoding;
+		}
+
+
+		public void setEncoding(String encoding) {
+			this.encoding = encoding;
+		}
+
+
+		public FileReadActivity(Node node){
+        	Element rootActivityElement = (Element)node;
+        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
+        	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
+        	this.fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	Element encodingElement=(Element)rootActivityElement.getElementsByTagName("encoding").item(0);
+        	if(encodingElement!=null){
+        		this.encoding=encodingElement.getTextContent();
+        	}
         }
         
     }
+
+    public class FileRemoveActivity{
+    	private String activityType;
+    	private String fileName;
+		public String getActivityType() {
+			return activityType;
+		}
+
+	
+    	public String getFileName() {
+			return fileName;
+		}
+
+
+		public void setFileName(String fileName) {
+			this.fileName = fileName;
+		}
+
+
+		public void setActivityType(String activityType) {
+			this.activityType = activityType;
+		}
+
+
+		public FileRemoveActivity(Node targetNode){
+    		Element rootActivityElement = (Element)targetNode;
+        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
+        	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
+        	this.fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+    	}
+    	
+    }
+    	
+    public class FileListActivity{
+    	private String activityType;
+    	private String fileName;
+		public String getActivityType() {
+			return activityType;
+		}
+
+	
+    	public String getFileName() {
+			return fileName;
+		}
+
+
+		public void setFileName(String fileName) {
+			this.fileName = fileName;
+		}
+
+
+		public void setActivityType(String activityType) {
+			this.activityType = activityType;
+		}
+
+
+		public FileListActivity(Node targetNode){
+    		Element rootActivityElement = (Element)targetNode;
+        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
+        	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
+        	this.fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+    	}
+    	
+    }
+
 }

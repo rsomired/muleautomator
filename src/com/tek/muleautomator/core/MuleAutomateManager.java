@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.handler.FileHandler;
 import com.tek.muleautomator.handler.JMSHandler;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
@@ -28,9 +29,9 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		try {
 			String seperator = File.separator; 
-			String tibcoProjectLocationRootFolder = "D:/Migration/Sample";
-			String tibcoProcessLocation = "D:/Migration/Sample/FileProject/ProcessDefinition.process";
-			String workspace = "D://mule";
+			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
+			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Sample/FileProject/ProcessDefinition.process";
+			String workspace = "D://mule3";
 			String projectName = getProjectName(tibcoProcessLocation);
 			String muleProjectLocation = workspace+seperator+projectName;
 			createMuleProject(tibcoProjectLocationRootFolder, projectName, workspace);
@@ -54,20 +55,20 @@ public class MuleAutomateManager {
 
 
 	/**
-	 * Method to get a List of All textContent inside "pd:type" tag.
+	 * Method to get a List of All ActivityElements Containing  Type and a Reference to Node in Document.
 	 * @param doc Parsed DOM Document.
 	 * @param tag Tag inside which we expect "pd:type".
-	 * @return List of type String containing the type.
+	 * @return List type ActivityElement.
 	 */
 
-	public static List<String> getActivityTypes(Document doc, String tag) {
-		NodeList starterNodeList = doc.getElementsByTagName(tag);
-		List<String> activityTypes = new ArrayList<>();
-		for (int count = 0; count < starterNodeList.getLength(); count++) {
-			Node tempNode = starterNodeList.item(count);
+	public static List<ActivityElement> getActivityTypes(Document doc, String tag) {
+		NodeList allNodes = doc.getElementsByTagName(tag);
+		List<ActivityElement> activityTypes = new ArrayList<>();
+		for (int count = 0; count < allNodes.getLength(); count++) {
+			Node tempNode = allNodes.item(count);
 			Element tempNodeElement = (Element) tempNode;
 			String activityType = tempNodeElement.getElementsByTagName("pd:type").item(0).getTextContent();
-			activityTypes.add(activityType);
+			activityTypes.add(new ActivityElement(activityType, tempNode));
 		}
 		return activityTypes;
 	}
@@ -85,15 +86,15 @@ public class MuleAutomateManager {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document docIn = documentBuilder.parse(new File(tibcoProcessPath));
-			List<String> starterNodeTypesList = getActivityTypes(docIn, "pd:starter");
-			List<String> activityNodeTypesList = getActivityTypes(docIn, "pd:activity");
-			activityNodeTypesList.addAll(starterNodeTypesList);
-			for(String activityType: activityNodeTypesList){
-				pluginType = getPluginType(activityType);
+			List<ActivityElement> activityElements = new ArrayList<>();
+			activityElements.addAll(getActivityTypes(docIn, "pd:starter"));
+			activityElements.addAll(getActivityTypes(docIn, "pd:activity"));
+			for(ActivityElement activityElement: activityElements){
+				pluginType = getPluginType(activityElement.getActivityType());
 				switch(pluginType){
-				case "jms": JMSHandler.generateMuleFlow(activityType, muleProjectLocation);
+				case "jms": JMSHandler.generateMuleFlow(activityElement, muleProjectLocation);
 				break;
-				case "file": FileHandler.generateMuleFlow(activityType, muleProjectLocation);
+				case "file": FileHandler.generateMuleFlow(activityElement, muleProjectLocation);
 				break;
 				}
 			}
