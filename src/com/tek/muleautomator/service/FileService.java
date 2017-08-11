@@ -5,13 +5,13 @@ import org.w3c.dom.Element;
 
 import com.tek.muleautomator.util.MuleConfigConnection;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 
 public class FileService {
 
 	public void fileCopy(String muleProjectLocation) {
 		try {
-			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
+			Document doc = MuleConfigConnection.getDomObj(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
 
 			Element fileFlow = doc.createElement("flow");
@@ -35,7 +35,7 @@ public class FileService {
 			fileOutBound.setAttribute("path", "C:/Users/nshaik/Desktop/Destination");
 			fileFlow.appendChild(fileOutBound);
 			Mule.appendChild(fileFlow);
-			dom.trasfromData(doc,muleProjectLocation);
+			MuleAutomatorUtil.trasfromData(doc,muleProjectLocation);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -43,9 +43,7 @@ public class FileService {
 
 	public void fileCreate(String muleProjectLocation) {
 		try {
-			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
-			
+			Document doc = MuleConfigConnection.getDomObj(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
 			Element fileCreateFlow = doc.createElement("flow");
 			fileCreateFlow.setAttribute("name", "createFile");
@@ -74,7 +72,7 @@ public class FileService {
 			fileCreateFlow.appendChild(fileOutBound);
 
 			Mule.appendChild(fileCreateFlow);
-			dom.trasfromData(doc,(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, "")));
+			MuleAutomatorUtil.trasfromData(doc,(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, "")));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -82,10 +80,8 @@ public class FileService {
 
 	public void fileDelete(String muleProjectLocation) {
 		try {
-			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
+			Document doc = MuleConfigConnection.getDomObj(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
-
 
 			Element fileConnector = doc.createElement("file:connector");
 			fileConnector.setAttribute("name", "File");
@@ -111,7 +107,7 @@ public class FileService {
 			fileDelteFlow.appendChild(filesetPayload);
 			Mule.appendChild(fileDelteFlow);
 			Mule.appendChild(fileConnector);
-			dom.trasfromData(doc,(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, "")));
+			MuleAutomatorUtil.trasfromData(doc,(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, "")));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

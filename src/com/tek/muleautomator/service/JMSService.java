@@ -14,13 +14,13 @@ import org.xml.sax.SAXException;
 
 import com.tek.muleautomator.util.MuleConfigConnection;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 
 public class JMSService {
 
 	public void jmsConfiguration(String muleProjectLocation) {
 		try {
-			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
+			Document doc = MuleConfigConnection.getDomObj(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
 			Element jmsConfig = doc.createElement("jms:activemq-connector");
 			jmsConfig.setAttribute("name", "Active_MQ");
@@ -40,7 +40,7 @@ public class JMSService {
 			} else
 				Mule.appendChild(jmsConfig);
 			Mule.appendChild(springBeansConfig);
-			dom.trasfromData(doc,MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
+			MuleAutomatorUtil.trasfromData(doc,MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -51,8 +51,7 @@ public class JMSService {
 			if(isJmsConfigRequired(muleProjectLocation)){
 				jmsConfiguration(muleProjectLocation);
 			}
-			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
+			Document doc = MuleConfigConnection.getDomObj(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
 
 			Element jmsFlow = doc.createElement("flow");
@@ -72,7 +71,7 @@ public class JMSService {
 			jmsFlow.appendChild(loggerElement);
 
 			Mule.appendChild(jmsFlow);
-			dom.trasfromData(doc,MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
+			MuleAutomatorUtil.trasfromData(doc,MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
 
 		} catch (Exception e) {
 			e.printStackTrace();

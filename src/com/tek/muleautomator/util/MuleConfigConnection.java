@@ -1,48 +1,38 @@
 package com.tek.muleautomator.util;
 
-import java.io.File;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 
 
 public class MuleConfigConnection {
 
-	public static MuleConfigConnection domConfig;
+	private static Document doc;
 
-	public static synchronized MuleConfigConnection getDomObj() {
-		if ( domConfig == null ) {
-			domConfig = new MuleConfigConnection();
-		}
-		return domConfig;
-
-	}
-	public Document getDomConfig(String filepath) throws Exception{
+	private MuleConfigConnection() {
 		
+	}
+	
+	public static synchronized Document getDomObj(String filepath) throws Exception {
+		if ( doc == null ) {
+			doc = getDomConfig(filepath);
+		}
+		return doc;
+	}
+
+	private static  Document getDomConfig(String filepath) throws Exception {
+		Document doc = null;
+		try {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(filepath);
+		doc = docBuilder.parse(filepath);
+	} catch(Exception e) {
+		e.printStackTrace();
+	}
 		return doc;
 	}
-	public void trasfromData(Document doc,String filepath){
-		try{
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(filepath));
-			transformer.transform(source, result);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
 
-	}
 }
