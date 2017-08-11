@@ -1,16 +1,18 @@
 package com.tek.muleautomator.handler;
 
+import org.w3c.dom.Element;
+
 import com.tek.muleautomator.service.FileService;
 
 public class FileHandler {
 
 	static FileService fileService = new FileService();
 	
-	public static void generateMuleFlow(String activityType, String muleProjectLocation) {
+	public static void generateMuleFlow(String activityType, String muleConfigPath, Element flowElement) {
 		switch(activityType) {
 		case "com.tibco.plugin.file.FileCreateActivity":
 			System.out.println("com.tibco.plugin.file.FileCreateActivity-----The Create File activity creates a new file or directory with the specified name. When creating a file, you can also provide the file contents. ");
-			fileService.fileCreate(muleProjectLocation);
+			fileService.fileCreate(muleConfigPath, flowElement);
 			break;
 			
 		case "com.tibco.plugin.file.ListFilesActivity":
@@ -23,7 +25,7 @@ public class FileHandler {
 
 		case "com.tibco.plugin.file.FileRemoveActivity":
 			System.out.println("com.tibco.plugin.file.FileRemoveActivity-----The Remove File activity removes the specified file. This activity can also remove empty directories. If a directory that is not empty is specified, an exception is thrown. ");
-			fileService.fileDelete(muleProjectLocation);
+			fileService.fileDelete(muleConfigPath, flowElement);
 			break;
 
 		case "com.tibco.plugin.file.FileRenameActivity":

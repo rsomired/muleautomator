@@ -11,18 +11,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import com.tek.muleautomator.util.MuleAutomatorConstants;
 
 public class MuleProjectSetup {
@@ -31,7 +19,6 @@ public class MuleProjectSetup {
 			throws IOException {
 		String sourceFile = MuleAutomatorConstants.generateSourcePath(projectName);
 		String destinationFile = directory + File.separator + projectName;
-		String muleConfigPath = MuleAutomatorConstants.generateMuleConfigPath(directory, projectName);
 		String muleResourcesPath = MuleAutomatorConstants.generateMuleResourcesPath(directory, projectName);
 		String testclassFilesPath = MuleAutomatorConstants.generateMuleTestClassFilesPath(directory);
 		String cmd = MuleAutomatorConstants.generateMavenCommand(projectName);
@@ -42,10 +29,6 @@ public class MuleProjectSetup {
 			}
 			moveMuleProjectToSpecifiedDirectory(sourceFile, destinationFile);
 			deleteDefaultTestFiles(new File(testclassFilesPath));
-			if (new File(muleConfigPath).exists()) {
-				removeDefultFlow(muleConfigPath);
-				setDefaultNamespace(muleConfigPath);
-			}
 			List<File> tibcoFiles = new ArrayList<>();
 			fileFinder(new File(tibcoProjectLocationRootFolder), tibcoFiles, new String[] { "wsdl", "xsd", "xsl" });
 			moveTibcoFilesToMuleProject(tibcoFiles, muleResourcesPath);
@@ -53,21 +36,6 @@ public class MuleProjectSetup {
 			System.err.println(e);
 		}
 
-	}
-
-	private void setDefaultNamespace(String muleConfigPath) {
-		try {
-			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(muleConfigPath);
-			Element Mule = (Element) doc.getFirstChild();
-			Mule.setAttribute("xmlns:doc", "http://www.mulesoft.org/schema/mule/documentation");
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(muleConfigPath));
-			transformer.transform(source, result);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void moveTibcoFilesToMuleProject(List<File> tibcoFiles, String muleResourcesPath) {
@@ -174,28 +142,4 @@ public class MuleProjectSetup {
 		dir.delete();
 	}
 
-	private static void removeDefultFlow(String filepath) {
-		try {
-			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document docIn = documentBuilder.parse(new File(filepath));
-			NodeList flowTags = docIn.getElementsByTagName("flow");
-			Node[] flowTagNodes = new Node[flowTags.getLength()];
-			for (int i = 0; i < flowTags.getLength(); ++i) {
-				flowTagNodes[i] = flowTags.item(i);
-			}
-			Node muleTag = docIn.getDocumentElement();
-			for (Node X : flowTagNodes) {
-				muleTag.removeChild(X);
-			}
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(docIn);
-			StreamResult result = new StreamResult(new File(filepath));
-			transformer.transform(source, result);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
 }
