@@ -23,38 +23,30 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.tek.muleautomator.util.Utilities;
+import com.tek.muleautomator.util.MuleAutomatorConstants;
 
 public class MuleProjectSetup {
 
-	String seperator = File.separator;
-
 	public void createMuleProject(String tibcoProjectLocationRootFolder, String directory, String projectName)
 			throws IOException {
-
-		String sourceFile = Utilities.generateSourcePath(projectName);
-		String destinationFile = directory + seperator + projectName;
-		String muleConfigPath = Utilities.generateMuleConfigPath(directory, projectName);
-		String muleResourcesPath = Utilities.generateMuleResourcesPath(directory, projectName);
-		String testclassFilesPath = Utilities.generateMuleTestClassFilesPath(directory);
-		String cmd = Utilities.generateMavenCommand(projectName);
-
+		String sourceFile = MuleAutomatorConstants.generateSourcePath(projectName);
+		String destinationFile = directory + File.separator + projectName;
+		String muleConfigPath = MuleAutomatorConstants.generateMuleConfigPath(directory, projectName);
+		String muleResourcesPath = MuleAutomatorConstants.generateMuleResourcesPath(directory, projectName);
+		String testclassFilesPath = MuleAutomatorConstants.generateMuleTestClassFilesPath(directory);
+		String cmd = MuleAutomatorConstants.generateMavenCommand(projectName);
 		try {
 			String outlist[] = createMuleProjectByMaven(cmd);
 			for (int i = 0; i < outlist.length; i++) {
 				System.out.println(outlist[i]);
 			}
 			moveMuleProjectToSpecifiedDirectory(sourceFile, destinationFile);
-
 			deleteDefaultTestFiles(new File(testclassFilesPath));
-
 			if (new File(muleConfigPath).exists()) {
 				removeDefultFlow(muleConfigPath);
 				setDefaultNamespace(muleConfigPath);
 			}
-
 			List<File> tibcoFiles = new ArrayList<>();
-
 			fileFinder(new File(tibcoProjectLocationRootFolder), tibcoFiles, new String[] { "wsdl", "xsd", "xsl" });
 			moveTibcoFilesToMuleProject(tibcoFiles, muleResourcesPath);
 		} catch (Exception e) {
@@ -73,7 +65,6 @@ public class MuleProjectSetup {
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(new File(muleConfigPath));
 			transformer.transform(source, result);
-
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -82,8 +73,7 @@ public class MuleProjectSetup {
 	private void moveTibcoFilesToMuleProject(List<File> tibcoFiles, String muleResourcesPath) {
 		File muleRootDirectory = new File(muleResourcesPath);
 		for (File f : tibcoFiles) {
-			System.out.println("Copying file: "+f.getPath()+" to "+muleRootDirectory.getAbsolutePath() + seperator + f.getName());
-			copyFile(f, new File(muleRootDirectory.getAbsolutePath() + seperator + f.getName()));
+			copyFile(f, new File(muleRootDirectory.getAbsolutePath() + File.separator + f.getName()));
 		}
 	}
 

@@ -16,16 +16,21 @@ import org.w3c.dom.NodeList;
 import com.tek.muleautomator.handler.FileHandler;
 import com.tek.muleautomator.handler.JMSHandler;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
-import com.tek.muleautomator.service.JMSService;
 
 public class MuleAutomateManager {
+
+	/**
+	 * Method to execute mule automator application.
+	 * @param tibco project root folder.
+	 * @param tibco process location.
+	 */
 
 	public static void main(String args[]) {
 		try {
 			String seperator = File.separator; 
-			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Sample/FileProject//ProcessDefinition.process";
-			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
-			String workspace = "D://mule2";
+			String tibcoProjectLocationRootFolder = "D:/Migration/Sample";
+			String tibcoProcessLocation = "D:/Migration/Sample/FileProject/ProcessDefinition.process";
+			String workspace = "D://mule";
 			String projectName = getProjectName(tibcoProcessLocation);
 			String muleProjectLocation = workspace+seperator+projectName;
 			createMuleProject(tibcoProjectLocationRootFolder, projectName, workspace);
@@ -33,14 +38,26 @@ public class MuleAutomateManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
+	 * Method to create mule project.
+	 * @param tibco project root folder.
+	 * @param mule project name.
+	 * @param mule project workspace.
+	 */
+
+	private static void createMuleProject(String tibcoProjectLocationRootFolder, String projectName, String directory) throws IOException {
+		MuleProjectSetup muleProjectSetup = new MuleProjectSetup();
+		muleProjectSetup.createMuleProject(tibcoProjectLocationRootFolder, directory, projectName);
+	}
+
+
+	/**
 	 * Method to get a List of All textContent inside "pd:type" tag.
-	 * @param doc Parsed DOM Document
-	 * @param tag Tag inside which we expect "pd:type"
-	 * @return List of type String containing the type
+	 * @param doc Parsed DOM Document.
+	 * @param tag Tag inside which we expect "pd:type".
+	 * @return List of type String containing the type.
 	 */
 
 	public static List<String> getActivityTypes(Document doc, String tag) {
@@ -55,37 +72,29 @@ public class MuleAutomateManager {
 		return activityTypes;
 	}
 
-	private static String getPluginType(String a){
-        return a.substring(a.indexOf("plugin.")+"plugin.".length(),a.lastIndexOf("."));
-    }
-	
+
+	/**
+	 * Method to generate mule flow by reading tibco process.
+	 * @param tibco process path.
+	 * @param mule project location.
+	 */
+
 	public static void generateMuleFlowFromTibcoProcess(String tibcoProcessPath, String muleProjectLocation) {
 		String pluginType=null;
 		try {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document docIn = documentBuilder.parse(new File(tibcoProcessPath));
-			
-			List<String> starterNodeTypesList=getActivityTypes(docIn, "pd:starter");
-			/*for(String activityType:starterNodeTypesList){
-				if (activityType.equals("com.tibco.plugin.jms.JMSQueueEventSource")) {
-					System.out.println("com.tibco.plugin.jms.JMSQueueEventSource-----This actvity will be used to receive jms messages from jms/tibco ems servers");
-					jmsService.jmsSubscribe(muleProjectLocation);
-				}
-			}*/
-			
-			List<String> activityNodeTypesList=getActivityTypes(docIn, "pd:activity");
-			
-			// Add Starter Nodes
+			List<String> starterNodeTypesList = getActivityTypes(docIn, "pd:starter");
+			List<String> activityNodeTypesList = getActivityTypes(docIn, "pd:activity");
 			activityNodeTypesList.addAll(starterNodeTypesList);
 			for(String activityType: activityNodeTypesList){
-
 				pluginType = getPluginType(activityType);
 				switch(pluginType){
-					case "jms": JMSHandler.generateMuleFlow(activityType, muleProjectLocation);
-						break;
-					case "file": FileHandler.generateMuleFlow(activityType, muleProjectLocation);
-					     break;
+				case "jms": JMSHandler.generateMuleFlow(activityType, muleProjectLocation);
+				break;
+				case "file": FileHandler.generateMuleFlow(activityType, muleProjectLocation);
+				break;
 				}
 			}
 		} catch (Exception e) {
@@ -94,14 +103,24 @@ public class MuleAutomateManager {
 
 	}
 
+	/**
+	 * Method to get plugin type of activityType.
+	 * @param activity type.
+	 * @return mule plugin type.
+	 */
+
+	private static String getPluginType(String activityType){
+		return activityType.substring(activityType.indexOf("plugin.")+"plugin.".length(),activityType.lastIndexOf("."));
+	}
+
+	/**
+	 * Method to get mule project name.
+	 * @param tibco process path.
+	 * @return mule project name.
+	 */
+
 	private static String getProjectName(String path) {
 		return path.substring(path.lastIndexOf('/') + 1).split("\\.")[0];
 	}
-
-	private static void createMuleProject(String tibcoProjectLocationRootFolder, String projectName, String directory) throws IOException {
-		MuleProjectSetup muleProjectSetup = new MuleProjectSetup();
-		muleProjectSetup.createMuleProject(tibcoProjectLocationRootFolder, directory, projectName);
-	}
-
 
 }

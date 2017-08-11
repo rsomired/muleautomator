@@ -11,7 +11,7 @@ import java.io.File;
  *
  * @author asgupta
  */
-public class Utilities {
+public class MuleAutomatorConstants {
     static String seperator = File.separator;
     
     public static String generateMavenCommand(String projectName){

@@ -5,14 +5,14 @@ import com.tek.muleautomator.service.FileService;
 public class FileHandler {
 
 	static FileService fileService = new FileService();
-
+	
 	public static void generateMuleFlow(String activityType, String muleProjectLocation) {
-
 		switch(activityType) {
 		case "com.tibco.plugin.file.FileCreateActivity":
 			System.out.println("com.tibco.plugin.file.FileCreateActivity-----The Create File activity creates a new file or directory with the specified name. When creating a file, you can also provide the file contents. ");
 			fileService.fileCreate(muleProjectLocation);
 			break;
+			
 		case "com.tibco.plugin.file.ListFilesActivity":
 			System.out.println("com.tibco.plugin.file.ListFilesActivity-----The List Files activity returns information about files or directories, or a listing of all the files in the specified directory. ");
 			break;
@@ -38,7 +38,6 @@ public class FileHandler {
 			System.out.println("com.tibco.plugin.file.FileWriteActivity-----The Write File activity writes content to the specified file.");
 			break;
 		}
-
 	}	
 
 }

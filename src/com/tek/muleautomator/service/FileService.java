@@ -1,39 +1,20 @@
 package com.tek.muleautomator.service;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import com.tek.muleautomator.util.MuleConfigConnection;
-import com.tek.muleautomator.util.Utilities;
+import com.tek.muleautomator.util.MuleAutomatorConstants;
 
 public class FileService {
-
-	private static String directory = System.getProperty("user.dir");
-
-	private static String seperator = File.separator;
 
 	public void fileCopy(String muleProjectLocation) {
 		try {
 			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(Utilities.generateMuleConfigPath(muleProjectLocation, ""));
+			Document doc=dom.getDomConfig(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
 
 			Element fileFlow = doc.createElement("flow");
-			// add attributes
 			fileFlow.setAttribute("name", "copyFile");
 			
 			Element fileInBound=doc.createElement("file:inbound-endpoint");
@@ -56,7 +37,6 @@ public class FileService {
 			Mule.appendChild(fileFlow);
 			dom.trasfromData(doc,muleProjectLocation);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	}
@@ -64,12 +44,10 @@ public class FileService {
 	public void fileCreate(String muleProjectLocation) {
 		try {
 			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			System.out.println(muleProjectLocation);
-			Document doc=dom.getDomConfig(Utilities.generateMuleConfigPath(muleProjectLocation, ""));
+			Document doc=dom.getDomConfig(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
 			
 			Element Mule = (Element) doc.getFirstChild();
 			Element fileCreateFlow = doc.createElement("flow");
-			// add attributes
 			fileCreateFlow.setAttribute("name", "createFile");
 			Element filesetPayload=doc.createElement("set-payload");
 			filesetPayload.setAttribute("value", "abc");
@@ -96,9 +74,8 @@ public class FileService {
 			fileCreateFlow.appendChild(fileOutBound);
 
 			Mule.appendChild(fileCreateFlow);
-			dom.trasfromData(doc,(Utilities.generateMuleConfigPath(muleProjectLocation, "")));
+			dom.trasfromData(doc,(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, "")));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	}
@@ -106,7 +83,7 @@ public class FileService {
 	public void fileDelete(String muleProjectLocation) {
 		try {
 			MuleConfigConnection dom=MuleConfigConnection.getDomObj();
-			Document doc=dom.getDomConfig(Utilities.generateMuleConfigPath(muleProjectLocation, ""));
+			Document doc=dom.getDomConfig(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, ""));
 			Element Mule = (Element) doc.getFirstChild();
 
 
@@ -118,7 +95,6 @@ public class FileService {
 			fileConnector.setAttribute("doc:name", "File");
 
 			Element fileDelteFlow = doc.createElement("flow");
-			// add attributes
 			fileDelteFlow.setAttribute("name", "deleteFile");
 
 			Element fileInBound=doc.createElement("file:inbound-endpoint");
@@ -135,9 +111,8 @@ public class FileService {
 			fileDelteFlow.appendChild(filesetPayload);
 			Mule.appendChild(fileDelteFlow);
 			Mule.appendChild(fileConnector);
-			dom.trasfromData(doc,(Utilities.generateMuleConfigPath(muleProjectLocation, "")));
+			dom.trasfromData(doc,(MuleAutomatorConstants.generateMuleConfigPath(muleProjectLocation, "")));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 

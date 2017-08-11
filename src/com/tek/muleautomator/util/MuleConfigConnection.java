@@ -14,12 +14,7 @@ import org.w3c.dom.Document;
 
 public class MuleConfigConnection {
 
-	private static String directory = System.getProperty("user.dir");
-	private static String seperator = File.separator;
 	public static MuleConfigConnection domConfig;
-	/*public static String filepath=directory + seperator + "src" + seperator + "main" + seperator
-			+ "app" + seperator + "mule-config.xml";
-*/
 
 	public static synchronized MuleConfigConnection getDomObj() {
 		if ( domConfig == null ) {
