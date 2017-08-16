@@ -32,14 +32,7 @@ public class FileElement {
         	if(encodingElement!=null){
         		this.encoding=encodingElement.getTextContent();
         	}
-        }
-        
-       
-        
-        public FileWriteActivity(String activityType, String fileName) {
-            this.activityType = activityType;
-            this.fileName = fileName;
-        }
+        }      
 
 		public String getActivityType() {
 			return activityType;
@@ -80,10 +73,6 @@ public class FileElement {
         private String activityType;
         private String fileName;
 
-        public FileCreateActivity(String activityType, String fileName) {
-            this.activityType = activityType;
-            this.fileName = fileName;
-        }
         
         public FileCreateActivity(Node activityNode){
         	Element rootActivityElement = (Element)activityNode;
@@ -115,11 +104,7 @@ public class FileElement {
         private String fileName;
         private String encoding;
         
-        public FileReadActivity(String activityType, String fileName) {
-            this.activityType = activityType;
-            this.fileName = fileName;
-        }
-        
+      
 
         public String getActivityType() {
 			return activityType;
@@ -228,4 +213,57 @@ public class FileElement {
     	
     }
 
+    public class FileRenameActivity {
+    	String activityType;
+    	String fromFileName, toFileName;
+    	
+    	public FileRenameActivity(Node targetNode){
+    		Element rootActivityElement = (Element)targetNode;
+        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
+        	Element fileFromElement=(Element)rootActivityElement.getElementsByTagName("fromFileName").item(0);
+        	this.fromFileName=fileFromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	Element filetoElement=(Element)rootActivityElement.getElementsByTagName("toFileName").item(0);
+        	this.toFileName=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+    	}
+
+		public String getActivityType() {
+			return activityType;
+		}
+
+		public String getFromFileName() {
+			return fromFileName;
+		}
+
+		public String getToFileName() {
+			return toFileName;
+		}
+    	
+    }
+    
+    public class FileCopyActivity {
+    	String activityType;
+    	String fromFileName, toFileName;
+    	
+    	public FileCopyActivity(Node targetNode){
+    		Element rootActivityElement = (Element)targetNode;
+        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
+        	Element fileFromElement=(Element)rootActivityElement.getElementsByTagName("fromFileName").item(0);
+        	this.fromFileName=fileFromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	Element filetoElement=(Element)rootActivityElement.getElementsByTagName("toFileName").item(0);
+        	this.toFileName=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+    	}
+
+		public String getActivityType() {
+			return activityType;
+		}
+
+		public String getFromFileName() {
+			return fromFileName;
+		}
+
+		public String getToFileName() {
+			return toFileName;
+		}
+    	
+    }
 }
