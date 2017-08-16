@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 
 import com.tek.muleautomator.util.MuleAutomatorUtil;
 import com.tek.muleautomator.util.MuleConfigConnection;
+import com.tek.muleautomator.element.FileElement.FileCopyActivity;
 import com.tek.muleautomator.element.FileElement.FileCreateActivity;
 import com.tek.muleautomator.element.FileElement.FileReadActivity;
 import com.tek.muleautomator.element.FileElement.FileRemoveActivity;
@@ -13,7 +14,7 @@ import com.tek.muleautomator.element.FileElement.FileWriteActivity;
 
 public class FileService {
 
-	public void fileCopy(String muleConfigPath, Element flow) {
+	public void fileCopy(String muleConfigPath, FileCopyActivity fileCopyActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 

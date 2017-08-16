@@ -36,7 +36,6 @@ public class MuleAutomateManager {
 		Element flowElement = null;
 		try {
 
-			String seperator = File.separator; 
 			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
 			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Sample/FileProject/ProcessDefinition.process";
 			String workspace = "D://mule4";
