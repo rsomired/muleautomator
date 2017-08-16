@@ -8,6 +8,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class MuleAutomatorUtil {
 
@@ -21,6 +22,22 @@ public class MuleAutomatorUtil {
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static void loggerElement(String muleConfigPath, Element flow){
+		
+		try {
+			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			Element loggerElement=doc.createElement("logger");
+			loggerElement.setAttribute("message", "#[payload]");
+			loggerElement.setAttribute("level", "INFO");
+			loggerElement.setAttribute("doc:name", "Logger");
+			flow.appendChild(loggerElement);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
