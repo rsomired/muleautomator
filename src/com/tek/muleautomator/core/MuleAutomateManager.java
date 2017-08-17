@@ -37,14 +37,13 @@ public class MuleAutomateManager {
 		Element flowElement = null;
 		try {
 
-			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
+			/*String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
 			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Sample/FileProject/ProcessDefinition.process";
-			String workspace = "D://mule4";
-/*
-			/*String tibcoProjectLocationRootFolder = "D:/Migration/Sample";
+			String workspace = "D://mule4";*/
+			String tibcoProjectLocationRootFolder = "D:/Migration/Sample";
 			String tibcoProcessLocation = "D:/Migration/Sample/FileProject/ProcessDefinition.process";
-			String workspace = "D://mule";
-			String tibcoProjectLocationRootFolder = "D:/Migration/Tibcocode";
+			String workspace = "D:/Migration/projects";
+			/*String tibcoProjectLocationRootFolder = "D:/Migration/Tibcocode";
 			String tibcoProcessLocation = "D:/Migration/Tibcocode/Services/JMS/AdditionSvc.process";
 			String workspace = "D://mule"
 					;*/
@@ -107,20 +106,20 @@ public class MuleAutomateManager {
 			Node tempNode = allNodes.item(count);
 			Element tempNodeElement = (Element) tempNode;
 			String activityType = tempNodeElement.getElementsByTagName("pd:type").item(0).getTextContent();
-			String activityName = tempNodeElement.getElementsByTagName("pd:name").item(0).getTextContent();
+			String activityName = tempNodeElement.getAttributes().getNamedItem("name").getNodeValue();
 			activityTypes.add(new ActivityElement(activityType, activityName, tempNode));
 		}
 		return activityTypes;
 	}
-	
+
 	/**
 	 * Method to get a List of All transitions Containing  from,to and condition type.
 	 * @param doc Parsed DOM Document.
 	 * @return List type TransitionElement.
 	 */ 
-	
+
 	public static List<TransitionElement> getTransitions(Document doc) {
-		NodeList allNodes = doc.getElementsByTagName("transition");
+		NodeList allNodes = doc.getElementsByTagName("pd:transition");
 		List<TransitionElement> transitions = new ArrayList<>();
 		for (int count=0; count < allNodes.getLength(); count++) {
 			Node tempNode = allNodes.item(count);
@@ -173,28 +172,26 @@ public class MuleAutomateManager {
 
 	}
 
-	public static void generateMuleFlowFromTibcoProcessTransitions(String tibcoProcessPath, String muleConfigPath, Element flowElement) {
+	public static void generateMuleFlowFromTibcoProcessOrderByTransitions(String tibcoProcessPath, String muleConfigPath, Element flowElement) {
 		String pluginType=null;
 		try {
+			List<ActivityElement> activityElements = new ArrayList<>();
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document docIn = documentBuilder.parse(new File(tibcoProcessPath));
-			List<ActivityElement> activityElements = new ArrayList<>();
+			List<TransitionElement> transitionElements = getTransitions(docIn);
 			activityElements.addAll(getActivityTypes(docIn, "pd:starter"));
 			activityElements.addAll(getActivityTypes(docIn, "pd:activity"));
-			List<TransitionElement> transitionElements = new ArrayList<>();
-			transitionElements.addAll(getTransitions(docIn));
-			
 			for(TransitionElement transitionElement: transitionElements){
-				ActivityElement activityElement = getActivityFromTransition(transitionElement.getFrom(), activityElements);
+				ActivityElement activityElement = getActivityByTransition(transitionElement.getFrom(), activityElements);
 				if (activityElement != null){
-				pluginType = getPluginType(activityElement.getActivityType());
-				switch(pluginType){
-				case "jms": JMSHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-				break;
-				case "file": FileHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-				break;
-				}
+					pluginType = getPluginType(activityElement.getActivityType());
+					switch(pluginType){
+					case "jms": JMSHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+					break;
+					case "file": FileHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+					break;
+					}
 				}
 			}
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
@@ -230,17 +227,23 @@ public class MuleAutomateManager {
 	private static String getProjectName(String path) {
 		return path.substring(path.lastIndexOf('/') + 1).split("\\.")[0];
 	}
+
+	/**
+	 * Method to get activity element by transition.
+	 * @param transition key.
+	 * @return activities list.
+	 */
 	
-	private static ActivityElement getActivityFromTransition(String transitionFrom, List<ActivityElement> activityElements) {
+	private static ActivityElement getActivityByTransition(String transitionFrom, List<ActivityElement> activityElements) {
 		for(ActivityElement activityElement: activityElements){
-			if (activityElement.getActivityName() == transitionFrom){
+			if (activityElement.getActivityName().equals(transitionFrom)) {
 				return activityElement;
-				}
+			}
 		}
 		return null;
-				
-		
+
+
 	}
-	
-	
+
+
 }
