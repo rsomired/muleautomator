@@ -18,6 +18,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.tek.muleautomator.element.ActivityElement;
+import com.tek.muleautomator.element.TransitionElement;
 import com.tek.muleautomator.handler.FileHandler;
 import com.tek.muleautomator.handler.JMSHandler;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
@@ -106,9 +107,30 @@ public class MuleAutomateManager {
 			Node tempNode = allNodes.item(count);
 			Element tempNodeElement = (Element) tempNode;
 			String activityType = tempNodeElement.getElementsByTagName("pd:type").item(0).getTextContent();
-			activityTypes.add(new ActivityElement(activityType, tempNode));
+			String activityName = tempNodeElement.getElementsByTagName("pd:name").item(0).getTextContent();
+			activityTypes.add(new ActivityElement(activityType, activityName, tempNode));
 		}
 		return activityTypes;
+	}
+	
+	/**
+	 * Method to get a List of All transitions Containing  from,to and condition type.
+	 * @param doc Parsed DOM Document.
+	 * @return List type TransitionElement.
+	 */ 
+	
+	public static List<TransitionElement> getTransitions(Document doc) {
+		NodeList allNodes = doc.getElementsByTagName("transition");
+		List<TransitionElement> transitions = new ArrayList<>();
+		for (int count=0; count < allNodes.getLength(); count++) {
+			Node tempNode = allNodes.item(count);
+			Element tempNodeElement = (Element) tempNode;
+			String from = tempNodeElement.getElementsByTagName("pd:from").item(0).getTextContent();
+			String to = tempNodeElement.getElementsByTagName("pd:to").item(0).getTextContent();
+			String condition = tempNodeElement.getElementsByTagName("pd:conditionType").item(0).getTextContent();
+			transitions.add(new TransitionElement(from, to, condition));
+		}
+		return transitions;
 	}
 
 
@@ -151,6 +173,44 @@ public class MuleAutomateManager {
 
 	}
 
+	public static void generateMuleFlowFromTibcoProcessTransitions(String tibcoProcessPath, String muleConfigPath, Element flowElement) {
+		String pluginType=null;
+		try {
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document docIn = documentBuilder.parse(new File(tibcoProcessPath));
+			List<ActivityElement> activityElements = new ArrayList<>();
+			activityElements.addAll(getActivityTypes(docIn, "pd:starter"));
+			activityElements.addAll(getActivityTypes(docIn, "pd:activity"));
+			List<TransitionElement> transitionElements = new ArrayList<>();
+			transitionElements.addAll(getTransitions(docIn));
+			
+			for(TransitionElement transitionElement: transitionElements){
+				ActivityElement activityElement = getActivityFromTransition(transitionElement.getFrom(), activityElements);
+				if (activityElement != null){
+				pluginType = getPluginType(activityElement.getActivityType());
+				switch(pluginType){
+				case "jms": JMSHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
+				case "file": FileHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
+				}
+				}
+			}
+			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			doc.getFirstChild().appendChild(flowElement);
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(muleConfigPath);
+			transformer.transform(source, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+
 	/**
 	 * Method to get plugin type of activityType.
 	 * @param activity type.
@@ -170,5 +230,17 @@ public class MuleAutomateManager {
 	private static String getProjectName(String path) {
 		return path.substring(path.lastIndexOf('/') + 1).split("\\.")[0];
 	}
-
+	
+	private static ActivityElement getActivityFromTransition(String transitionFrom, List<ActivityElement> activityElements) {
+		for(ActivityElement activityElement: activityElements){
+			if (activityElement.getActivityName() == transitionFrom){
+				return activityElement;
+				}
+		}
+		return null;
+				
+		
+	}
+	
+	
 }

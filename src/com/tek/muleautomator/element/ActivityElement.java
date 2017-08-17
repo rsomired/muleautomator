@@ -4,11 +4,21 @@ import org.w3c.dom.Node;
 
 public class ActivityElement {
 	String activityType;
+	String activityName;
 	Node targetNode;
 	
 	
-	public ActivityElement(String activityType, Node targetNode) {
+	public String getActivityName() {
+		return activityName;
+	}
+
+	public void setActivityName(String activityName) {
+		this.activityName = activityName;
+	}
+
+	public ActivityElement(String activityType, String activityName, Node targetNode) {
 		this.activityType = activityType;
+		this.activityName = activityName;
 		this.targetNode = targetNode;
 	}
 	
