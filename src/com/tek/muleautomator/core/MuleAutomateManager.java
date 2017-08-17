@@ -20,6 +20,7 @@ import org.w3c.dom.NodeList;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.TransitionElement;
 import com.tek.muleautomator.handler.FileHandler;
+import com.tek.muleautomator.handler.JDBCHandler;
 import com.tek.muleautomator.handler.JMSHandler;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
@@ -157,6 +158,8 @@ public class MuleAutomateManager {
 				break;
 				case "file": FileHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 				break;
+				case "jdbc": JDBCHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
 				}
 			}
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
@@ -190,6 +193,8 @@ public class MuleAutomateManager {
 					case "jms": JMSHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 					break;
 					case "file": FileHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+					break;
+					case "jdbc": JDBCHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 					break;
 					}
 				}

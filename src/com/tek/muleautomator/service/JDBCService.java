@@ -11,9 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.tek.muleautomator.element.FileElement.FileReadActivity;
 import com.tek.muleautomator.element.JDBCElement;
-import com.tek.muleautomator.element.JDBCElement.JDBCUpdateActivity;
 import com.tek.muleautomator.util.MuleAutomatorUtil;
 import com.tek.muleautomator.util.MuleConfigConnection;
 

@@ -8,9 +8,9 @@ import com.tek.muleautomator.service.JDBCService;
 
 public class JDBCHandler {
 	
-	JDBCService jdbcService = new JDBCService();
+	public static JDBCService jdbcService = new JDBCService();
 	
-	public void generateMuleFlow(ActivityElement activityElement, String muleProjectLocation, Element flowElement) {
+	public static void generateMuleFlow(ActivityElement activityElement, String muleProjectLocation, Element flowElement) {
 		String activityType=activityElement.getActivityType();
 		switch(activityType) {
 		case "com.tibco.plugin.jdbc.JDBCCallActivity":
