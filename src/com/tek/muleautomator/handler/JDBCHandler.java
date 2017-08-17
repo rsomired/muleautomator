@@ -18,6 +18,9 @@ public class JDBCHandler {
 			JDBCElement.JDBCCallActivity jdbcCallActivity = new JDBCElement.JDBCCallActivity(activityElement.getTargetNode());
 			jdbcService.jdbcCallProcedure(muleProjectLocation, jdbcCallActivity, flowElement);
 			break;
+		case "com.tibco.plugin.jdbc.JDBCGetConnectionActivity":
+			System.out.println("com.tibco.plugin.jdbc.JDBCGetConnectionActivity-----The JDBC Get Connection activity retrieves an object reference to a JavaConnectionAccessor object for the specified JDBC Connection from the connection pool.");
+			break;
 		case "com.tibco.plugin.jdbc.JDBCQueryActivity":
 			System.out.println("com.tibco.plugin.jdbc.JDBCQueryActivity-----The JDBC Call Procedure activity calls a database procedure using the specified JDBC connection");
 			JDBCElement.JDBCQueryActivity jdbcQueryActivity = new JDBCElement.JDBCQueryActivity(activityElement.getTargetNode());
