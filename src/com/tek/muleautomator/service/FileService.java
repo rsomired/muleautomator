@@ -63,7 +63,7 @@ public class FileService {
 
 			Element filesetPayload=doc.createElement("set-payload");
 			filesetPayload.setAttribute("value", "sample");
-			filesetPayload.setAttribute("fileName", fileWriteActivity.getFileName());
+			filesetPayload.setAttribute("fileName", fileWriteActivity.getINPUT_fileName());
 			filesetPayload.setAttribute("doc:name", "Set Payload");
 			flow.appendChild(filesetPayload);
 
