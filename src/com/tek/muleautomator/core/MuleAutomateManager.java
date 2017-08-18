@@ -131,6 +131,23 @@ public class MuleAutomateManager {
 			String condition = tempNodeElement.getElementsByTagName("pd:conditionType").item(0).getTextContent();
 			transitions.add(new TransitionElement(from, to, condition));
 		}
+		
+		if (transitions.size() > 1){
+			List<TransitionElement> tranistionsByOrder = new ArrayList<>();
+			String activity = getStartActivity(doc);
+			while(transitions.size()!=0 ) {
+				for (int count =0; count < transitions.size(); count++){
+					TransitionElement transition = transitions.get(count);
+					if (transition.getFrom().equals(activity)){
+						tranistionsByOrder.add(transition);
+						activity = transition.getTo();
+						transitions.remove(transition);
+						break;
+					}
+				}
+			}
+			return tranistionsByOrder;
+		}
 		return transitions;
 	}
 
@@ -251,6 +268,12 @@ public class MuleAutomateManager {
 		return null;
 
 
+	}
+	
+	private static String getStartActivity(Document doc) {
+
+		String startActivity = doc.getElementsByTagName("pd:startName").item(0).getTextContent();
+		return startActivity;
 	}
 
 
