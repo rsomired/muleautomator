@@ -20,6 +20,7 @@ import org.w3c.dom.NodeList;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.TransitionElement;
 import com.tek.muleautomator.handler.FileHandler;
+import com.tek.muleautomator.handler.HTTPHandler;
 import com.tek.muleautomator.handler.JDBCHandler;
 import com.tek.muleautomator.handler.JMSHandler;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
@@ -41,8 +42,8 @@ public class MuleAutomateManager {
 			/*String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
 			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Sample/FileProject/ProcessDefinition.process";
 			String workspace = "D://mule4";*/
-			String tibcoProjectLocationRootFolder = "D:/Migration/Sample";
-			String tibcoProcessLocation = "D:/Migration/Sample/FileProject/ProcessDefinition.process";
+			String tibcoProjectLocationRootFolder = "D:/Migration/tibprgms/HTTP/Process/Parameter-Filter";
+			String tibcoProcessLocation = "D:/Migration/tibprgms/HTTP/Process/Parameter-Filter/Name.process";
 			String workspace = "D:/Migration/projects";
 			/*String tibcoProjectLocationRootFolder = "D:/Migration/Tibcocode";
 			String tibcoProcessLocation = "D:/Migration/Tibcocode/Services/JMS/AdditionSvc.process";
@@ -159,6 +160,8 @@ public class MuleAutomateManager {
 				case "file": FileHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 				break;
 				case "jdbc": JDBCHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
+				case "http": HTTPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 				break;
 				}
 			}

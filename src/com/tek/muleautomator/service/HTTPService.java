@@ -75,7 +75,7 @@ public class HTTPService {
 		}
 	}
 
-	public void httpRequest(String muleConfigPath,
+	public void SendHttpRequest(String muleConfigPath,
 			HTTPElement.HTTPSendRequestActivity httpSendRequestActivity,
 			Element flow) {
 		try {
@@ -107,7 +107,7 @@ public class HTTPService {
 		}
 	}
 
-	public void httpResopnse(String muleConfigPath,
+	public void sendHttpResopnse(String muleConfigPath,
 			HTTPElement.HTTPSendResponseActivity httpSendResponseActivity,
 			Element flow) {
 		try {
