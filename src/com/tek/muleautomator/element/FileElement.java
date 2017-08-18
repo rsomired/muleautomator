@@ -181,7 +181,7 @@ public class FileElement {
     	
     }
     	
-    public class FileListActivity{
+    public class FileListActivity {
     	private String activityType;
     	private String fileName;
 		public String getActivityType() {
@@ -266,4 +266,5 @@ public class FileElement {
 		}
     	
     }
+
 }

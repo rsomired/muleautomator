@@ -194,6 +194,7 @@ public class JDBCElement {
 				pcp.setColType(Integer.valueOf(currParam.getElementsByTagName("colType").item(0).getTextContent()));
 				pcp.setDataType(Integer.valueOf(currParam.getElementsByTagName("dataType").item(0).getTextContent()));
 				pcp.setTypeName(currParam.getElementsByTagName("typeName").item(0).getTextContent());
+				this.params.add(pcp);
 			}
 			
 		}
