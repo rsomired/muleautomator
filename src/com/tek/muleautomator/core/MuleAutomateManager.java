@@ -50,7 +50,9 @@ public class MuleAutomateManager {
 			String tibcoProcessLocation = "D:/Migration/Tibcocode/Services/JMS/AdditionSvc.process";
 			String workspace = "D://mule"
 					;*/
-
+			
+			// Loads all the Global Variables into MuleAutomatorConstants.globalResolver Object
+			
 			String projectName = getProjectName(tibcoProcessLocation);
 			createMuleProject(tibcoProjectLocationRootFolder, projectName, workspace);
 			String muleConfigPath = MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName);

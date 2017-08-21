@@ -13,6 +13,11 @@ import java.io.File;
  */
 public class MuleAutomatorConstants {
     static String seperator = File.separator;
+    public static GlobalResolver globalResolver;
+    
+    public static void loadGlobalVars(String location) {
+    	globalResolver=new GlobalResolver(location);
+    }
     
     public static String generateMavenCommand(String projectName){
         return "cmd /c mvn archetype:generate -B -DarchetypeGroupId=org.mule.tools.maven -DarchetypeArtifactId=maven-achetype-mule-app -DarchetypeVersion=1.0 -DgroupId=org.mycompany.app -DartifactId="
@@ -36,6 +41,10 @@ public class MuleAutomatorConstants {
         return directory + seperator + projectName + seperator + "src" + seperator + "test"
 				+ seperator + "java" + seperator + "org";
     }
+
+	public static String generateDefaultVarsPath(String tibcoProjectLocationRootFolder) {
+		return tibcoProjectLocationRootFolder+"/defaultVars/";
+	}
     
     
     

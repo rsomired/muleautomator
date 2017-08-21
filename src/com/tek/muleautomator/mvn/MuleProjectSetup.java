@@ -21,6 +21,7 @@ public class MuleProjectSetup {
 		String destinationFile = directory + File.separator + projectName;
 		String muleResourcesPath = MuleAutomatorConstants.generateMuleResourcesPath(directory, projectName);
 		String testclassFilesPath = MuleAutomatorConstants.generateMuleTestClassFilesPath(directory, projectName);
+		String defaultVarsPath = MuleAutomatorConstants.generateDefaultVarsPath(tibcoProjectLocationRootFolder);
 		String cmd = MuleAutomatorConstants.generateMavenCommand(projectName);
 		try {
 			String outlist[] = createMuleProjectByMaven(cmd);
@@ -29,8 +30,9 @@ public class MuleProjectSetup {
 			}
 			moveMuleProjectToSpecifiedDirectory(sourceFile, destinationFile);
 			deleteDefaultTestFiles(new File(testclassFilesPath));
+			MuleAutomatorConstants.loadGlobalVars(defaultVarsPath);
 			List<File> tibcoFiles = new ArrayList<>();
-			fileFinder(new File(tibcoProjectLocationRootFolder), tibcoFiles, new String[] { "wsdl", "xsd", "xsl" });
+			fileFinder(new File(tibcoProjectLocationRootFolder), tibcoFiles, new String[] { "wsdl", "xsd", "xsl", "substvar"});
 			moveTibcoFilesToMuleProject(tibcoFiles, muleResourcesPath);
 		} catch (Exception e) {
 			System.err.println(e);
