@@ -360,5 +360,96 @@ public class SOAPElement {
 			SOAPRetrieveResourcesActivity.description="The Retrieve Resources activity generates a WSDL file containinga concrete service description of any process definition that has aSOAP Event Source process starter.";
 			SOAPRetrieveResourcesActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
 		}
+
+
+		public static String getCONFIG_activityType() {
+			return CONFIG_activityType;
+		}
+
+
+		public static void setCONFIG_activityType(String cONFIG_activityType) {
+			CONFIG_activityType = cONFIG_activityType;
+		}
+
+
+		public static String getDescription() {
+			return description;
+		}
+
+
+		public static void setDescription(String description) {
+			SOAPRetrieveResourcesActivity.description = description;
+		}
+
+
+		public String getINPUT_resourcePath() {
+			return INPUT_resourcePath;
+		}
+
+
+		public void setINPUT_resourcePath(String iNPUT_resourcePath) {
+			INPUT_resourcePath = iNPUT_resourcePath;
+		}
+
+
+		public String getINPUT_filter() {
+			return INPUT_filter;
+		}
+
+
+		public void setINPUT_filter(String iNPUT_filter) {
+			INPUT_filter = iNPUT_filter;
+		}
+
+
+		public String getINPUT_hostName() {
+			return INPUT_hostName;
+		}
+
+
+		public void setINPUT_hostName(String iNPUT_hostName) {
+			INPUT_hostName = iNPUT_hostName;
+		}
+
+
+		public String getINPUT_port() {
+			return INPUT_port;
+		}
+
+
+		public void setINPUT_port(String iNPUT_port) {
+			INPUT_port = iNPUT_port;
+		}
+
+
+		public String getOUPUT_outputClass() {
+			return OUPUT_outputClass;
+		}
+
+
+		public void setOUPUT_outputClass(String oUPUT_outputClass) {
+			OUPUT_outputClass = oUPUT_outputClass;
+		}
+
+
+		public String getOUTPUT_resourceData() {
+			return OUTPUT_resourceData;
+		}
+
+
+		public void setOUTPUT_resourceData(String oUTPUT_resourceData) {
+			OUTPUT_resourceData = oUTPUT_resourceData;
+		}
+
+
+		public byte[] getOUTPUT_resourceBytes() {
+			return OUTPUT_resourceBytes;
+		}
+
+
+		public void setOUTPUT_resourceBytes(byte[] oUTPUT_resourceBytes) {
+			OUTPUT_resourceBytes = oUTPUT_resourceBytes;
+		}
+		
 	}
 }
