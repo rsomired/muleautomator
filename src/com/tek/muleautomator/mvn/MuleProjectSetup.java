@@ -20,7 +20,7 @@ public class MuleProjectSetup {
 		String sourceFile = MuleAutomatorConstants.generateSourcePath(projectName);
 		String destinationFile = directory + File.separator + projectName;
 		String muleResourcesPath = MuleAutomatorConstants.generateMuleResourcesPath(directory, projectName);
-		String testclassFilesPath = MuleAutomatorConstants.generateMuleTestClassFilesPath(directory);
+		String testclassFilesPath = MuleAutomatorConstants.generateMuleTestClassFilesPath(directory, projectName);
 		String cmd = MuleAutomatorConstants.generateMavenCommand(projectName);
 		try {
 			String outlist[] = createMuleProjectByMaven(cmd);

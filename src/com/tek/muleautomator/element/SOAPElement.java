@@ -281,17 +281,17 @@ public class SOAPElement {
 		 }
 	}
 	
-	public static class SOAPSendReply{
+	public static class SOAPSendReplyActivity {
 		 
 		   private static String CONFIG_description;
 		   private static String CONFIG_activityType;
 		   private static String CONFIG_replyto;
 		   private Map<String, String> INPUT_Header,INPUT_mimeEnvelopeElement,INPUT__configData;
 		   
-		   public SOAPSendReply(Node targetNode){ 
-		    SOAPSendReply.CONFIG_description="The SOAP Send Reply activity sends a reply to an application that sent a SOAP request. This activity is primarily used in process definitions that implement web services.";
+		   public SOAPSendReplyActivity(Node targetNode){ 
+			   SOAPSendReplyActivity.CONFIG_description="The SOAP Send Reply activity sends a reply to an application that sent a SOAP request. This activity is primarily used in process definitions that implement web services.";
 		    Element rootActivityElement = (Element)targetNode;
-		    SOAPSendReply.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();   
+		    SOAPSendReplyActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();   
 		   }
 		   
 		   public static String getCONFIG_description() {

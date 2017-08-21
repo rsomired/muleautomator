@@ -23,6 +23,7 @@ import com.tek.muleautomator.handler.FileHandler;
 import com.tek.muleautomator.handler.HTTPHandler;
 import com.tek.muleautomator.handler.JDBCHandler;
 import com.tek.muleautomator.handler.JMSHandler;
+import com.tek.muleautomator.handler.SOAPHandler;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleConfigConnection;
@@ -42,8 +43,8 @@ public class MuleAutomateManager {
 			/*String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
 			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Sample/FileProject/ProcessDefinition.process";
 			String workspace = "D://mule4";*/
-			String tibcoProjectLocationRootFolder = "D:/Migration/tibprgms/HTTP/Process/Parameter-Filter";
-			String tibcoProcessLocation = "D:/Migration/tibprgms/HTTP/Process/Parameter-Filter/Name.process";
+			String tibcoProjectLocationRootFolder = "D:/Migration/tibprgms/Soap/Soap_HTTP";
+			String tibcoProcessLocation = "D:/Migration/tibprgms/Soap/Soap_HTTP/Soap_Event.process";
 			String workspace = "D:/Migration/projects";
 			/*String tibcoProjectLocationRootFolder = "D:/Migration/Tibcocode";
 			String tibcoProcessLocation = "D:/Migration/Tibcocode/Services/JMS/AdditionSvc.process";
@@ -180,6 +181,8 @@ public class MuleAutomateManager {
 				break;
 				case "http": HTTPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 				break;
+				case "soap": SOAPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
 				}
 			}
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
@@ -215,6 +218,8 @@ public class MuleAutomateManager {
 					case "file": FileHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 					break;
 					case "jdbc": JDBCHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+					break;
+					case "soap": SOAPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 					break;
 					}
 				}

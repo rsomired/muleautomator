@@ -32,8 +32,8 @@ public class MuleAutomatorConstants {
         return directory + seperator + projectName + seperator + "src" + seperator + "main"+ seperator + "resources";
     }
     
-    public static String generateMuleTestClassFilesPath(String directory){
-        return directory + seperator + "mule-sample" + seperator + "src" + seperator + "test"
+    public static String generateMuleTestClassFilesPath(String directory, String projectName){
+        return directory + seperator + projectName + seperator + "src" + seperator + "test"
 				+ seperator + "java" + seperator + "org";
     }
     
