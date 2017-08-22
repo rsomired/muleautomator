@@ -114,6 +114,12 @@ public class FileElement {
 			INPUT_fileName = iNPUT_fileName;
 		}
 
+		
+
+		public String getINPUT_filePath() {
+			return INPUT_filePath;
+		}
+
 
 		public String getINPUT_textContent() {
 			return INPUT_textContent;
@@ -169,7 +175,7 @@ public class FileElement {
         	Element rootActivityElement = (Element)activityNode;
         	this.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
-        	this.INPUT_fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	if(this.INPUT_filePath.contains("_globalVariables")){
         		String x=null;
         		if(this.INPUT_filePath.contains("concat")){
@@ -199,9 +205,17 @@ public class FileElement {
             return INPUT_fileName;
         }
 
-        public void setFileName(String fileName) {
-            this.INPUT_fileName = fileName;
-        }
+		public String getINPUT_fileName() {
+			return INPUT_fileName;
+		}
+
+		public String getINPUT_filePath() {
+			return INPUT_filePath;
+		}
+
+		public void setINPUT_filePath(String iNPUT_filePath) {
+			INPUT_filePath = iNPUT_filePath;
+		}
         
     }
     
@@ -240,13 +254,24 @@ public class FileElement {
 			this.INPUT_encoding = encoding;
 		}
 
+		
+
+		public String getINPUT_filePath() {
+			return INPUT_filePath;
+		}
+
+
+		public void setINPUT_filePath(String iNPUT_filePath) {
+			INPUT_filePath = iNPUT_filePath;
+		}
+
 
 		public FileReadActivity(Node node){
         	Element rootActivityElement = (Element)node;
         	this.CONFIG_description="The Read File activity is used to read a file and place its contents into the activity’s output. ";
         	this.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
-        	this.INPUT_fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	Element encodingElement=(Element)rootActivityElement.getElementsByTagName("encoding").item(0);
         	if(encodingElement!=null){
         		this.INPUT_encoding=encodingElement.getTextContent();
@@ -353,13 +378,19 @@ public class FileElement {
 
 
 
+		public String getINPUT_filePath() {
+			return INPUT_filePath;
+		}
+
+
+
 		public FileRemoveActivity(Node targetNode){
     		Element rootActivityElement = (Element)targetNode;
     		this.CONFIG_description="The Remove File activity removes the specified file. This activity can also remove empty directories. If a directory that is not empty is specified, an exception is thrown. ";
     		
         	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
-        	this.INPUT_fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	if(this.INPUT_filePath.contains("_globalVariables")){
         		String x=null;
         		if(this.INPUT_filePath.contains("concat")){
@@ -531,6 +562,14 @@ public class FileElement {
 			OUTPUT_writeProtected = oUTPUT_writeProtected;
 		}
 
+		public String getINPUT_fromFilePath() {
+			return INPUT_fromFilePath;
+		}
+
+		public String getINPUT_toFilePath() {
+			return INPUT_toFilePath;
+		}
+
 		
     	
     }
@@ -549,9 +588,9 @@ public class FileElement {
     		this.CONFIG_description="The Copy File activity allows you to copy files and directories to a new location";
         	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileFromElement=(Element)rootActivityElement.getElementsByTagName("fromFileName").item(0);
-        	this.INPUT_fromFileName=fileFromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	this.INPUT_fromFilePath=fileFromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	Element filetoElement=(Element)rootActivityElement.getElementsByTagName("toFileName").item(0);
-        	this.INPUT_toFileName=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	this.INPUT_toFilePath=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	
         	this.CONFIG_overwrite=rootActivityElement.getElementsByTagName("overwrite").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("overwrite").item(0).getTextContent()):false;
         	this.CONFIG_createMissingDirectories=rootActivityElement.getElementsByTagName("createMissingDirectories").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("createMissingDirectories").item(0).getTextContent()):false;
@@ -600,6 +639,36 @@ public class FileElement {
 		public String getToFileName() {
 			return INPUT_toFileName;
 		}
+
+		public boolean isCONFIG_overwrite() {
+			return CONFIG_overwrite;
+		}
+
+		public boolean isCONFIG_createMissingDirectories() {
+			return CONFIG_createMissingDirectories;
+		}
+
+		public String getCONFIG_description() {
+			return CONFIG_description;
+		}
+
+		public String getINPUT_fromFileName() {
+			return INPUT_fromFileName;
+		}
+
+		public String getINPUT_toFileName() {
+			return INPUT_toFileName;
+		}
+
+		public String getINPUT_fromFilePath() {
+			return INPUT_fromFilePath;
+		}
+
+		public String getINPUT_toFilePath() {
+			return INPUT_toFilePath;
+		}
+		
+		
     	
     }
 

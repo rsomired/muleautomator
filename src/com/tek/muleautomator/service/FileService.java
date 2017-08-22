@@ -21,7 +21,7 @@ public class FileService {
 			Element fileInBound=doc.createElement("file:inbound-endpoint");
 			fileInBound.setAttribute("responseTimeout", "10000");
 			fileInBound.setAttribute("doc:name", "File");
-			fileInBound.setAttribute("path", "C:/Users/nshaik/Desktop/source");
+			fileInBound.setAttribute("path", fileCopyActivity.getINPUT_fromFilePath());
 			flow.appendChild(fileInBound);
 
 			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
@@ -29,7 +29,7 @@ public class FileService {
 			Element fileOutBound=doc.createElement("file:outbound-endpoint");
 			fileOutBound.setAttribute("responseTimeout", "10000");
 			fileOutBound.setAttribute("doc:name", "File");
-			fileOutBound.setAttribute("path", "C:/Users/nshaik/Desktop/Destination");
+			fileOutBound.setAttribute("path", fileCopyActivity.getINPUT_toFilePath());
 			flow.appendChild(fileOutBound);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -47,8 +47,8 @@ public class FileService {
 			Element fileOutBound=doc.createElement("file:outbound-endpoint");
 			fileOutBound.setAttribute("responseTimeout", "10000");
 			fileOutBound.setAttribute("doc:name", "File");
-			fileOutBound.setAttribute("outputPattern", "abc.txt");
-			fileOutBound.setAttribute("path", "C:/Users/nshaik/Desktop/File");
+			fileOutBound.setAttribute("outputPattern", fileCreateActivity.getINPUT_fileName());
+			fileOutBound.setAttribute("path", fileCreateActivity.getINPUT_filePath());
 			flow.appendChild(fileOutBound);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,8 +72,8 @@ public class FileService {
 			Element fileOutBound=doc.createElement("file:outbound-endpoint");
 			fileOutBound.setAttribute("responseTimeout", "10000");
 			fileOutBound.setAttribute("doc:name", "File");
-			fileOutBound.setAttribute("outputPattern", "abc.txt");
-			fileOutBound.setAttribute("path", "C:/Users/nshaik/Desktop/File");
+			fileOutBound.setAttribute("outputPattern", fileWriteActivity.getINPUT_fileName());
+			fileOutBound.setAttribute("path", fileWriteActivity.getINPUT_filePath());
 			flow.appendChild(fileOutBound);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -98,10 +98,10 @@ public class FileService {
 
 			Element fileInBound=doc.createElement("file:inbound-endpoint");
 			fileInBound.setAttribute("responseTimeout", "10000");
-			fileInBound.setAttribute("moveToPattern", ".txt");
+			fileInBound.setAttribute("moveToPattern", fileRemoveActivity.getINPUT_fileName().substring(fileRemoveActivity.getINPUT_fileName().lastIndexOf(".")+1));
 			fileInBound.setAttribute("connector-ref", "File");
 			fileInBound.setAttribute("doc:name", "File");
-			fileInBound.setAttribute("path", "C:/Users/nshaik/Desktop/File");
+			fileInBound.setAttribute("path", fileRemoveActivity.getINPUT_filePath());
 			flow.appendChild(fileInBound);
 
 			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
@@ -121,8 +121,7 @@ public class FileService {
 			Element fileInBound=doc.createElement("file:inbound-endpoint");
 			fileInBound.setAttribute("responseTimeout", "10000");
 			fileInBound.setAttribute("doc:name", "File");
-			fileInBound.setAttribute("path", "C:/Users/nshaik/Desktop/source");
-			fileInBound.setAttribute("moveToDirectory", "C:/Users/nshaik/Desktop/Destination");
+			fileInBound.setAttribute("path", fileReadActivity.getINPUT_filePath());
 			flow.appendChild(fileInBound);
 
 			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
@@ -145,7 +144,7 @@ public class FileService {
 			fileConnector.setAttribute("streaming", "true");
 			fileConnector.setAttribute("validateConnections", "true");
 			fileConnector.setAttribute("doc:name", "File");
-			fileConnector.setAttribute("workFileNamePattern", "MyText.txt");
+			fileConnector.setAttribute("workFileNamePattern", fileRenameActivity.getINPUT_fromFileName());
 			
 			muleTag.appendChild(fileConnector);
 
@@ -153,8 +152,8 @@ public class FileService {
 			fileInBound.setAttribute("responseTimeout", "10000");
 			fileInBound.setAttribute("doc:name", "File");
 			fileInBound.setAttribute("connector-ref", "File1");
-			fileInBound.setAttribute("path", "C:/Users/nshaik/Desktop/source");
-			fileInBound.setAttribute("moveToDirectory", "C:/Users/nshaik/Desktop/source");
+			fileInBound.setAttribute("path", fileRenameActivity.getINPUT_fromFilePath());
+			fileInBound.setAttribute("moveToDirectory", fileRenameActivity.getINPUT_toFilePath());
 			flow.appendChild(fileInBound);
 
 			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);

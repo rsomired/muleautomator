@@ -43,8 +43,8 @@ public class MuleAutomateManager {
 			/*String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
 			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Sample/FileProject/ProcessDefinition.process";
 			String workspace = "D://mule4";*/
-			String tibcoProjectLocationRootFolder = "D:/Migration/tibprgms/Soap/Soap_HTTP";
-			String tibcoProcessLocation = "D:/Migration/tibprgms/Soap/Soap_HTTP/Soap_Event.process";
+			String tibcoProjectLocationRootFolder = "D:/Migration/Sample";
+			String tibcoProcessLocation = "D:/Migration/Sample/FileProject/ProcessDefinition.process";
 			String workspace = "D:/Migration/projects";
 			/*String tibcoProjectLocationRootFolder = "D:/Migration/Tibcocode";
 			String tibcoProcessLocation = "D:/Migration/Tibcocode/Services/JMS/AdditionSvc.process";
