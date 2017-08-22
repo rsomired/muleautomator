@@ -474,17 +474,17 @@ public class FileElement {
         	this.INPUT_toFilePath=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	
         	if(this.INPUT_fromFilePath.contains("_globalVariables")){
-        		String x=null;
+        		String resolvedPath=null;
         		if(this.INPUT_fromFilePath.contains("concat")){
-        			x=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fromFilePath);
+        			resolvedPath=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fromFilePath);
         			
         		} else {
-        			x=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_fromFilePath);
+        			resolvedPath=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_fromFilePath);
         		}
-        		if(x.endsWith("\\"))
-        			x=x.substring(0, x.length()-1);
-        		this.INPUT_fromFileName=x.substring(x.lastIndexOf("\\")+1);
-        		this.INPUT_fromFilePath=x.substring(0,x.lastIndexOf("\\"));
+        		if(resolvedPath.endsWith("\\"))
+        			resolvedPath=resolvedPath.substring(0, resolvedPath.length()-1);
+        		this.INPUT_fromFileName=resolvedPath.substring(resolvedPath.lastIndexOf("\\")+1);
+        		this.INPUT_fromFilePath=resolvedPath.substring(0,resolvedPath.lastIndexOf("\\"));
         	} else {
         		this.INPUT_fromFileName="";
         	}

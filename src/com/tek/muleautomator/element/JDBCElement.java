@@ -31,7 +31,7 @@ public class JDBCElement {
 			JDBCUpdateActivity.description="The JDBC Update activity performs the specified SQL INSERT, UPDATE, or DELETE statement";
 			Element rootActivityElement = (Element)targetNode;
         	JDBCUpdateActivity.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-        	JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
+        	//JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
         	this.TIMEOUT=rootActivityElement.getElementsByTagName("timeout").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
         	this.commit=rootActivityElement.getElementsByTagName("commit").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("commit").item(0).getTextContent()):false;
         	this.batchUpdate=rootActivityElement.getElementsByTagName("batchUpdate").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("batchUpdate").item(0).getTextContent()):false;
@@ -40,8 +40,10 @@ public class JDBCElement {
         	if(this.sqlQuery.contains("?")){
         		NodeList params=rootActivityElement.getElementsByTagName("parameter");
         		for(int i=0;i<params.getLength();++i){
+        			if(params.item(i).getNodeType()==Node.ELEMENT_NODE){
         			Element currParam=(Element)params.item(i);
         			queryParams.add(currParam.getElementsByTagName("parameterName").item(0).getTextContent());
+        			}
         		}
         	}
         	this.namedParamsQuery=generateQueryString(this.sqlQuery, this.queryParams);
@@ -102,7 +104,7 @@ public class JDBCElement {
 			JDBCUpdateActivity.description="The JDBC Query activity performs the specified SQL SELECT statement";
 			Element rootActivityElement = (Element)targetNode;
         	JDBCUpdateActivity.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-        	JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
+        	//JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
         	this.TIMEOUT=rootActivityElement.getElementsByTagName("timeout").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
         	this.commit=rootActivityElement.getElementsByTagName("commit").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("commit").item(0).getTextContent()):false;
         	this.batchUpdate=rootActivityElement.getElementsByTagName("batchUpdate").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("batchUpdate").item(0).getTextContent()):false;
@@ -111,8 +113,10 @@ public class JDBCElement {
         	if(this.sqlQuery.contains("?")){
         		NodeList params=rootActivityElement.getElementsByTagName("parameter");
         		for(int i=0;i<params.getLength();++i){
+        			if(params.item(i).getNodeType()==Node.ELEMENT_NODE){
         			Element currParam=(Element)params.item(i);
         			queryParams.add(currParam.getElementsByTagName("parameterName").item(0).getTextContent());
+        			}
         		}
         	}
         	this.namedParamsQuery=generateQueryString(this.sqlQuery, this.queryParams);
@@ -234,7 +238,7 @@ public class JDBCElement {
 			JDBCCallActivity.description="The JDBC Call Procedure activity calls a database procedure using the specified JDBC connection";
 			Element rootActivityElement = (Element)targetNode;
         	JDBCUpdateActivity.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-        	JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
+        	//JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
         	this.TIMEOUT=rootActivityElement.getElementsByTagName("timeout").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
         	this.maxRows=rootActivityElement.getElementsByTagName("maxRows").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("maxRows").item(0).getTextContent()):10;
         	
@@ -245,8 +249,10 @@ public class JDBCElement {
 			this.params=new ArrayList<>();
 			
 			for(int i=0;i<allParamsNodeList.getLength();++i){
+				if(allParamsNodeList.item(i).getNodeType()==Node.ELEMENT_NODE){
 				Element curr=(Element)allParamsNodeList.item(i);
 				params.add(curr.getNodeName());
+			}
 			}
 			this.namedParamQuery="{call "+this.procedureName+"(";
 			for(int i=0;i<params.size();++i){
@@ -272,7 +278,7 @@ public class JDBCElement {
 			JDBCUpdateActivity.description="The SQL Direct activity executes a SQL statement that you provide. This activity allows you to build a SQL statement dynamically (using other activities), then pass the SQL statement into this activity’s input";
 			Element rootActivityElement = (Element)targetNode;
         	JDBCUpdateActivity.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-        	JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
+        	//JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
         	this.TIMEOUT=rootActivityElement.getElementsByTagName("timeout").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
         	this.sqlQuery=rootActivityElement.getElementsByTagName("statement").item(0).getTextContent();
         	

@@ -40,12 +40,12 @@ public class MuleAutomateManager {
 		Element flowElement = null;
 		try {
 
-			/*String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
-			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Sample/FileProject/ProcessDefinition.process";
-			String workspace = "D://mule4";*/
-			String tibcoProjectLocationRootFolder = "D:/Migration/Sample";
+			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/JDBC/";
+			String tibcoProcessLocation = "D:/Tibco_To_Mule/JDBC/Sto_Proc/Count_Rec.process";
+			String workspace = "D://mule2";
+			/*String tibcoProjectLocationRootFolder = "D:/Migration/Sample";
 			String tibcoProcessLocation = "D:/Migration/Sample/FileProject/ProcessDefinition.process";
-			String workspace = "D:/Migration/projects";
+			String workspace = "D:/Migration/projects";*/
 			/*String tibcoProjectLocationRootFolder = "D:/Migration/Tibcocode";
 			String tibcoProcessLocation = "D:/Migration/Tibcocode/Services/JMS/AdditionSvc.process";
 			String workspace = "D://mule"

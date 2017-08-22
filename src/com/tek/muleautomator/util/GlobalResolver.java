@@ -109,32 +109,32 @@ public class GlobalResolver {
      * @return Concatenated String
      */
 
-    public String resolveConcatQuery(String y){      
+    public String resolveConcatQuery(String concatQuery){      
         // Remove &quot;
-        y=y.replace("&quot;", "");
+        concatQuery=concatQuery.replace("&quot;", "");
         // Remove extra quotes
-        y=y.replace("\"", "");
+        concatQuery=concatQuery.replace("\"", "");
         
         String result="";
-        if(y.contains("concat")){           
-            String a=y.substring(y.indexOf("(")+1,y.indexOf(","));
-            String b=y.substring(y.indexOf(",")+1,y.indexOf(")"));
-            if(a.contains("GlobalVariables")){
-                a=getValueFromGlobalExpr(a);
+        if(concatQuery.contains("concat")){           
+            String expr1=concatQuery.substring(concatQuery.indexOf("(")+1,concatQuery.indexOf(","));
+            String expr2=concatQuery.substring(concatQuery.indexOf(",")+1,concatQuery.indexOf(")"));
+            if(expr1.contains("GlobalVariables")){
+                expr1=getValueFromGlobalExpr(expr1);
             }
-            if(b.contains("GlobalVariables")){
-                b=getValueFromGlobalExpr(b);
+            if(expr2.contains("GlobalVariables")){
+                expr2=getValueFromGlobalExpr(expr2);
             } else {
-                if(b.contains("/"))
-                    b=b.replace("/", "");
+                if(expr2.contains("/"))
+                    expr2=expr2.replace("/", "");
             }
-            if(b.startsWith("\'")&&b.endsWith("\'"))
-                b=b.replace("\'", "");
-            if(a.endsWith("\\") && b.startsWith("\\"))
-                return a+b.substring(1);
-            if(a.endsWith("\\") || b.startsWith("\\"))
-                return a+b;
-            return a+"\\"+b;
+            if(expr2.startsWith("\'")&&expr2.endsWith("\'"))
+                expr2=expr2.replace("\'", "");
+            if(expr1.endsWith("\\") && expr2.startsWith("\\"))
+                return expr1+expr2.substring(1);
+            if(expr1.endsWith("\\") || expr2.startsWith("\\"))
+                return expr1+expr2;
+            return expr1+"\\"+expr2;
         }
         System.err.println("NOT A CONCAT QUERY");
         return null;
