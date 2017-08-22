@@ -1,10 +1,8 @@
 package com.tek.muleautomator.element;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,6 +10,13 @@ import org.w3c.dom.NodeList;
 
 public class JDBCElement {
 
+	private static String generateQueryString(String preparedQuery, List<String> params){
+		if(!preparedQuery.contains("?"))
+			return preparedQuery;
+		for(String a:params)
+			preparedQuery=preparedQuery.replaceFirst("\\?",":"+a);
+		return preparedQuery;
+	}
 	
 	public static class JDBCUpdateActivity {
 		private static String description, connectionPath, activityType;
@@ -19,6 +24,7 @@ public class JDBCElement {
 		private String sqlQuery;
 		private List<String> queryParams;
 		private boolean commit, batchUpdate, emptyStrAsNil;
+		private String namedParamsQuery;
 		
 		public JDBCUpdateActivity(Node targetNode){
 			queryParams=new ArrayList<>();
@@ -38,7 +44,17 @@ public class JDBCElement {
         			queryParams.add(currParam.getElementsByTagName("parameterName").item(0).getTextContent());
         		}
         	}
+        	this.namedParamsQuery=generateQueryString(this.sqlQuery, this.queryParams);
+        	
 		}
+		
+		
+
+		public String getNamedParamsQuery() {
+			return namedParamsQuery;
+		}
+
+
 
 		public static String getDescription() {
 			return description;
@@ -80,7 +96,7 @@ public class JDBCElement {
 		private String sqlQuery;
 		private List<String> queryParams;
 		private boolean commit, batchUpdate, emptyStrAsNil;
-		
+		private String namedParamsQuery;
 		public JDBCQueryActivity(Node targetNode){
 			queryParams=new ArrayList<>();
 			JDBCUpdateActivity.description="The JDBC Query activity performs the specified SQL SELECT statement";
@@ -99,6 +115,11 @@ public class JDBCElement {
         			queryParams.add(currParam.getElementsByTagName("parameterName").item(0).getTextContent());
         		}
         	}
+        	this.namedParamsQuery=generateQueryString(this.sqlQuery, this.queryParams);
+		}
+		
+		public String getNamedParamsQuery() {
+			return namedParamsQuery;
 		}
 
 		public static String getDescription() {
@@ -141,39 +162,73 @@ public class JDBCElement {
 		private boolean emptyStrAsNil;
 		private String procedureName;
 		private String packageName;
-		private List<ProcedureCallParameter> params;
-		class ProcedureCallParameter{
-			String colName, typeName;
-			int colType, dataType;
-			public String getColName() {
-				return colName;
-			}
-			public void setColName(String colName) {
-				this.colName = colName;
-			}
-			public String getTypeName() {
-				return typeName;
-			}
-			public void setTypeName(String typeName) {
-				this.typeName = typeName;
-			}
-			public int getColType() {
-				return colType;
-			}
-			public void setColType(int colType) {
-				this.colType = colType;
-			}
-			public int getDataType() {
-				return dataType;
-			}
-			public void setDataType(int dataType) {
-				this.dataType = dataType;
-			}
-			
-			
-			
-		}
+		private List<String> params;
+		private String namedParamQuery;
 		
+		public static String getDescription() {
+			return description;
+		}
+
+		public static void setDescription(String description) {
+			JDBCCallActivity.description = description;
+		}
+
+		public int getTIMEOUT() {
+			return TIMEOUT;
+		}
+
+		public void setTIMEOUT(int tIMEOUT) {
+			TIMEOUT = tIMEOUT;
+		}
+
+		public int getMaxRows() {
+			return maxRows;
+		}
+
+		public void setMaxRows(int maxRows) {
+			this.maxRows = maxRows;
+		}
+
+		public boolean isEmptyStrAsNil() {
+			return emptyStrAsNil;
+		}
+
+		public void setEmptyStrAsNil(boolean emptyStrAsNil) {
+			this.emptyStrAsNil = emptyStrAsNil;
+		}
+
+		public String getProcedureName() {
+			return procedureName;
+		}
+
+		public void setProcedureName(String procedureName) {
+			this.procedureName = procedureName;
+		}
+
+		public String getPackageName() {
+			return packageName;
+		}
+
+		public void setPackageName(String packageName) {
+			this.packageName = packageName;
+		}
+
+		public List<String> getParams() {
+			return params;
+		}
+
+		public void setParams(List<String> params) {
+			this.params = params;
+		}
+
+		public String getNamedParamQuery() {
+			return namedParamQuery;
+		}
+
+		public void setNamedParamQuery(String namedParamQuery) {
+			this.namedParamQuery = namedParamQuery;
+		}
+
 		public JDBCCallActivity(Node targetNode){
 			this.packageName="default.package";
 			JDBCCallActivity.description="The JDBC Call Procedure activity calls a database procedure using the specified JDBC connection";
@@ -186,17 +241,22 @@ public class JDBCElement {
         	this.emptyStrAsNil=rootActivityElement.getElementsByTagName("emptyStrAsNil").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("emptyStrAsNil").item(0).getTextContent()):false;
 			this.procedureName=rootActivityElement.getElementsByTagName("ProcedureName").item(0).getTextContent();
 			
-			NodeList allParamsNodeList=rootActivityElement.getElementsByTagName("parameter");
+			NodeList allParamsNodeList=rootActivityElement.getElementsByTagName("inputSet").item(0).getChildNodes();
 			this.params=new ArrayList<>();
+			
 			for(int i=0;i<allParamsNodeList.getLength();++i){
-				Element currParam=(Element)allParamsNodeList.item(i);
-				ProcedureCallParameter pcp=new ProcedureCallParameter();
-				pcp.setColName(currParam.getElementsByTagName("colName").item(0).getTextContent());
-				pcp.setColType(Integer.valueOf(currParam.getElementsByTagName("colType").item(0).getTextContent()));
-				pcp.setDataType(Integer.valueOf(currParam.getElementsByTagName("dataType").item(0).getTextContent()));
-				pcp.setTypeName(currParam.getElementsByTagName("typeName").item(0).getTextContent());
-				this.params.add(pcp);
+				Element curr=(Element)allParamsNodeList.item(i);
+				params.add(curr.getNodeName());
 			}
+			this.namedParamQuery="{call "+this.procedureName+"(";
+			for(int i=0;i<params.size();++i){
+				this.namedParamQuery+=":"+params.get(i);
+				if(i+1<params.size()){
+					this.namedParamQuery+=",";
+				}
+			}
+			
+			this.namedParamQuery+=")}";
 			
 		}
 	}

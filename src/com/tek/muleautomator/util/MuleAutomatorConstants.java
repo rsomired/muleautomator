@@ -12,8 +12,10 @@ import java.io.File;
  * @author asgupta
  */
 public class MuleAutomatorConstants {
+	public static String TIBCO_PROJECT_ROOT_FOLDER;
     static String seperator = File.separator;
     public static GlobalResolver globalResolver;
+   
     
     public static void loadGlobalVars(String location) {
     	globalResolver=new GlobalResolver(location);

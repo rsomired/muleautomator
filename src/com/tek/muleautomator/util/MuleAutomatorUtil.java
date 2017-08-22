@@ -1,6 +1,7 @@
 package com.tek.muleautomator.util;
 
 import java.io.File;
+import java.util.List;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -39,6 +40,24 @@ public class MuleAutomatorUtil {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public static void fileFinder(File rootFile, List<File> fileList, String[] fileTypes) {
+		if (rootFile == null)
+			return;
+		if (rootFile.isDirectory()) {
+			for (int i = 0; i < rootFile.listFiles().length; ++i) {
+				fileFinder(rootFile.listFiles()[i], fileList, fileTypes);
+			}
+		} else {
+			for (String fileType : fileTypes) {
+				if (!fileType.startsWith("."))
+					fileType = "." + fileType;
+				if (rootFile.getName().toLowerCase().endsWith(fileType)) {
+					fileList.add(rootFile);
+				}
+			}
 		}
 	}
 

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tek.muleautomator.util.MuleAutomatorConstants;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 
 public class MuleProjectSetup {
 
@@ -32,7 +33,7 @@ public class MuleProjectSetup {
 			deleteDefaultTestFiles(new File(testclassFilesPath));
 			MuleAutomatorConstants.loadGlobalVars(defaultVarsPath);
 			List<File> tibcoFiles = new ArrayList<>();
-			fileFinder(new File(tibcoProjectLocationRootFolder), tibcoFiles, new String[] { "wsdl", "xsd", "xsl", "substvar"});
+			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), tibcoFiles, new String[] { "wsdl", "xsd", "xsl", "substvar"});
 			moveTibcoFilesToMuleProject(tibcoFiles, muleResourcesPath);
 		} catch (Exception e) {
 			System.err.println(e);
@@ -58,24 +59,7 @@ public class MuleProjectSetup {
 		}
 	}
 
-	private void fileFinder(File rootFile, List<File> fileList, String[] fileTypes) {
-		if (rootFile == null)
-			return;
-		if (rootFile.isDirectory()) {
-			for (int i = 0; i < rootFile.listFiles().length; ++i) {
-				fileFinder(rootFile.listFiles()[i], fileList, fileTypes);
-			}
-		} else {
-			for (String fileType : fileTypes) {
-				if (!fileType.startsWith("."))
-					fileType = "." + fileType;
-				if (rootFile.getName().toLowerCase().endsWith(fileType)) {
-					fileList.add(rootFile);
-				}
-			}
-		}
-	}
-
+	
 	private void moveMuleProjectToSpecifiedDirectory(String sourceFile, String destinationFile) {
 		File srcFile = new File(sourceFile);
 		File destFile = new File(destinationFile);

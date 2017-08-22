@@ -53,6 +53,7 @@ public class MuleAutomateManager {
 			
 			// Loads all the Global Variables into MuleAutomatorConstants.globalResolver Object
 			
+			MuleAutomatorConstants.TIBCO_PROJECT_ROOT_FOLDER=tibcoProjectLocationRootFolder;
 			String projectName = getProjectName(tibcoProcessLocation);
 			createMuleProject(tibcoProjectLocationRootFolder, projectName, workspace);
 			String muleConfigPath = MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName);

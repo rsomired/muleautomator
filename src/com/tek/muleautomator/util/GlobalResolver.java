@@ -41,23 +41,7 @@ public class GlobalResolver {
         this(new File(location));
     }
     
-    private void fileFinder(File rootFile, List<File> fileList, String[] fileTypes) {
-		if (rootFile == null)
-			return;
-		if (rootFile.isDirectory()) {
-			for (int i = 0; i < rootFile.listFiles().length; ++i) {
-				fileFinder(rootFile.listFiles()[i], fileList, fileTypes);
-			}
-		} else {
-			for (String fileType : fileTypes) {
-				if (!fileType.startsWith("."))
-					fileType = "." + fileType;
-				if (rootFile.getName().toLowerCase().endsWith(fileType)) {
-					fileList.add(rootFile);
-				}
-			}
-		}
-	}
+    
     
     
     private String getRelativePathFrom(String path1, String path2){
@@ -71,7 +55,7 @@ public class GlobalResolver {
     
     private void generateGlobalVarMap(File location) throws IOException, ParserConfigurationException, SAXException{
         List<File> defVarFiles=new ArrayList();
-        fileFinder(location, defVarFiles, new String[]{"substvar"});
+        MuleAutomatorUtil.fileFinder(location, defVarFiles, new String[]{"substvar"});
         if(defVarFiles.size()==0){
             System.err.println("No default Var files found in "+location.getPath());
             return;

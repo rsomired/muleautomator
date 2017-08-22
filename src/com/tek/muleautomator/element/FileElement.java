@@ -9,6 +9,8 @@ package com.tek.muleautomator.element;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import com.tek.muleautomator.util.MuleAutomatorConstants;
+
 public class FileElement {
     
 	
@@ -34,6 +36,14 @@ public class FileElement {
         	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
         	this.INPUT_fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(this.INPUT_fileName.contains("_globalVariables")){
+        		if(this.INPUT_fileName.contains("concat")){
+        			this.INPUT_fileName=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fileName);
+        			
+        		} else {
+        			this.INPUT_fileName=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_fileName);
+        		}
+        	}
         	Element textContentElement=(Element)rootActivityElement.getElementsByTagName("textContent").item(0);
         	if(textContentElement!=null){
         		this.INPUT_textContent=textContentElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
@@ -152,6 +162,14 @@ public class FileElement {
         	this.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
         	this.INPUT_fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(this.INPUT_fileName.contains("_globalVariables")){
+        		if(this.INPUT_fileName.contains("concat")){
+        			this.INPUT_fileName=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fileName);
+        			
+        		} else {
+        			this.INPUT_fileName=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_fileName);
+        		}
+        	}
         }
 
         public String getActivityType() {
@@ -217,6 +235,14 @@ public class FileElement {
         	Element encodingElement=(Element)rootActivityElement.getElementsByTagName("encoding").item(0);
         	if(encodingElement!=null){
         		this.INPUT_encoding=encodingElement.getTextContent();
+        	}
+        	if(this.INPUT_fileName.contains("_globalVariables")){
+        		if(this.INPUT_fileName.contains("concat")){
+        			this.INPUT_fileName=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fileName);
+        			
+        		} else {
+        			this.INPUT_fileName=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_fileName);
+        		}
         	}
         }
         
@@ -312,7 +338,15 @@ public class FileElement {
         	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
         	this.INPUT_fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-    	}
+        	if(this.INPUT_fileName.contains("_globalVariables")){
+        		if(this.INPUT_fileName.contains("concat")){
+        			this.INPUT_fileName=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fileName);
+        			
+        		} else {
+        			this.INPUT_fileName=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_fileName);
+        		}
+        	}
+		}
     	
     }
     	
@@ -347,7 +381,15 @@ public class FileElement {
         	this.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
         	this.INPUT_fileName=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-    	}
+        	if(this.INPUT_fileName.contains("_globalVariables")){
+        		if(this.INPUT_fileName.contains("concat")){
+        			this.INPUT_fileName=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fileName);
+        			
+        		} else {
+        			this.INPUT_fileName=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_fileName);
+        		}
+        	}
+		}
     	
     }
 
@@ -369,6 +411,23 @@ public class FileElement {
         	this.INPUT_fromFileName=fileFromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	Element filetoElement=(Element)rootActivityElement.getElementsByTagName("toFileName").item(0);
         	this.INPUT_toFileName=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(this.INPUT_fromFileName.contains("_globalVariables")){
+        		if(this.INPUT_fromFileName.contains("concat")){
+        			this.INPUT_fromFileName=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fromFileName);
+        			
+        		} else {
+        			this.INPUT_fromFileName=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_fromFileName);
+        		}
+        	}
+        	
+        	if(this.INPUT_toFileName.contains("_globalVariables")){
+        		if(this.INPUT_toFileName.contains("concat")){
+        			this.INPUT_toFileName=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_toFileName);
+        			
+        		} else {
+        			this.INPUT_toFileName=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_toFileName);
+        		}
+        	}
     	}
 
 		public String getActivityType() {
@@ -451,7 +510,23 @@ public class FileElement {
         	
         	this.CONFIG_overwrite=rootActivityElement.getElementsByTagName("overwrite").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("overwrite").item(0).getTextContent()):false;
         	this.CONFIG_createMissingDirectories=rootActivityElement.getElementsByTagName("createMissingDirectories").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("createMissingDirectories").item(0).getTextContent()):false;
-			
+        	if(this.INPUT_fromFileName.contains("_globalVariables")){
+        		if(this.INPUT_fromFileName.contains("concat")){
+        			this.INPUT_fromFileName=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fromFileName);
+        			
+        		} else {
+        			this.INPUT_fromFileName=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_fromFileName);
+        		}
+        	}
+        	
+        	if(this.INPUT_toFileName.contains("_globalVariables")){
+        		if(this.INPUT_toFileName.contains("concat")){
+        			this.INPUT_toFileName=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_toFileName);
+        			
+        		} else {
+        			this.INPUT_toFileName=MuleAutomatorConstants.globalResolver.getValueFromGlobalExpr(this.INPUT_toFileName);
+        		}
+        	}
         	
     	}
 
