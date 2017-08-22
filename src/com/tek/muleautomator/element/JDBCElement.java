@@ -2,6 +2,7 @@ package com.tek.muleautomator.element;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +17,11 @@ public class JDBCElement {
 		private static String description, connectionPath, activityType;
 		private int TIMEOUT;
 		private String sqlQuery;
-		private Map<String, String> queryParams;
+		private List<String> queryParams;
 		private boolean commit, batchUpdate, emptyStrAsNil;
 		
 		public JDBCUpdateActivity(Node targetNode){
-			queryParams=new LinkedHashMap<>();
+			queryParams=new ArrayList<>();
 			JDBCUpdateActivity.description="The JDBC Update activity performs the specified SQL INSERT, UPDATE, or DELETE statement";
 			Element rootActivityElement = (Element)targetNode;
         	JDBCUpdateActivity.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
@@ -34,7 +35,7 @@ public class JDBCElement {
         		NodeList params=rootActivityElement.getElementsByTagName("parameter");
         		for(int i=0;i<params.getLength();++i){
         			Element currParam=(Element)params.item(i);
-        			queryParams.put(currParam.getElementsByTagName("parameterName").item(0).getTextContent(), currParam.getElementsByTagName("dataType").item(0).getTextContent());
+        			queryParams.add(currParam.getElementsByTagName("parameterName").item(0).getTextContent());
         		}
         	}
 		}
@@ -59,7 +60,7 @@ public class JDBCElement {
 			return sqlQuery;
 		}
 
-		public Map<String, String> getQueryParams() {
+		public List<String> getQueryParams() {
 			return queryParams;
 		}
 
@@ -77,11 +78,11 @@ public class JDBCElement {
 		private static String description, connectionPath, activityType;
 		private int TIMEOUT;
 		private String sqlQuery;
-		private Map<String, String> queryParams;
+		private List<String> queryParams;
 		private boolean commit, batchUpdate, emptyStrAsNil;
 		
 		public JDBCQueryActivity(Node targetNode){
-			queryParams=new LinkedHashMap<>();
+			queryParams=new ArrayList<>();
 			JDBCUpdateActivity.description="The JDBC Query activity performs the specified SQL SELECT statement";
 			Element rootActivityElement = (Element)targetNode;
         	JDBCUpdateActivity.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
@@ -95,7 +96,7 @@ public class JDBCElement {
         		NodeList params=rootActivityElement.getElementsByTagName("parameter");
         		for(int i=0;i<params.getLength();++i){
         			Element currParam=(Element)params.item(i);
-        			queryParams.put(currParam.getElementsByTagName("parameterName").item(0).getTextContent(), currParam.getElementsByTagName("dataType").item(0).getTextContent());
+        			queryParams.add(currParam.getElementsByTagName("parameterName").item(0).getTextContent());
         		}
         	}
 		}
@@ -120,7 +121,7 @@ public class JDBCElement {
 			return sqlQuery;
 		}
 
-		public Map<String, String> getQueryParams() {
+		public List<String> getQueryParams() {
 			return queryParams;
 		}
 
