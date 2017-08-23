@@ -39,7 +39,6 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-
 			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/JDBC/";
 			String tibcoProcessLocation = "D:/Tibco_To_Mule/JDBC/Sto_Proc/Count_Rec.process";
 			String workspace = "D://mule2";
@@ -60,7 +59,7 @@ public class MuleAutomateManager {
 			if (new File(muleConfigPath).exists()) {
 				flowElement = createMuleFlow(muleConfigPath, projectName);
 			}
-			generateMuleFlowFromTibcoProcess(tibcoProcessLocation, muleConfigPath, flowElement);
+			generateMuleFlowFromTibcoProcessOrderByTransitions(tibcoProcessLocation, muleConfigPath, flowElement);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
