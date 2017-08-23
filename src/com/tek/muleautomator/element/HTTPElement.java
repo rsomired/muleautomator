@@ -261,7 +261,7 @@ public class HTTPElement {
 	 //this.CONFIG_host=rootActivityElement.getElementsByTagName("host").item(0).getTextContent();
 	 this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent()):80;
 	 //this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent();
-	 this.CONFIG_authentication=((Element)rootActivityElement.getElementsByTagName("Authorization").item(0)).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue();
+	 //this.CONFIG_authentication=((Element)rootActivityElement.getElementsByTagName("Authorization").item(0)).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue();
 	 NodeList paramTag=rootActivityElement.getElementsByTagName("parameters");
 	 if(paramTag.getLength()>0){
 		 NodeList params=((Element)paramTag).getChildNodes();
