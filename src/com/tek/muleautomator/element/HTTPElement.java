@@ -264,10 +264,12 @@ public class HTTPElement {
 	 //this.CONFIG_authentication=((Element)rootActivityElement.getElementsByTagName("Authorization").item(0)).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue();
 	 NodeList paramTag=rootActivityElement.getElementsByTagName("parameters");
 	 if(paramTag.getLength()>0){
-		 NodeList params=((Element)paramTag).getChildNodes();
+		 NodeList params=paramTag.item(0).getChildNodes();
 		 for(int i=0;i<params.getLength();++i){
-			 this.CONFIG_parameters.put(params.item(i).getNodeName(), params.item(i).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue());
-		 }
+			 if(params.item(i).getNodeType()==Node.ELEMENT_NODE){
+				 //this.CONFIG_parameters.put(params.item(i).getNodeName(), params.item(i).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue());
+			 }
+			}
 	 }
 	}
 	public static String getDescription() {
