@@ -258,7 +258,7 @@ public class HTTPElement {
 	 Element rootActivityElement = (Element)targetNode;
 	 HTTPSendRequestActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
 	// HTTPSendRequestActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
-	 this.CONFIG_host=rootActivityElement.getElementsByTagName("host").item(0).getTextContent();
+	 //this.CONFIG_host=rootActivityElement.getElementsByTagName("host").item(0).getTextContent();
 	 this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent()):80;
 	 //this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent();
 	 this.CONFIG_authentication=((Element)rootActivityElement.getElementsByTagName("Authorization").item(0)).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue();
