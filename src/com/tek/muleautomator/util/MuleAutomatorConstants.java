@@ -14,11 +14,11 @@ import java.io.File;
 public class MuleAutomatorConstants {
 	public static String TIBCO_PROJECT_ROOT_FOLDER;
     static String seperator = File.separator;
-    public static GlobalResolver globalResolver;
+    public static GlobalVarsResolver globalVarsResolver;
    
     
     public static void loadGlobalVars(String location) {
-    	globalResolver=new GlobalResolver(location);
+    	globalVarsResolver=new GlobalVarsResolver(location);
     }
     
     public static String generateMavenCommand(String projectName){

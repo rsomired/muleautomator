@@ -25,10 +25,10 @@ import org.xml.sax.SAXException;
  *
  * @author asgupta
  */
-public class GlobalResolver {
+public class GlobalVarsResolver {
     Map<String, String> map;
     
-    public GlobalResolver(File location){
+    public GlobalVarsResolver(File location){
         map=new HashMap<>();
         try{
             generateGlobalVarMap(location);
@@ -37,7 +37,7 @@ public class GlobalResolver {
         }
     }
     
-    public GlobalResolver(String location){
+    public GlobalVarsResolver(String location){
         this(new File(location));
     }
     

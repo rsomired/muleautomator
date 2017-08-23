@@ -29,6 +29,10 @@ public class TransitionElement {
 	public void setCondition(String condition) {
 		this.condition = condition;
 	}
+	@Override
+	public String toString() {
+		return "TransitionElement [from=" + from + ", to=" + to + ", condition=" + condition + "]";
+	}
 	
 
 }

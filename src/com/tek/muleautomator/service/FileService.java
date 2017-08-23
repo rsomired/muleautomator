@@ -61,12 +61,12 @@ public class FileService {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 
 
-			Element filesetPayload=doc.createElement("set-payload");
+			/*Element filesetPayload=doc.createElement("set-payload");
 			filesetPayload.setAttribute("value", "sample");
 			filesetPayload.setAttribute("fileName", fileWriteActivity.getINPUT_fileName());
 			filesetPayload.setAttribute("doc:name", "Set Payload");
 			flow.appendChild(filesetPayload);
-
+*/
 			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
 
 			Element fileOutBound=doc.createElement("file:outbound-endpoint");

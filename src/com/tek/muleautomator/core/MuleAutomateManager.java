@@ -39,16 +39,9 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/JDBC/";
-			String tibcoProcessLocation = "D:/Tibco_To_Mule/JDBC/Sto_Proc/Count_Rec.process";
-			String workspace = "D://mule2";
-			/*String tibcoProjectLocationRootFolder = "D:/Migration/Sample";
-			String tibcoProcessLocation = "D:/Migration/Sample/FileProject/ProcessDefinition.process";
-			String workspace = "D:/Migration/projects";*/
-			/*String tibcoProjectLocationRootFolder = "D:/Migration/Tibcocode";
-			String tibcoProcessLocation = "D:/Migration/Tibcocode/Services/JMS/AdditionSvc.process";
-			String workspace = "D://mule"
-					;*/
+			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/HTTP/Exception-Response/";
+			String tibcoProcessLocation = "D:/Tibco_To_Mule/HTTP/Exception-Response/Process/Receiver.process";
+			String workspace = "D:/mule44";
 			
 			// Loads all the Global Variables into MuleAutomatorConstants.globalResolver Object
 			
@@ -148,6 +141,9 @@ public class MuleAutomateManager {
 						break;
 					}
 				}
+				if(activity.equals("End")){
+					break;
+				}
 			}
 			return tranistionsByOrder;
 		}
@@ -220,6 +216,8 @@ public class MuleAutomateManager {
 					case "file": FileHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 					break;
 					case "jdbc": JDBCHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+					break;
+					case "http": HTTPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 					break;
 					case "soap": SOAPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 					break;

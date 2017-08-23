@@ -109,7 +109,7 @@ public class HTTPService {
 			Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-			if (isHttpRequestConfigRequired(muleConfigPath)) {
+			/*if (isHttpRequestConfigRequired(muleConfigPath)) {
 				httpRequestConfiguration(muleConfigPath, flow);
 			}
 			Element httpRequest = doc.createElement("http:request");
@@ -129,7 +129,7 @@ public class HTTPService {
 
 			httpRequest.appendChild(requestBuilder);
 			flow.appendChild(httpRequest);
-
+*/
 			Element httpResponse = doc.createElement("set-payload");
 			httpResponse.setAttribute("value", "#[payload]");
 			httpResponse.setAttribute("doc:name", "Set Payload");
