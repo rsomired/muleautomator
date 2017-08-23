@@ -110,7 +110,6 @@ public class JDBCService {
 				dbParam.setAttribute("value", "#[payload."+jdbcCallActivity.getParams().get(i)+"]");
 				stordProc.appendChild(dbParam);
 			}
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
 
 			flow.appendChild(stordProc);
 
@@ -144,8 +143,6 @@ public class JDBCService {
 				dbSelect.appendChild(dbParamAccountType);
 			}
 			
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
-
 			flow.appendChild(dbSelect);
 
 
@@ -182,8 +179,6 @@ public class JDBCService {
 			}
 			
 
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
-
 			flow.appendChild(dbInsert);	
 
 
@@ -218,8 +213,6 @@ public class JDBCService {
 				dbUpdate.appendChild(dbParam);
 			
 			}
-
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
 
 			flow.appendChild(dbUpdate);	
 
@@ -256,10 +249,7 @@ public class JDBCService {
 				dbDelete.appendChild(dbParam);
 			}
 			
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
-
 			flow.appendChild(dbDelete);	
-
 
 		}
 		catch (Exception e) {

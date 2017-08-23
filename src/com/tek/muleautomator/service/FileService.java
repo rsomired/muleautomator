@@ -42,8 +42,6 @@ public class FileService {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
-
 			Element fileOutBound=doc.createElement("file:outbound-endpoint");
 			fileOutBound.setAttribute("responseTimeout", "10000");
 			fileOutBound.setAttribute("doc:name", "File");
@@ -66,8 +64,8 @@ public class FileService {
 			filesetPayload.setAttribute("fileName", fileWriteActivity.getINPUT_fileName());
 			filesetPayload.setAttribute("doc:name", "Set Payload");
 			flow.appendChild(filesetPayload);
-*/
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
+
+			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);*/
 
 			Element fileOutBound=doc.createElement("file:outbound-endpoint");
 			fileOutBound.setAttribute("responseTimeout", "10000");
@@ -104,8 +102,6 @@ public class FileService {
 			fileInBound.setAttribute("path", fileRemoveActivity.getINPUT_filePath());
 			flow.appendChild(fileInBound);
 
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -123,8 +119,6 @@ public class FileService {
 			fileInBound.setAttribute("doc:name", "File");
 			fileInBound.setAttribute("path", fileReadActivity.getINPUT_filePath());
 			flow.appendChild(fileInBound);
-
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,8 +150,6 @@ public class FileService {
 			fileInBound.setAttribute("moveToDirectory", fileRenameActivity.getINPUT_toFilePath());
 			flow.appendChild(fileInBound);
 
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -176,8 +168,6 @@ public class FileService {
 			fileInBound.setAttribute("path", "C:/Users/nshaik/Desktop/source");
 			fileInBound.setAttribute("moveToDirectory", "C:/Users/nshaik/Desktop/Destination");
 			flow.appendChild(fileInBound);
-
-			MuleAutomatorUtil.loggerElement(muleConfigPath,flow);
 
 		} catch (Exception e) {
 			e.printStackTrace();
