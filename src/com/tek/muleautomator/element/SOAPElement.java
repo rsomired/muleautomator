@@ -1,6 +1,7 @@
 package com.tek.muleautomator.element;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.w3c.dom.Element;
@@ -13,30 +14,33 @@ public class SOAPElement {
 	  private static String CONFIG_description;
 	  private static String CONFIG_connectionPath;
 	  private static String CONFIG_activityType;
-	  private Map<String, String> CONFIG_operationParams;
+	  private List<String> CONFIG_operationParams;
 	  private String CONFIG_service,CONFIG_port,CONFIG_soapAction,CONFIG_timeout,CONFIG_attachmentStyle, CONFIG_operationType ;
 	  private String INPUT_endpointURL,INPUT_host,INPUT_inputMessage,OUTPUT_outputMessage,OUTPUT_headers;
 	  private Map<String, String> OUTPUT_mimeHeaders,OUTPUT_mimeEnvelopeElement;
 	  
 	  public SOAPSendReceiveActivity(Node targetNode)
 	  {
-	   this.CONFIG_operationParams=new LinkedHashMap<>();
+	   this.CONFIG_operationParams=new ArrayList<>();
 	   SOAPSendReceiveActivity.CONFIG_description="The SOAP Request Reply activity performs a request on the specified web service and optionally expects a reply from the webservice. You can invoke both document and RPC web serviceswith this activity.";
 	   Element rootActivityElement = (Element)targetNode;
 	   SOAPSendReceiveActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-	   SOAPSendReceiveActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
+	   //SOAPSendReceiveActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
 	   this.CONFIG_service=rootActivityElement.getElementsByTagName("service").item(0).getTextContent();
 	   this.CONFIG_soapAction=rootActivityElement.getElementsByTagName("soapAction").item(0).getTextContent();
 	   this.CONFIG_timeout=rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent();
 	   this.CONFIG_attachmentStyle=rootActivityElement.getElementsByTagName("soapAttachmentStyle").item(0).getTextContent();
-	   this.CONFIG_operationType=rootActivityElement.getElementsByTagName("Operation").item(0).getTextContent();
+	   this.CONFIG_operationType=rootActivityElement.getElementsByTagName("operation").item(0).getTextContent();
 	   this.INPUT_endpointURL=rootActivityElement.getElementsByTagName("endpointURL").item(0).getTextContent();
 	   this.CONFIG_port=rootActivityElement.getElementsByTagName("servicePort").item(0).getTextContent();
 	    NodeList paramTag=rootActivityElement.getElementsByTagName(this.CONFIG_operationType);
+	    
 	     if(paramTag.getLength()>0){
-	      NodeList params=((Element)paramTag).getChildNodes();
-	      for(int i=0;i<params.getLength();++i){
-	       this.CONFIG_operationParams.put(params.item(i).getNodeName(), params.item(i).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue());
+	      NodeList params=paramTag.item(0).getChildNodes();
+	      for(int i=0;i<params.getLength();++i){    	  
+	    	  if(params.item(i).getNodeType()!=Node.ELEMENT_NODE)
+	    		  continue;
+	       this.CONFIG_operationParams.add(params.item(i).getNodeName());
 	      }
 	 }
 	 }
@@ -65,11 +69,11 @@ public class SOAPElement {
 		CONFIG_activityType = cONFIG_activityType;
 	}
 
-	public Map<String, String> getCONFIG_operationParams() {
+	public List<String> getCONFIG_operationParams() {
 		return CONFIG_operationParams;
 	}
 
-	public void setCONFIG_operationParams(Map<String, String> cONFIG_operationParams) {
+	public void setCONFIG_operationParams(List<String> cONFIG_operationParams) {
 		CONFIG_operationParams = cONFIG_operationParams;
 	}
 
@@ -268,7 +272,7 @@ public class SOAPElement {
 		   SOAPEventSourceActivity.CONFIG_description="The SOAP Event Source process starter creates a process instance for incoming SOAP requests. SOAP is a standard protocol for invoking web services. This allows you to create a web service using process definitions..";
 		   Element rootActivityElement = (Element)targetNode;
 		   SOAPSendReceiveActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-		   SOAPSendReceiveActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
+		   //SOAPSendReceiveActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
 		   String wsdlC=rootActivityElement.getElementsByTagName("service").item(0).getTextContent();
 		   this.CONFIG_portTypePrefixInWSDL=wsdlC.split(":")[0];
 		   this.CONFIG_portTypeNameInWSDL=wsdlC.split(":")[1];

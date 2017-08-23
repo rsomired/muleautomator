@@ -23,7 +23,7 @@ public class FileElement {
         private boolean CONFIG_append;
         
         private String INPUT_fileName;
-        private String INPUT_filePath;
+        private String INPUT_filePath="";
         private String INPUT_textContent;
         private byte[] INPUT_binaryContent;
         private String INPUT_encoding;
@@ -36,7 +36,9 @@ public class FileElement {
         	this.CONFIG_description="The Write File activity writes content to the specified file.";
         	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
-        	this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(fileElement!=null)
+        		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	
         	if(this.INPUT_filePath.contains("_globalVariables")){
         		String x=null;
         		if(this.INPUT_filePath.contains("concat")){
@@ -166,7 +168,7 @@ public class FileElement {
     
     public class FileCreateActivity {
         private String CONFIG_activityType,CONFIG_description,CONFIG_Overwrite,CONFIG_isADirectory ,CONFIG_createNonExistingDirectories;
-        private String INPUT_fileName, INPUT_filePath;
+        private String INPUT_fileName, INPUT_filePath="";
         private String OUTPUT_fileInfo,OUTPUT_fullName,OUTPUT_fileName,OUTPUT_location,OUTPUT_configuredFileName,OUTPUT_type;
         private String OUTPUT_readProtected,OUTPUT_writeProtected,OUTPUT_size,OUTPUT_lastModified;
         
@@ -175,7 +177,8 @@ public class FileElement {
         	Element rootActivityElement = (Element)activityNode;
         	this.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
-        	this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(fileElement!=null)
+        		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	if(this.INPUT_filePath.contains("_globalVariables")){
         		String x=null;
         		if(this.INPUT_filePath.contains("concat")){
@@ -222,7 +225,7 @@ public class FileElement {
     public class FileReadActivity {
     	private String CONFIG_activityType,CONFIG_description;
     	private String CONFIG_excludeFileContent, CONFIG_readAs;
-    	private String INPUT_fileName, INPUT_filePath,INPUT_encoding;
+    	private String INPUT_fileName, INPUT_filePath="",INPUT_encoding;
     	private String OUTPUT_fileInfo,OUTPUT_fullName,OUTPUT_fileName,OUTPUT_location,OUTPUT_configuredFileName,OUTPUT_type;
         private String OUTPUT_readProtected,OUTPUT_writeProtected,OUTPUT_size,OUTPUT_lastModified,OUTPUT_textContent,OUTPUT_binaryContent;
         public String getActivityType() {
@@ -271,7 +274,8 @@ public class FileElement {
         	this.CONFIG_description="The Read File activity is used to read a file and place its contents into the activity’s output. ";
         	this.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
-        	this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(fileElement!=null)
+        		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	Element encodingElement=(Element)rootActivityElement.getElementsByTagName("encoding").item(0);
         	if(encodingElement!=null){
         		this.INPUT_encoding=encodingElement.getTextContent();
@@ -299,7 +303,7 @@ public class FileElement {
     	private String activityType;
     	
     	private String CONFIG_description;
-    	private String INPUT_fileName, INPUT_filePath;
+    	private String INPUT_fileName, INPUT_filePath="";
     	
     	private String OUTPUT_location;
     	private boolean OUTPUT_readProtected, OUTPUT_writeProtected;
@@ -390,7 +394,8 @@ public class FileElement {
     		
         	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
-        	this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(fileElement!=null)
+        		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	if(this.INPUT_filePath.contains("_globalVariables")){
         		String x=null;
         		if(this.INPUT_filePath.contains("concat")){
@@ -440,7 +445,10 @@ public class FileElement {
     		this.CONFIG_description="The List Files activity returns information about files or directories, or a listing of all the files in the specified directory. ";
         	this.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
-        	this.INPUT_directoryPath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(fileElement!=null)
+        		this.INPUT_directoryPath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	else 
+        		this.INPUT_directoryPath="";
         	if(this.INPUT_directoryPath.contains("_globalVariables")){
         		if(this.INPUT_directoryPath.contains("concat")){
         			this.INPUT_directoryPath=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_directoryPath);
@@ -459,7 +467,7 @@ public class FileElement {
     	private boolean CONFIG_overwrite;
     	
     	private String INPUT_fromFileName, INPUT_toFileName;
-    	private String INPUT_fromFilePath, INPUT_toFilePath;
+    	private String INPUT_fromFilePath="", INPUT_toFilePath="";
     	
     	private String OUTPUT_location;
     	private boolean OUTPUT_writeProtected;
@@ -469,9 +477,11 @@ public class FileElement {
     		this.CONFIG_description="The Rename File activity is used to rename or move files. This activity can also rename directories, but you cannot use this activity to move a directory to a new location. ";
         	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileFromElement=(Element)rootActivityElement.getElementsByTagName("fromFileName").item(0);
-        	this.INPUT_fromFilePath=fileFromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(fileFromElement!=null)
+        		this.INPUT_fromFilePath=fileFromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	Element filetoElement=(Element)rootActivityElement.getElementsByTagName("toFileName").item(0);
-        	this.INPUT_toFilePath=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(filetoElement!=null)
+        		this.INPUT_toFilePath=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	
         	if(this.INPUT_fromFilePath.contains("_globalVariables")){
         		String resolvedPath=null;
@@ -581,16 +591,18 @@ public class FileElement {
     	private String CONFIG_description;
     	
     	private String INPUT_fromFileName, INPUT_toFileName;
-    	private String INPUT_fromFilePath, INPUT_toFilePath;
+    	private String INPUT_fromFilePath="", INPUT_toFilePath="";
     	
     	public FileCopyActivity(Node targetNode){
     		Element rootActivityElement = (Element)targetNode;
     		this.CONFIG_description="The Copy File activity allows you to copy files and directories to a new location";
         	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileFromElement=(Element)rootActivityElement.getElementsByTagName("fromFileName").item(0);
-        	this.INPUT_fromFilePath=fileFromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(fileFromElement!=null)
+        		this.INPUT_fromFilePath=fileFromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	Element filetoElement=(Element)rootActivityElement.getElementsByTagName("toFileName").item(0);
-        	this.INPUT_toFilePath=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	if(filetoElement!=null)
+        		this.INPUT_toFilePath=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	
         	this.CONFIG_overwrite=rootActivityElement.getElementsByTagName("overwrite").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("overwrite").item(0).getTextContent()):false;
         	this.CONFIG_createMissingDirectories=rootActivityElement.getElementsByTagName("createMissingDirectories").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("createMissingDirectories").item(0).getTextContent()):false;
