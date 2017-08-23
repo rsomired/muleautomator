@@ -3,7 +3,9 @@ package com.tek.muleautomator.core;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,9 +41,9 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/HTTP/Exception-Response/";
-			String tibcoProcessLocation = "D:/Tibco_To_Mule/HTTP/Exception-Response/Process/Receiver.process";
-			String workspace = "D:/mule44";
+			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Sample";
+			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Sample/FileProject/ProcessDefinition.process";
+			String workspace = "D:/mule";
 			
 			// Loads all the Global Variables into MuleAutomatorConstants.globalResolver Object
 			
@@ -200,14 +202,22 @@ public class MuleAutomateManager {
 		String pluginType=null;
 		try {
 			List<ActivityElement> activityElements = new ArrayList<>();
+			Map<String,ActivityElement> activityCache=new HashMap<>();
+			
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document docIn = documentBuilder.parse(new File(tibcoProcessPath));
 			List<TransitionElement> transitionElements = getTransitions(docIn);
+			
 			activityElements.addAll(getActivityTypes(docIn, "pd:starter"));
 			activityElements.addAll(getActivityTypes(docIn, "pd:activity"));
+			// Add all activity Elements to hashMap so that retrieval would be in O(1) Constant time.
+			for(ActivityElement currActElement: activityElements){
+				activityCache.put(currActElement.getActivityName(), currActElement);
+			}	
 			for(TransitionElement transitionElement: transitionElements){
-				ActivityElement activityElement = getActivityByTransition(transitionElement.getFrom(), activityElements);
+				// Constant Time Retrieval
+				ActivityElement activityElement = activityCache.get(transitionElement.getFrom());
 				if (activityElement != null){
 					pluginType = getPluginType(activityElement.getActivityType());
 					switch(pluginType){
@@ -245,7 +255,7 @@ public class MuleAutomateManager {
 	 */
 
 	private static String getPluginType(String activityType){
-		return activityType.substring(activityType.indexOf("plugin.")+"plugin.".length(),activityType.lastIndexOf("."));
+		return activityType.split("\\.")[3];
 	}
 
 	/**

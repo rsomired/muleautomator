@@ -139,7 +139,7 @@ public class HTTPElement {
 	HTTPReceiverActivity.CONFIG_description="Starts a process based on the receipt of a HTTP request";
 	   Element rootActivityElement = (Element)targetNode;
 	   HTTPReceiverActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-	   HTTPReceiverActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
+	   //HTTPReceiverActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
 	   this.CONFIG_outputMode=rootActivityElement.getElementsByTagName("outputMode").item(0).getTextContent();
 	   this.CONFIG_defaultEncoding=rootActivityElement.getElementsByTagName("defaultEncoding").item(0).getTextContent();
 	 }
@@ -234,7 +234,7 @@ public class HTTPElement {
 			 Element rootActivityElement = (Element)targetNode;
 			 this.key="defaultKey";
 			 HTTPWaitForRequest.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-			 HTTPWaitForRequest.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
+			 //HTTPWaitForRequest.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
 			 HTTPWaitForRequest.CONFIG_description="Waits for an incoming HTTP request in a process definition. The process instance suspends until the incoming HTTP request is received.";
 			 this.processTimeout=Integer.valueOf(rootActivityElement.getElementsByTagName("processTimeout").item(0).getTextContent());
 		}
@@ -257,7 +257,7 @@ public class HTTPElement {
 	 HTTPSendRequestActivity.CONFIG_description="The Send HTTP Request activity sends a HTTP request to a webserver";
 	 Element rootActivityElement = (Element)targetNode;
 	 HTTPSendRequestActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-	 HTTPSendRequestActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
+	// HTTPSendRequestActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
 	 this.CONFIG_host=rootActivityElement.getElementsByTagName("host").item(0).getTextContent();
 	 this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent()):80;
 	 //this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent();
