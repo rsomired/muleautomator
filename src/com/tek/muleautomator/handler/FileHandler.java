@@ -26,6 +26,10 @@ public class FileHandler {
 			fileService.fileCreate(muleProjectLocation, fileCreateActivity,flowElement);
 			break;
 			
+		case "com.tibco.plugin.file.FileEventSource":
+			System.out.println("com.tibco.plugin.file.FileEventSource-----The File Poller process starter polls for files or directories with the given name and starts a process when the specified change (creation, modification, deletion) is detected. ");
+			break;
+			
 		case "com.tibco.plugin.file.ListFilesActivity":
 			System.out.println("com.tibco.plugin.file.ListFilesActivity-----The List Files activity returns information about files or directories, or a listing of all the files in the specified directory. ");
 			/*FileElement.FileListActivity fileListActivity=fileElement.new FileListActivity(activityElement.getTargetNode());
