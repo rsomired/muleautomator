@@ -39,7 +39,7 @@ public class FileElement {
         	if(fileElement!=null)
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	
-        	if(this.INPUT_filePath.contains("_globalVariables")){
+        	if(this.INPUT_filePath.contains("_globalVariables")&&MuleAutomatorConstants.globalResolver.getMap().size()>0){
         		String x=null;
         		if(this.INPUT_filePath.contains("concat")){
         			x=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_filePath);
@@ -179,7 +179,7 @@ public class FileElement {
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
         	if(fileElement!=null)
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	if(this.INPUT_filePath.contains("_globalVariables")){
+        	if(this.INPUT_filePath.contains("_globalVariables")&&MuleAutomatorConstants.globalResolver.getMap().size()>0){
         		String x=null;
         		if(this.INPUT_filePath.contains("concat")){
         			x=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_filePath);
@@ -280,7 +280,7 @@ public class FileElement {
         	if(encodingElement!=null){
         		this.INPUT_encoding=encodingElement.getTextContent();
         	}
-        	if(this.INPUT_filePath.contains("_globalVariables")){
+        	if(this.INPUT_filePath.contains("_globalVariables")&&MuleAutomatorConstants.globalResolver.getMap().size()>0){
         		String x=null;
         		if(this.INPUT_filePath.contains("concat")){
         			x=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_filePath);
@@ -396,7 +396,7 @@ public class FileElement {
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
         	if(fileElement!=null)
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	if(this.INPUT_filePath.contains("_globalVariables")){
+        	if(this.INPUT_filePath.contains("_globalVariables")&&MuleAutomatorConstants.globalResolver.getMap().size()>0){
         		String x=null;
         		if(this.INPUT_filePath.contains("concat")){
         			x=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_filePath);
@@ -449,7 +449,7 @@ public class FileElement {
         		this.INPUT_directoryPath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	else 
         		this.INPUT_directoryPath="";
-        	if(this.INPUT_directoryPath.contains("_globalVariables")){
+        	if(this.INPUT_directoryPath.contains("_globalVariables")&&MuleAutomatorConstants.globalResolver.getMap().size()>0){
         		if(this.INPUT_directoryPath.contains("concat")){
         			this.INPUT_directoryPath=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_directoryPath);
         			
@@ -483,7 +483,7 @@ public class FileElement {
         	if(filetoElement!=null)
         		this.INPUT_toFilePath=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	
-        	if(this.INPUT_fromFilePath.contains("_globalVariables")){
+        	if(this.INPUT_fromFilePath.contains("_globalVariables")&&MuleAutomatorConstants.globalResolver.getMap().size()>0){
         		String resolvedPath=null;
         		if(this.INPUT_fromFilePath.contains("concat")){
         			resolvedPath=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fromFilePath);
@@ -499,7 +499,7 @@ public class FileElement {
         		this.INPUT_fromFileName="";
         	}
         	
-        	if(this.INPUT_toFilePath.contains("_globalVariables")){
+        	if(this.INPUT_toFilePath.contains("_globalVariables")&&MuleAutomatorConstants.globalResolver.getMap().size()>0){
         		String x=null;
         		if(this.INPUT_toFilePath.contains("concat")){
         			x=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_toFilePath);
@@ -606,7 +606,7 @@ public class FileElement {
         	
         	this.CONFIG_overwrite=rootActivityElement.getElementsByTagName("overwrite").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("overwrite").item(0).getTextContent()):false;
         	this.CONFIG_createMissingDirectories=rootActivityElement.getElementsByTagName("createMissingDirectories").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("createMissingDirectories").item(0).getTextContent()):false;
-        	if(this.INPUT_fromFilePath.contains("_globalVariables")){
+        	if(this.INPUT_fromFilePath.contains("_globalVariables")&&MuleAutomatorConstants.globalResolver.getMap().size()>0){
         		String x=null;
         		if(this.INPUT_fromFilePath.contains("concat")){
         			x=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_fromFilePath);
@@ -622,7 +622,7 @@ public class FileElement {
         		this.INPUT_fromFileName="";
         	}
         	
-        	if(this.INPUT_toFilePath.contains("_globalVariables")){
+        	if(this.INPUT_toFilePath.contains("_globalVariables") &&MuleAutomatorConstants.globalResolver.getMap().size()>0 ){
         		String x=null;
         		if(this.INPUT_toFilePath.contains("concat")){
         			x=MuleAutomatorConstants.globalResolver.resolveConcatQuery(this.INPUT_toFilePath);

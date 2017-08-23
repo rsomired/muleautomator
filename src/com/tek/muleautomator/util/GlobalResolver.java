@@ -94,7 +94,8 @@ public class GlobalResolver {
      */
     
     public String getValueFromGlobalExpr(String expr){    
- 
+    	if(this.map.size()==0)
+    		return expr;
         String key=expr.substring(expr.indexOf("GlobalVariables")+"GlobalVariables".length()+1,expr.length());
         return map.get(key);
     }
@@ -114,7 +115,8 @@ public class GlobalResolver {
         concatQuery=concatQuery.replace("&quot;", "");
         // Remove extra quotes
         concatQuery=concatQuery.replace("\"", "");
-        
+        if(this.map.size()==0)
+        	return concatQuery;
         String result="";
         if(concatQuery.contains("concat")){           
             String expr1=concatQuery.substring(concatQuery.indexOf("(")+1,concatQuery.indexOf(","));
