@@ -8,7 +8,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.tek.muleautomator.element.JDBCElement.JDBCUpdateActivity;
 
 public class HTTPElement {
 	
@@ -258,16 +257,15 @@ public class HTTPElement {
 	 Element rootActivityElement = (Element)targetNode;
 	 HTTPSendRequestActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
 	// HTTPSendRequestActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
-	 //this.CONFIG_host=rootActivityElement.getElementsByTagName("host").item(0).getTextContent();
+	 this.CONFIG_host=(rootActivityElement.getElementsByTagName("host").getLength()>0)?rootActivityElement.getElementsByTagName("host").item(0).getTextContent():"";
 	 this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent()):80;
-	 //this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent();
 	 //this.CONFIG_authentication=((Element)rootActivityElement.getElementsByTagName("Authorization").item(0)).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue();
 	 NodeList paramTag=rootActivityElement.getElementsByTagName("parameters");
 	 if(paramTag.getLength()>0){
 		 NodeList params=paramTag.item(0).getChildNodes();
 		 for(int i=0;i<params.getLength();++i){
-			 if(params.item(i).getNodeType()==Node.ELEMENT_NODE){
-				 //this.CONFIG_parameters.put(params.item(i).getNodeName(), params.item(i).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue());
+			 if(params.item(i).getNodeType()==Node.ELEMENT_NODE){	 
+				 this.CONFIG_parameters.put(params.item(i).getNodeName(), ((Element)params.item(i)).getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue());
 			 }
 			}
 	 }

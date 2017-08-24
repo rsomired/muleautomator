@@ -1,6 +1,7 @@
 package com.tek.muleautomator.service;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -86,17 +87,17 @@ public class HTTPService {
 			httpRequest.setAttribute("config-ref", "HTTP_Request_Configuration");
 			httpRequest.setAttribute("path", "/path");
 			httpRequest.setAttribute("method", "GET");
+			httpRequest.setAttribute("port", ""+httpSendRequestActivity.getPort());
+			httpRequest.setAttribute("host", httpSendRequestActivity.getHost());
 			httpRequest.setAttribute("doc:name", "HTTP");
 
 			Element requestBuilder = doc.createElement("http:request-builder");
-			Element httpParams = doc.createElement("http:query-param");
-			httpParams.setAttribute("paramName", "value1");
-			requestBuilder.appendChild(httpParams);
-
-			Element httpParams2 = doc.createElement("http:query-param");
-			httpParams2.setAttribute("paramName", "value2");
-			requestBuilder.appendChild(httpParams2);
-
+			for(Map.Entry<String, String> param: httpSendRequestActivity.getCONFIG_parameters().entrySet()){
+				Element httpParams = doc.createElement("http:query-param");
+				httpParams.setAttribute("paramName", param.getKey());
+				httpParams.setAttribute("value", param.getValue());
+				requestBuilder.appendChild(httpParams);
+			}
 			httpRequest.appendChild(requestBuilder);
 			flow.appendChild(httpRequest);
 
