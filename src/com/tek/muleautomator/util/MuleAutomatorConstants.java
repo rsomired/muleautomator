@@ -6,6 +6,7 @@
 package com.tek.muleautomator.util;
 
 import java.io.File;
+import java.util.HashMap;
 
 /**
  *
@@ -15,7 +16,7 @@ public class MuleAutomatorConstants {
 	public static String TIBCO_PROJECT_ROOT_FOLDER;
     static String seperator = File.separator;
     public static GlobalVarsResolver globalVarsResolver;
-   
+    public static HashMap<String, String> tibcoVariables=new HashMap<>();
     
     public static void loadGlobalVars(String location) {
     	globalVarsResolver=new GlobalVarsResolver(location);

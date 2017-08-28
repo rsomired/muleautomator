@@ -120,12 +120,19 @@ public class GlobalVarsResolver {
         String result="";
         if(concatQuery.contains("concat")){           
             String expr1=concatQuery.substring(concatQuery.indexOf("(")+1,concatQuery.indexOf(","));
-            String expr2=concatQuery.substring(concatQuery.indexOf(",")+1,concatQuery.indexOf(")"));
+            String expr2=concatQuery.substring(concatQuery.lastIndexOf(",")+1,concatQuery.indexOf(")"));
+          
             if(expr1.contains("GlobalVariables")){
                 expr1=getValueFromGlobalExpr(expr1);
+            } else if(expr1.contains("OutputClass")) {
+            	String temp=expr1.substring(0, expr1.indexOf("/"));
+            	expr1=MuleAutomatorConstants.tibcoVariables.get(temp);
             }
             if(expr2.contains("GlobalVariables")){
                 expr2=getValueFromGlobalExpr(expr2);
+            } else if(expr2.contains("OutputClass")) {
+            	String temp=expr2.substring(0, expr2.indexOf("/"));
+            	expr2=MuleAutomatorConstants.tibcoVariables.get(temp);
             } else {
                 if(expr2.contains("/"))
                     expr2=expr2.replace("/", "");

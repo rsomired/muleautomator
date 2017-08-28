@@ -32,8 +32,8 @@ public class FileHandler {
 			
 		case "com.tibco.plugin.file.ListFilesActivity":
 			System.out.println("com.tibco.plugin.file.ListFilesActivity-----The List Files activity returns information about files or directories, or a listing of all the files in the specified directory. ");
-			/*FileElement.FileListActivity fileListActivity=fileElement.new FileListActivity(activityElement.getTargetNode());
-			fileService.listFiles(muleProjectLocation, fileListActivity,flowElement);*/
+			FileElement.FileListActivity fileListActivity=fileElement.new FileListActivity(activityElement.getTargetNode());
+			//fileService.listFiles(muleProjectLocation, fileListActivity,flowElement);
 			break;
 
 		case "com.tibco.plugin.file.FileReadActivity":

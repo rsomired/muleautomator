@@ -51,9 +51,22 @@ public class FileElement {
         			x=x.substring(0, x.length()-1);
         		this.INPUT_fileName=x.substring(x.lastIndexOf("\\")+1);
         		this.INPUT_filePath=x.substring(0,x.lastIndexOf("\\"));
+        	} else if(this.INPUT_filePath.startsWith("$")) {
+        		String activityNameKey=this.INPUT_filePath.substring(0, this.INPUT_filePath.indexOf("/"));
+        		if(MuleAutomatorConstants.tibcoVariables.containsKey(activityNameKey)){
+        			String temp=MuleAutomatorConstants.tibcoVariables.get(activityNameKey);
+        			this.INPUT_fileName=temp.substring(temp.lastIndexOf("\\")+1);
+            		this.INPUT_filePath=temp.substring(0,temp.lastIndexOf("\\"));
+        		} else {
+        			this.INPUT_fileName="";
+        			this.INPUT_filePath="";
+        		}
         	} else {
         		this.INPUT_fileName="";
         	}
+        	String activityName=rootActivityElement.getAttribute("name");
+    		MuleAutomatorConstants.tibcoVariables.put(generateTibcoVarName(activityName), this.INPUT_filePath+"\\"+this.INPUT_fileName);
+
         	Element textContentElement=(Element)rootActivityElement.getElementsByTagName("textContent").item(0);
         	if(textContentElement!=null){
         		this.INPUT_textContent=textContentElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
@@ -115,8 +128,7 @@ public class FileElement {
 		public void setINPUT_fileName(String iNPUT_fileName) {
 			INPUT_fileName = iNPUT_fileName;
 		}
-
-		
+	
 
 		public String getINPUT_filePath() {
 			return INPUT_filePath;
@@ -165,7 +177,7 @@ public class FileElement {
 		
         
     }
-    
+     
     public class FileCreateActivity {
         private String CONFIG_activityType,CONFIG_description,CONFIG_Overwrite,CONFIG_isADirectory ,CONFIG_createNonExistingDirectories;
         private String INPUT_fileName, INPUT_filePath="";
@@ -177,13 +189,13 @@ public class FileElement {
         	Element rootActivityElement = (Element)activityNode;
         	this.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
+        	
         	if(fileElement!=null)
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	if(this.INPUT_filePath.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
-        		String x=null;
+        		String x="";
         		if(this.INPUT_filePath.contains("concat")){
-        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.INPUT_filePath);
-        			
+        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.INPUT_filePath);        			
         		} else {
         			x=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.INPUT_filePath);
         		}
@@ -191,9 +203,14 @@ public class FileElement {
         			x=x.substring(0, x.length()-1);
         		this.INPUT_fileName=x.substring(x.lastIndexOf("\\")+1);
         		this.INPUT_filePath=x.substring(0,x.lastIndexOf("\\"));
+        		String activityName=rootActivityElement.getAttribute("name");
+        		MuleAutomatorConstants.tibcoVariables.put(generateTibcoVarName(activityName), this.INPUT_filePath+"\\"+this.INPUT_fileName);
         	} else {
         		this.INPUT_fileName="";
         	}
+        	String activityName=rootActivityElement.getAttribute("name");
+    		MuleAutomatorConstants.tibcoVariables.put(generateTibcoVarName(activityName), this.INPUT_filePath+"\\"+this.INPUT_fileName);
+
         }
 
         public String getActivityType() {
@@ -292,9 +309,20 @@ public class FileElement {
         			x=x.substring(0, x.length()-1);
         		this.INPUT_fileName=x.substring(x.lastIndexOf("\\")+1);
         		this.INPUT_filePath=x.substring(0,x.lastIndexOf("\\"));
+        	} else if(this.INPUT_filePath.startsWith("$")) {
+        		String activityNameKey=this.INPUT_filePath.substring(0, this.INPUT_filePath.indexOf("/"));
+        		if(MuleAutomatorConstants.tibcoVariables.containsKey(activityNameKey)){
+        			String temp=MuleAutomatorConstants.tibcoVariables.get(activityNameKey);
+        			this.INPUT_fileName=temp.substring(temp.lastIndexOf("\\")+1);
+            		this.INPUT_filePath=temp.substring(0,temp.lastIndexOf("\\"));
+        		} else {
+        			this.INPUT_fileName="";
+        			this.INPUT_filePath="";
+        		}
         	} else {
         		this.INPUT_fileName="";
         	}
+        	
         }
         
     }
@@ -408,9 +436,20 @@ public class FileElement {
         			x=x.substring(0, x.length()-1);
         		this.INPUT_fileName=x.substring(x.lastIndexOf("\\")+1);
         		this.INPUT_filePath=x.substring(0,x.lastIndexOf("\\"));
+        	} else if(this.INPUT_filePath.startsWith("$")) {
+        		String activityNameKey=this.INPUT_filePath.substring(0, this.INPUT_filePath.indexOf("/"));
+        		if(MuleAutomatorConstants.tibcoVariables.containsKey(activityNameKey)){
+        			String temp=MuleAutomatorConstants.tibcoVariables.get(activityNameKey);
+        			this.INPUT_fileName=temp.substring(temp.lastIndexOf("\\")+1);
+            		this.INPUT_filePath=temp.substring(0,temp.lastIndexOf("\\"));
+        		} else {
+        			this.INPUT_fileName="";
+        			this.INPUT_filePath="";
+        		}
         	} else {
         		this.INPUT_fileName="";
         	}
+     
 		}
     	
     }
@@ -457,6 +496,9 @@ public class FileElement {
         			this.INPUT_directoryPath=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.INPUT_directoryPath);
         		}
         	}
+        	String activityName=rootActivityElement.getAttribute("name");
+    		MuleAutomatorConstants.tibcoVariables.put(generateTibcoVarName(activityName), this.INPUT_directoryPath);
+
 		}
     	
     }
@@ -495,9 +537,19 @@ public class FileElement {
         			resolvedPath=resolvedPath.substring(0, resolvedPath.length()-1);
         		this.INPUT_fromFileName=resolvedPath.substring(resolvedPath.lastIndexOf("\\")+1);
         		this.INPUT_fromFilePath=resolvedPath.substring(0,resolvedPath.lastIndexOf("\\"));
+        	} else if(this.INPUT_fromFilePath.startsWith("$")) {
+        		String activityNameKey=this.INPUT_fromFilePath.substring(0, this.INPUT_fromFilePath.indexOf("/"));
+        		if(MuleAutomatorConstants.tibcoVariables.containsKey(activityNameKey)){
+        			String temp=MuleAutomatorConstants.tibcoVariables.get(activityNameKey);
+        			this.INPUT_fromFilePath=temp;
+        		} else {
+        			this.INPUT_fromFileName="";
+        		}
         	} else {
         		this.INPUT_fromFileName="";
         	}
+        	this.INPUT_fromFileName="";
+        	
         	
         	if(this.INPUT_toFilePath.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
         		String x=null;
@@ -511,9 +563,20 @@ public class FileElement {
         			x=x.substring(0, x.length()-1);
         		this.INPUT_toFileName=x.substring(x.lastIndexOf("\\")+1);
         		this.INPUT_toFilePath=x.substring(0,x.lastIndexOf("\\"));
-        	} else {
+        	} else if(this.INPUT_toFilePath.startsWith("$")) {
+        		String activityNameKey=this.INPUT_toFilePath.substring(0, this.INPUT_toFilePath.indexOf("/"));
+        		if(MuleAutomatorConstants.tibcoVariables.containsKey(activityNameKey)){
+        			String temp=MuleAutomatorConstants.tibcoVariables.get(activityNameKey);
+        			this.INPUT_toFileName=temp;
+        		} else {
+        			this.INPUT_toFileName="";
+        		}
+        	}  else {
         		this.INPUT_toFileName="";
-        	}        	
+        	}
+        	String activityName=rootActivityElement.getAttribute("name");
+    		MuleAutomatorConstants.tibcoVariables.put(generateTibcoVarName(activityName), this.INPUT_toFilePath+"\\"+this.INPUT_toFileName);
+
     	}
 
 		public String getActivityType() {
@@ -618,10 +681,20 @@ public class FileElement {
         			x=x.substring(0, x.length()-1);
         		this.INPUT_fromFileName=x.substring(x.lastIndexOf("\\")+1);
         		this.INPUT_fromFilePath=x.substring(0,x.lastIndexOf("\\"));
+        	}  else if(this.INPUT_fromFilePath.startsWith("$")) {
+        		String activityNameKey=this.INPUT_fromFilePath.substring(0, this.INPUT_fromFilePath.indexOf("/"));
+        		if(MuleAutomatorConstants.tibcoVariables.containsKey(activityNameKey)){
+        			String temp=MuleAutomatorConstants.tibcoVariables.get(activityNameKey);
+        			this.INPUT_fromFileName=temp.substring(temp.lastIndexOf("\\")+1);
+            		this.INPUT_fromFilePath=temp.substring(0,temp.lastIndexOf("\\"));
+        		} else {
+        			this.INPUT_fromFileName="";
+        			this.INPUT_fromFilePath="";
+        		}
         	} else {
         		this.INPUT_fromFileName="";
         	}
-        	
+        	     	
         	if(this.INPUT_toFilePath.contains("_globalVariables") &&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0 ){
         		String x=null;
         		if(this.INPUT_toFilePath.contains("concat")){
@@ -634,9 +707,21 @@ public class FileElement {
         			x=x.substring(0, x.length()-1);
         		this.INPUT_toFileName=x.substring(x.lastIndexOf("\\")+1);
         		this.INPUT_toFilePath=x.substring(0,x.lastIndexOf("\\"));
+        	} else if(this.INPUT_toFilePath.startsWith("$")) {
+        		String activityNameKey=this.INPUT_toFilePath.substring(0, this.INPUT_toFilePath.indexOf("/"));
+        		if(MuleAutomatorConstants.tibcoVariables.containsKey(activityNameKey)){
+        			String temp=MuleAutomatorConstants.tibcoVariables.get(activityNameKey);
+        			this.INPUT_toFileName=temp.substring(temp.lastIndexOf("\\")+1);
+            		this.INPUT_toFilePath=temp.substring(0,temp.lastIndexOf("\\"));
+        		} else {
+        			this.INPUT_toFileName="";
+        			this.INPUT_toFilePath="";
+        		}
         	} else {
         		this.INPUT_toFileName="";
         	}
+        	String activityName=rootActivityElement.getAttribute("name");
+    		MuleAutomatorConstants.tibcoVariables.put(generateTibcoVarName(activityName), this.INPUT_toFilePath+"\\"+this.INPUT_toFileName);
         	
     	}
 
@@ -682,6 +767,17 @@ public class FileElement {
 		
 		
     	
+    }
+    
+    private static String generateTibcoVarName(String activityName){
+    	String []splitBySpace=activityName.split(" ");
+    	String varHeader="$";
+    	for(int i=0;i<splitBySpace.length;++i){
+    		varHeader+=splitBySpace[i];
+    		if(i!=splitBySpace.length-1)
+    			varHeader+="-";
+    	}
+    	return varHeader;	
     }
 
 }
