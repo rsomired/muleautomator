@@ -1,6 +1,9 @@
 package com.tek.muleautomator.service;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,24 +21,54 @@ import com.tek.muleautomator.element.JMSElement.JMSQueueSendActivity;
 import com.tek.muleautomator.element.JMSElement.JMSReplyActivity;
 import com.tek.muleautomator.element.JMSElement.JMSTopicPublishActivity;
 import com.tek.muleautomator.element.JMSElement.JMSTopicRequestReplyActivity;
+import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleAutomatorUtil;
 import com.tek.muleautomator.util.MuleConfigConnection;
 
 public class JMSService {
-
+	private static String JMS_URL="", JMS_USERNAME="", JMS_PASSWORD="";
 	public void jmsConfiguration(String muleConfigPath, Element flow) {
 		try {
-			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-			Element jmsConfig = doc.createElement("jms:activemq-connector");
-			jmsConfig.setAttribute("name", "Active_MQ");
-			jmsConfig.setAttribute("brokerURL", "tcp://localhost:61616");
-			jmsConfig.setAttribute("validateConnections", "true");
-			jmsConfig.setAttribute("doc:name", "Active MQ");
-			if (flow.hasChildNodes()) {
-				Node existingFlow = flow.getFirstChild();
-				flow.insertBefore(jmsConfig, existingFlow);
-			} else
-				flow.appendChild(jmsConfig);
+			try {
+				Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+				Element muleTag=(Element)doc.getFirstChild();
+				List<File> jmsConnFiles=new ArrayList<>();
+				MuleAutomatorUtil.fileFinder(new File(MuleAutomatorConstants.TIBCO_PROJECT_ROOT_FOLDER), jmsConnFiles, new String[]{"sharedjmscon"});			
+				Element jmsConfig=null;
+				if(jmsConnFiles.size()>0){
+					File currFile=jmsConnFiles.get(0);
+					
+					DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			        Document jmsDoc = documentBuilder.parse(currFile);
+			        
+			        JMSService.JMS_URL=jmsDoc.getElementsByTagName("ProviderURL").getLength()>0?jmsDoc.getElementsByTagName("ProviderURL").item(0).getTextContent():"";
+			        JMSService.JMS_USERNAME=jmsDoc.getElementsByTagName("username").getLength()>0?jmsDoc.getElementsByTagName("username").item(0).getTextContent():"";
+			        JMSService.JMS_PASSWORD=jmsDoc.getElementsByTagName("password").getLength()>0?jmsDoc.getElementsByTagName("password").item(0).getTextContent():"";	
+			        jmsConfig = doc.createElement("jms:activemq-connector");
+					jmsConfig.setAttribute("name", "Active_MQ");
+					jmsConfig.setAttribute("brokerURL", JMSService.JMS_URL);
+					jmsConfig.setAttribute("username", JMSService.JMS_USERNAME);
+					jmsConfig.setAttribute("password", JMSService.JMS_PASSWORD);
+					jmsConfig.setAttribute("validateConnections", "true");
+					jmsConfig.setAttribute("doc:name", "Active MQ");
+				} else {
+					System.err.println("No JMS-Shared configuration files found in "+MuleAutomatorConstants.TIBCO_PROJECT_ROOT_FOLDER+" \nUsing Default Values");
+					jmsConfig = doc.createElement("jms:activemq-connector");
+					jmsConfig.setAttribute("name", "Active_MQ");
+					jmsConfig.setAttribute("brokerURL", "tcp://localhost:61616");
+					jmsConfig.setAttribute("validateConnections", "true");
+					jmsConfig.setAttribute("doc:name", "Active MQ");
+				}
+				
+				if (flow.hasChildNodes()) {
+					Node existingFlow = flow.getFirstChild();
+					flow.insertBefore(jmsConfig, existingFlow);
+				} else
+					flow.appendChild(jmsConfig);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -159,11 +192,15 @@ public class JMSService {
 	}
 	
 	public boolean isJmsConfigRequired(String muleConfigPath) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder;
-		docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(muleConfigPath);
-		NodeList nodeList = doc.getElementsByTagName("jms:activemq-connector");
-		return nodeList.getLength() == 0 ? true : false;
+		Document doc;
+		try {
+			doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			Element muleTag=(Element)doc.getFirstChild();
+			return muleTag.getElementsByTagName("jms:activemq-connector").getLength()>0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+		
 	}
 }

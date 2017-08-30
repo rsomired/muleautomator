@@ -34,6 +34,13 @@ public class ActivityElement {
 	public void setTargetNode(Node targetNode) {
 		this.targetNode = targetNode;
 	}
+
+	@Override
+	public String toString() {
+		return "ActivityElement [activityType=" + activityType + ", activityName=" + activityName + "]";
+	}
+	
+	
 	
 	
 }

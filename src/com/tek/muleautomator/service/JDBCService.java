@@ -257,15 +257,17 @@ public class JDBCService {
 		} 
 	}
 
-
-
 	public boolean isJDBCConfigRequired(String muleConfigPath) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder;
-		docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(muleConfigPath);
-		NodeList nodeList = doc.getElementsByTagName("db:oracle-config");
-		return nodeList.getLength() == 0 ? true : false;
+		Document doc;
+		try {
+			doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			NodeList nodeList = doc.getElementsByTagName("db:oracle-config");
+			return nodeList.getLength() == 0 ? true : false;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	

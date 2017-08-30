@@ -3,17 +3,26 @@ package com.tek.muleautomator.element;
 public class TransitionElement {
 	String from;
 	String to;
-	String condition;
-	
+	String condition, condition_xpath;
 	
 	public TransitionElement(String from, String to, String condition) {
 		this.from = from;
 		this.to = to;
 		this.condition = condition;
+		this.condition_xpath=null;
 	}
 	public String getFrom() {
 		return from;
 	}
+	
+	public String getXPath() {
+		return condition_xpath;
+	}
+	
+	public void setXPath(String xpath) {
+		this.condition_xpath=xpath;
+	}
+	
 	public void setFrom(String from) {
 		this.from = from;
 	}
@@ -33,6 +42,7 @@ public class TransitionElement {
 	public String toString() {
 		return "TransitionElement [from=" + from + ", to=" + to + ", condition=" + condition + "]";
 	}
+	
 	
 
 }
