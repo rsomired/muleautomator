@@ -47,9 +47,9 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Project Src/tib5.x/tibprgms/Loops/";
-			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Project Src/tib5.x/tibprgms/Loops/Iterate.process";
-			String workspace = "D:/muleLoop";
+			String tibcoProjectLocationRootFolder = "D:/TTM/Sample Codes/File Palette/Sample";
+			String tibcoProcessLocation = "D:/TTM/Sample Codes/File Palette/Sample/FileProject/pd.process";
+			String workspace = "D:/muleFileUpdated";
 
 			// Loads all the Global Variables into
 			// MuleAutomatorConstants.globalResolver Object
@@ -62,6 +62,7 @@ public class MuleAutomateManager {
 			}
 			generateMuleFlowFromTibcoProcessOrderByTransitionsWithChoice(tibcoProcessLocation, muleConfigPath,
 					flowElement);
+			//System.out.println("Vars: "+ MuleAutomatorConstants.tibcoVariables);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -457,48 +458,7 @@ public class MuleAutomateManager {
 	 *            project location.
 	 */
 
-	public static void generateMuleFlowFromTibcoProcess(String tibcoProcessPath, String muleConfigPath,
-			Element flowElement) {
-		String pluginType = null;
-		try {
-			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document docIn = documentBuilder.parse(new File(tibcoProcessPath));
-			List<ActivityElement> activityElements = new ArrayList<>();
-			activityElements.addAll(getActivityTypes(docIn, "pd:starter"));
-			activityElements.addAll(getActivityTypes(docIn, "pd:activity"));
-			for (ActivityElement activityElement : activityElements) {
-				pluginType = getPluginType(activityElement.getActivityType());
-				switch (pluginType) {
-				case "jms":
-					JMSHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-					break;
-				case "file":
-					FileHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-					break;
-				case "jdbc":
-					JDBCHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-					break;
-				case "http":
-					HTTPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-					break;
-				case "soap":
-					SOAPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-					break;
-				}
-			}
-			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-			doc.getFirstChild().appendChild(flowElement);
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(muleConfigPath);
-			transformer.transform(source, result);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
+	
 
 	public static void generateMuleFlowFromTibcoProcessOrderByTransitions(String tibcoProcessPath,
 			String muleConfigPath, Element flowElement) {
@@ -580,24 +540,7 @@ public class MuleAutomateManager {
 		return path.substring(path.lastIndexOf('/') + 1).split("\\.")[0];
 	}
 
-	/**
-	 * Method to get activity element by transition.
-	 * 
-	 * @param transition
-	 *            key.
-	 * @return activities list.
-	 */
 
-	private static ActivityElement getActivityByTransition(String transitionFrom,
-			List<ActivityElement> activityElements) {
-		for (ActivityElement activityElement : activityElements) {
-			if (activityElement.getActivityName().equals(transitionFrom)) {
-				return activityElement;
-			}
-		}
-		return null;
-
-	}
 	
 	/**
 	 * Checks TIBCO process file for start Activity, returns the name of the same

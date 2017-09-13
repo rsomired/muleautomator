@@ -25,10 +25,10 @@ import org.xml.sax.SAXException;
  *
  * @author asgupta
  */
-public class GlobalVarsResolver {
+public class VarsResolver {
     Map<String, String> map;
     
-    public GlobalVarsResolver(File location){
+    public VarsResolver(File location){
         map=new HashMap<>();
         try{
             generateGlobalVarMap(location);
@@ -37,7 +37,7 @@ public class GlobalVarsResolver {
         }
     }
     
-    public GlobalVarsResolver(String location){
+    public VarsResolver(String location){
         this(new File(location));
     }
     
@@ -104,9 +104,8 @@ public class GlobalVarsResolver {
     	String expr1=new String(expr);
     	if(expr1.contains("GlobalVariables")){
             expr1=getValueFromGlobalExpr(expr1);
-        } else if(expr1.contains("OutputClass")) {
-        	String temp=expr1.substring(0, expr1.indexOf("/"));
-        	expr1=MuleAutomatorConstants.tibcoVariables.get(temp);
+        } else if(expr1.contains("Output")) {
+        	expr1=MuleAutomatorConstants.tibcoLocalVariables.get(expr);
         } else 
         	expr1=expr1.replaceAll("'", "");
     	return expr1;
