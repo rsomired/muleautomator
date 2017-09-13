@@ -39,6 +39,7 @@ public class FileElement {
         	if(fileElement!=null)
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	
+        	
         	if(this.INPUT_filePath.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
         		String x=null;
         		if(this.INPUT_filePath.contains("concat")){
@@ -70,6 +71,7 @@ public class FileElement {
         	Element textContentElement=(Element)rootActivityElement.getElementsByTagName("textContent").item(0);
         	if(textContentElement!=null){
         		this.INPUT_textContent=textContentElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        		
         	}
         	Element encodingElement=(Element)rootActivityElement.getElementsByTagName("encoding").item(0);
         	if(encodingElement!=null){

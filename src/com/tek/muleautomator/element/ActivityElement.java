@@ -6,6 +6,7 @@ public class ActivityElement {
 	String activityType;
 	String activityName;
 	Node targetNode;
+	boolean isInsideLoop;
 	
 	
 	public String getActivityName() {
@@ -17,9 +18,22 @@ public class ActivityElement {
 	}
 
 	public ActivityElement(String activityType, String activityName, Node targetNode) {
+		this(activityType,activityName,targetNode,false);
+	}
+	
+	public boolean isInsideLoop() {
+		return isInsideLoop;
+	}
+
+	public void setInsideLoop(boolean isInsideLoop) {
+		this.isInsideLoop = isInsideLoop;
+	}
+
+	public ActivityElement(String activityType, String activityName, Node targetNode, boolean insideLoop) {
 		this.activityType = activityType;
 		this.activityName = activityName;
 		this.targetNode = targetNode;
+		this.isInsideLoop=insideLoop;
 	}
 	
 	public String getActivityType() {

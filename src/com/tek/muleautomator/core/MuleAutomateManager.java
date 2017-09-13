@@ -47,9 +47,9 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Project Src/tib5.x/tibprgms/JDBC";
-			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Project Src/tib5.x/tibprgms/JDBC/Process/ab.process";
-			String workspace = "D:/muleSub1";
+			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Project Src/tib5.x/tibprgms/Loops/";
+			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Project Src/tib5.x/tibprgms/Loops/Iterate.process";
+			String workspace = "D:/muleLoop";
 
 			// Loads all the Global Variables into
 			// MuleAutomatorConstants.globalResolver Object
@@ -102,10 +102,63 @@ public class MuleAutomateManager {
 		MuleProjectSetup muleProjectSetup = new MuleProjectSetup();
 		muleProjectSetup.createMuleProject(tibcoProjectLocationRootFolder, directory, projectName);
 	}
+	
+	
+	private static void loopGenerator(ActivityElement activityElement, String muleConfigPath, Element flowElement){
+		Element loopElement=(Element)activityElement.getTargetNode();
+		List<ActivityElement> activityElements=new ArrayList<>();
+		List<TransitionElement> transitionElements=new ArrayList<>();
+		
+		NodeList loopActivities=loopElement.getElementsByTagName("pd:activity");
+		NodeList loopTransitions=loopElement.getElementsByTagName("pd:transition");
+		// Get all inner transitions
+		for(int transIndex=0;transIndex<loopTransitions.getLength();++transIndex){
+			Element currTrans=(Element)loopTransitions.item(transIndex);
+			TransitionElement t=new TransitionElement(currTrans.getElementsByTagName("pd:from").item(0).getTextContent(), currTrans.getElementsByTagName("pd:to").item(0).getTextContent(), currTrans.getElementsByTagName("pd:conditionType").item(0).getTextContent());
+			transitionElements.add(t);
+		}
+		// Get ordered activities corresponding to transition
+		for(TransitionElement transitionElement: transitionElements){
+			if(transitionElement.getTo().toLowerCase().equals("end"))
+				break;
+			for(int actIndex=0;actIndex<loopActivities.getLength();++actIndex){
+				Element actElement=(Element)loopActivities.item(actIndex);
+				String actName=actElement.getAttribute("name");
+				if((transitionElement.getTo().equals(actName))){
+					activityElements.add(new ActivityElement(actElement.getElementsByTagName("pd:type").item(0).getTextContent(), actName, actElement,true));
+					break;
+				}
+			}
+		}
+		// Append components inside the Loop's forEach flow
+		try {
+			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			
+			Element forEachTag=doc.createElement("foreach");
+			forEachTag.setAttribute("doc:name", "For Each");
+			
+			flowElement.appendChild(forEachTag);
+			
+			for(ActivityElement actEl: activityElements){
+				generateFlowForActivity(actEl, muleConfigPath, forEachTag);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
 
 	private static void generateFlowForActivity(ActivityElement activityElement, String muleConfigPath,
 			Element flowElement) {
 		if (activityElement != null) {
+			
+			if(activityElement.getActivityType().contains("LoopGroup")){
+				loopGenerator(activityElement, muleConfigPath, flowElement);
+				return;
+			}
+			
 			String pluginType = getPluginType(activityElement.getActivityType());
 			switch (pluginType) {
 			case "jms":
@@ -241,6 +294,7 @@ public class MuleAutomateManager {
 			Document docOut = MuleConfigConnection.getDomObj(muleConfigPath);
 			activityElements.addAll(getActivityTypes(docIn, "pd:starter"));
 			activityElements.addAll(getActivityTypes(docIn, "pd:activity"));
+			activityElements.addAll(getActivityTypes(docIn, "pd:group"));
 			// Add all activity Elements to hashMap so that retrieval would be
 			// in O(1) Constant time.
 			for (ActivityElement currActElement : activityElements) {

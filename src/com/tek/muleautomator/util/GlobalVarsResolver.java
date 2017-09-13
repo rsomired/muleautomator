@@ -54,7 +54,7 @@ public class GlobalVarsResolver {
     
     
     private void generateGlobalVarMap(File location) throws IOException, ParserConfigurationException, SAXException{
-        List<File> defVarFiles=new ArrayList();
+        List<File> defVarFiles=new ArrayList<>();
         MuleAutomatorUtil.fileFinder(location, defVarFiles, new String[]{"substvar"});
         if(defVarFiles.size()==0){
             System.err.println("No default Var files found in "+location.getPath());
@@ -100,6 +100,18 @@ public class GlobalVarsResolver {
         return map.get(key);
     }
     
+    public String resolveSingleExpression(String expr){
+    	String expr1=new String(expr);
+    	if(expr1.contains("GlobalVariables")){
+            expr1=getValueFromGlobalExpr(expr1);
+        } else if(expr1.contains("OutputClass")) {
+        	String temp=expr1.substring(0, expr1.indexOf("/"));
+        	expr1=MuleAutomatorConstants.tibcoVariables.get(temp);
+        } else 
+        	expr1=expr1.replaceAll("'", "");
+    	return expr1;
+    }
+    
     
     /**
      * Concatenate Query Resolver
@@ -115,19 +127,18 @@ public class GlobalVarsResolver {
         concatQuery=concatQuery.replace("&quot;", "");
         // Remove extra quotes
         concatQuery=concatQuery.replace("\"", "");
-        if(this.map.size()==0)
-        	return concatQuery;
+
         String result="";
         if(concatQuery.contains("concat")){           
-            String expr1=concatQuery.substring(concatQuery.indexOf("(")+1,concatQuery.indexOf(","));
-            String expr2=concatQuery.substring(concatQuery.lastIndexOf(",")+1,concatQuery.indexOf(")"));
-          
-            if(expr1.contains("GlobalVariables")){
-                expr1=getValueFromGlobalExpr(expr1);
-            } else if(expr1.contains("OutputClass")) {
-            	String temp=expr1.substring(0, expr1.indexOf("/"));
-            	expr1=MuleAutomatorConstants.tibcoVariables.get(temp);
-            }
+            String temp_expr=concatQuery.substring(concatQuery.indexOf("(")+1,concatQuery.indexOf(")"));
+            String[] exprs=temp_expr.split(",");            
+            for(String exp: exprs){
+            	String expr1=resolveSingleExpression(exp);
+            	result+=expr1;
+            }            
+            return result;
+            /*expr1=resolveSingleExpression(expr1);
+            expr2=resolveSingleExpression(expr2);
             if(expr2.contains("GlobalVariables")){
                 expr2=getValueFromGlobalExpr(expr2);
             } else if(expr2.contains("OutputClass")) {
@@ -143,10 +154,18 @@ public class GlobalVarsResolver {
                 return expr1+expr2.substring(1);
             if(expr1.endsWith("\\") || expr2.startsWith("\\"))
                 return expr1+expr2;
-            return expr1+"\\"+expr2;
+            return expr1+"\\"+expr2;*/
         }
         System.err.println("NOT A CONCAT QUERY");
         return null;
+    }
+    
+    public String resolveExpression(String expr){
+    	if(expr.contains("concat")){
+    		return resolveConcatQuery(expr);
+    	} else{
+    		return resolveSingleExpression(expr);
+    	}
     }
     
 }

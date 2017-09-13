@@ -135,11 +135,11 @@ public class JMSElement {
         	this.CONFIG_description="This actvity will be used to receive jms messages from jms/tibco ems servers";
         	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	this.CONFIG_messageType=rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent();
-        	this.MISC_sequencingKey=rootActivityElement.getElementsByTagName("_sequenceKey").item(0).getTextContent();
+        	//this.MISC_sequencingKey=rootActivityElement.getElementsByTagName("_sequenceKey").item(0).getTextContent();
        	    this.CONFIG_JMSConnection=rootActivityElement.getElementsByTagName("ConnectionReference").item(0).getTextContent();
        	    this.CONFIG_acknowledgeMode=rootActivityElement.getElementsByTagName("acknowledgeMode").item(0).getTextContent();
-       	  this.CONFIG_maxSessions=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
-     	 this.ADV_JMSApplicationProperties=rootActivityElement.getElementsByTagName("ApplicationProperties").item(0).getTextContent();
+       	  //this.CONFIG_maxSessions=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
+     	 //this.ADV_JMSApplicationProperties=rootActivityElement.getElementsByTagName("ApplicationProperties").item(0).getTextContent();
        	 // this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
 	 }
 	    
