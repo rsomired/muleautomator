@@ -24,6 +24,7 @@ import org.w3c.dom.NodeList;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.ConditionalTransition;
 import com.tek.muleautomator.element.TransitionElement;
+import com.tek.muleautomator.handler.FTPHandler;
 import com.tek.muleautomator.handler.FileHandler;
 import com.tek.muleautomator.handler.HTTPHandler;
 import com.tek.muleautomator.handler.JDBCHandler;
@@ -176,6 +177,8 @@ public class MuleAutomateManager {
 				break;
 			case "soap":
 				SOAPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+			case "ftp":
+				FTPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 			}
 		}
 	}
@@ -447,74 +450,6 @@ public class MuleAutomateManager {
 		return false;
 	}
 
-	/**
-	 * Method to generate mule flow by reading tibco process.
-	 * 
-	 * @param filePath
-	 * @param flowElement
-	 * @param tibco
-	 *            process path.
-	 * @param mule
-	 *            project location.
-	 */
-
-	
-
-	public static void generateMuleFlowFromTibcoProcessOrderByTransitions(String tibcoProcessPath,
-			String muleConfigPath, Element flowElement) {
-		String pluginType = null;
-		try {
-			List<ActivityElement> activityElements = new ArrayList<>();
-			Map<String, ActivityElement> activityCache = new HashMap<>();
-
-			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document docIn = documentBuilder.parse(new File(tibcoProcessPath));
-			List<TransitionElement> transitionElements = getSortedTransitions(docIn);
-
-			activityElements.addAll(getActivityTypes(docIn, "pd:starter"));
-			activityElements.addAll(getActivityTypes(docIn, "pd:activity"));
-			// Add all activity Elements to hashMap so that retrieval would be
-			// in O(1) Constant time.
-			for (ActivityElement currActElement : activityElements) {
-				activityCache.put(currActElement.getActivityName(), currActElement);
-			}
-			for (TransitionElement transitionElement : transitionElements) {
-				// Constant Time Retrieval
-				ActivityElement activityElement = activityCache.get(transitionElement.getFrom());
-				if (activityElement != null) {
-					pluginType = getPluginType(activityElement.getActivityType());
-					switch (pluginType) {
-					case "jms":
-						JMSHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-						break;
-					case "file":
-						FileHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-						break;
-					case "jdbc":
-						JDBCHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-						break;
-					case "http":
-						HTTPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-						break;
-					case "soap":
-						SOAPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-						break;
-					}
-				}
-			}
-			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-			doc.getFirstChild().appendChild(flowElement);
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(muleConfigPath);
-			transformer.transform(source, result);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
 
 	/**
 	 * Method to get plugin type of activityType.
