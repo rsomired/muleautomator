@@ -24,8 +24,20 @@ public class JDBCElement {
 		private String sqlQuery;
 		private List<String> queryParams;
 		private boolean commit, batchUpdate, emptyStrAsNil;
-		private String namedParamsQuery;
+		private String namedParamsQuery, connectionName;
 		
+		public String getConnectionName() {
+			return connectionName;
+		}
+
+
+
+		public void setConnectionName(String connectionName) {
+			this.connectionName = connectionName;
+		}
+
+
+
 		public JDBCUpdateActivity(Node targetNode){
 			queryParams=new ArrayList<>();
 			JDBCUpdateActivity.description="The JDBC Update activity performs the specified SQL INSERT, UPDATE, or DELETE statement";
@@ -46,6 +58,8 @@ public class JDBCElement {
         			}
         		}
         	}
+        	String con=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
+        	this.connectionName=con.substring(con.lastIndexOf("/")+1, con.lastIndexOf("."));
         	this.namedParamsQuery=generateQueryString(this.sqlQuery, this.queryParams);
         	
 		}
@@ -94,11 +108,19 @@ public class JDBCElement {
 	
 	public static class JDBCQueryActivity {
 		private static String description, connectionPath, activityType;
+		public String getConnectionName() {
+			return connectionName;
+		}
+
+		public void setConnectionName(String connectionName) {
+			this.connectionName = connectionName;
+		}
+
 		private int TIMEOUT;
 		private String sqlQuery;
 		private List<String> queryParams;
 		private boolean commit, batchUpdate, emptyStrAsNil;
-		private String namedParamsQuery;
+		private String namedParamsQuery, connectionName;
 		public JDBCQueryActivity(Node targetNode){
 			queryParams=new ArrayList<>();
 			JDBCUpdateActivity.description="The JDBC Query activity performs the specified SQL SELECT statement";
@@ -119,6 +141,8 @@ public class JDBCElement {
         			}
         		}
         	}
+        	String con=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
+        	this.connectionName=con.substring(con.lastIndexOf("/")+1, con.lastIndexOf("."));
         	this.namedParamsQuery=generateQueryString(this.sqlQuery, this.queryParams);
 		}
 		
@@ -167,8 +191,16 @@ public class JDBCElement {
 		private String procedureName;
 		private String packageName;
 		private List<String> params;
-		private String namedParamQuery;
+		private String namedParamQuery, connectionName;
 		
+		public String getConnectionName() {
+			return connectionName;
+		}
+
+		public void setConnectionName(String connectionName) {
+			this.connectionName = connectionName;
+		}
+
 		public static String getDescription() {
 			return description;
 		}
@@ -261,7 +293,9 @@ public class JDBCElement {
 					this.namedParamQuery+=",";
 				}
 			}
-			
+			String con=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
+        	this.connectionName=con.substring(con.lastIndexOf("/")+1, con.lastIndexOf("."));
+        	
 			this.namedParamQuery+=")}";
 			
 		}

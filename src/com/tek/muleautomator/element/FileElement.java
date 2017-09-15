@@ -175,22 +175,7 @@ public class FileElement {
         	
         	if(fileElement!=null)
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	/*if(this.INPUT_filePath.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
-        		String x="";
-        		if(this.INPUT_filePath.contains("concat")){
-        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.INPUT_filePath);        			
-        		} else {
-        			x=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.INPUT_filePath);
-        		}
-        		if(x.endsWith("\\"))
-        			x=x.substring(0, x.length()-1);
-        		this.INPUT_fileName=x.substring(x.lastIndexOf("\\")+1);
-        		this.INPUT_filePath=x.substring(0,x.lastIndexOf("\\"));
-        		String activityName=rootActivityElement.getAttribute("name");
-        		MuleAutomatorConstants.tibcoVariables.put(generateTibcoVarName(activityName), this.INPUT_filePath+"\\"+this.INPUT_fileName);
-        	} else {
-        		this.INPUT_fileName="";
-        	}*/
+
         	this.INPUT_filePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_filePath);
     		String varName_fullName=generateTibcoVarName(rootActivityElement.getAttribute("name"))+"/ns:CreateActivityOutputClass/fileInfo/fullName";
         	try{

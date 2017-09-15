@@ -1,6 +1,7 @@
 package com.tek.muleautomator.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -12,11 +13,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.tek.muleautomator.config.Connection;
+import com.tek.muleautomator.config.HTTPConnection;
 import com.tek.muleautomator.element.HTTPElement;
 import com.tek.muleautomator.element.SOAPElement.SOAPEventSourceActivity;
 import com.tek.muleautomator.element.SOAPElement.SOAPSendFaultActivity;
 import com.tek.muleautomator.element.SOAPElement.SOAPSendReceiveActivity;
 import com.tek.muleautomator.element.SOAPElement.SOAPSendReplyActivity;
+import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleConfigConnection;
 
 public class HTTPService {
@@ -24,15 +28,32 @@ public class HTTPService {
 	public void httpListnerConfiguration(String muleConfigPath) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-
-			Element muleTag = (Element) doc.getFirstChild();
-
-			Element httpConfig = doc.createElement("http:listener-config");
-			httpConfig.setAttribute("name", "HTTP_Listener_Configuration");
-			httpConfig.setAttribute("host", "0.0.0.0");
-			httpConfig.setAttribute("port", "8081");
-			httpConfig.setAttribute("doc:name", "HTTP Listener Configuration");
-			muleTag.appendChild(httpConfig);
+			Element muleTag = (Element) doc.getFirstChild();		
+			ArrayList<HTTPConnection> connections = new ArrayList<>();
+			for (Map.Entry<String, Connection> entry : MuleAutomatorConstants.connectionConfigs.entrySet()) {
+				if (entry.getValue().getConnectionType().equals("HTTP")) {
+					connections.add((HTTPConnection) entry.getValue());
+				}
+			}	
+			if(connections.size()>0){
+				for(HTTPConnection con: connections){
+					Element httpConfig = doc.createElement("http:listener-config");
+					httpConfig.setAttribute("name", con.CONNECTION_NAME.replaceAll(" ", "_"));
+					httpConfig.setAttribute("host", con.HOST);
+					httpConfig.setAttribute("port", con.PORT);
+					httpConfig.setAttribute("doc:name", "HTTP Listener Configuration");
+					muleTag.appendChild(httpConfig);
+				}
+			} else {
+				System.err.println("NO HTTP Connection file found. Setting default config...");
+				Element httpConfig = doc.createElement("http:listener-config");
+				httpConfig.setAttribute("name", "HTTP_Listener_Configuration");
+				httpConfig.setAttribute("host", "0.0.0.0");
+				httpConfig.setAttribute("port", "8081");
+				httpConfig.setAttribute("doc:name", "HTTP Listener Configuration");
+				muleTag.appendChild(httpConfig);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -65,8 +86,8 @@ public class HTTPService {
 				httpListnerConfiguration(muleConfigPath);
 			}
 			Element httpListnerRecvier = doc.createElement("http:listener");
-			httpListnerRecvier.setAttribute("config-ref", "HTTP_Listener_Configuration");
-			httpListnerRecvier.setAttribute("path", "/pathName");
+			httpListnerRecvier.setAttribute("config-ref", httpReceiverActivity.getConnectionName().replaceAll(" ", "_"));
+			httpListnerRecvier.setAttribute("path", "/");
 			httpListnerRecvier.setAttribute("doc:name", "HTTP");
 
 			flow.appendChild(httpListnerRecvier);

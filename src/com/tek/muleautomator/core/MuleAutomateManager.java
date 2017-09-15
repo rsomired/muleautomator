@@ -21,6 +21,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.tek.muleautomator.config.HTTPConnection;
+import com.tek.muleautomator.config.JDBCConnection;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.ConditionalTransition;
 import com.tek.muleautomator.element.TransitionElement;
@@ -32,6 +34,7 @@ import com.tek.muleautomator.handler.JMSHandler;
 import com.tek.muleautomator.handler.SOAPHandler;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 import com.tek.muleautomator.util.MuleConfigConnection;
 
 public class MuleAutomateManager {
@@ -48,9 +51,9 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-			String tibcoProjectLocationRootFolder = "D:/TTM/Sample Codes/File Palette/Sample";
-			String tibcoProcessLocation = "D:/TTM/Sample Codes/File Palette/Sample/FileProject/pd.process";
-			String workspace = "D:/muleFileUpdated";
+			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Project Src/tib5.x/tibprgms/HTTP/Retreive Resources/";
+			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Project Src/tib5.x/tibprgms/HTTP/Retreive Resources/pd.process";
+			String workspace = "D:/muleHTTP";
 
 			// Loads all the Global Variables into
 			// MuleAutomatorConstants.globalResolver Object
@@ -87,6 +90,32 @@ public class MuleAutomateManager {
 		flowElement.setAttribute("name", flowName);
 		return flowElement;
 	}
+	
+	
+	private static void fetchAllConnections(String tibcoProjectLocationRootFolder){
+		List<File> connFiles=new ArrayList<>();
+        MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), connFiles, new String[]{"sharedjdbc","sharedhttp"});
+        for(File file: connFiles){
+        	if(file.getPath().contains("jdbc")){
+        		JDBCConnection jdbcConnection=new JDBCConnection(file);
+            	MuleAutomatorConstants.connectionConfigs.put(jdbcConnection.CONNECTION_NAME, jdbcConnection);
+
+        	} else if(file.getPath().contains("http")){
+        		HTTPConnection httpCon=new HTTPConnection(file);
+        		String fileName="";
+				try {
+					fileName = file.getCanonicalPath().substring(file.getCanonicalPath().lastIndexOf(File.separator)+1);
+					fileName=fileName.substring(0,fileName.indexOf("."));
+				} catch (IOException e) {
+					fileName="HTTP Connection";
+					e.printStackTrace();
+				}
+                httpCon.CONNECTION_NAME=fileName;
+        		MuleAutomatorConstants.connectionConfigs.put(httpCon.CONNECTION_NAME, httpCon);
+
+        	}
+       }
+	}
 
 	/**
 	 * Method to create mule project.
@@ -101,6 +130,7 @@ public class MuleAutomateManager {
 
 	private static void createMuleProject(String tibcoProjectLocationRootFolder, String projectName, String directory)
 			throws IOException {
+		fetchAllConnections(tibcoProjectLocationRootFolder);
 		MuleProjectSetup muleProjectSetup = new MuleProjectSetup();
 		muleProjectSetup.createMuleProject(tibcoProjectLocationRootFolder, directory, projectName);
 	}

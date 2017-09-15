@@ -124,7 +124,7 @@ public class HTTPElement {
 	public static class HTTPReceiverActivity  
 	 {
 	  private static String CONFIG_description;
-	  private static String CONFIG_connectionPath;
+	  private static String CONFIG_connectionName;
 	  private static String CONFIG_activityType;
 	  private String  CONFIG_outputMode;
 	  private String CONFIG_defaultEncoding;
@@ -138,7 +138,8 @@ public class HTTPElement {
 	HTTPReceiverActivity.CONFIG_description="Starts a process based on the receipt of a HTTP request";
 	   Element rootActivityElement = (Element)targetNode;
 	   HTTPReceiverActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-	   //HTTPReceiverActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
+	   String con=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
+	   HTTPReceiverActivity.CONFIG_connectionName=con.substring(con.lastIndexOf("/")+1, con.lastIndexOf("."));
 	   this.CONFIG_outputMode=rootActivityElement.getElementsByTagName("outputMode").item(0).getTextContent();
 	   this.CONFIG_defaultEncoding=rootActivityElement.getElementsByTagName("defaultEncoding").item(0).getTextContent();
 	 }
@@ -146,8 +147,8 @@ public class HTTPElement {
 	   return CONFIG_description;
 	  }
 
-	  public static String getConnectionPath() {
-	   return CONFIG_connectionPath;
+	  public static String getConnectionName() {
+	   return CONFIG_connectionName;
 	  }
 
 	  public static String getActivityType() {
@@ -160,10 +161,10 @@ public class HTTPElement {
 		CONFIG_description = cONFIG_description;
 	}
 	public static String getCONFIG_connectionPath() {
-		return CONFIG_connectionPath;
+		return CONFIG_connectionName;
 	}
 	public static void setCONFIG_connectionPath(String cONFIG_connectionPath) {
-		CONFIG_connectionPath = cONFIG_connectionPath;
+		CONFIG_connectionName = cONFIG_connectionPath;
 	}
 	public static String getCONFIG_activityType() {
 		return CONFIG_activityType;
