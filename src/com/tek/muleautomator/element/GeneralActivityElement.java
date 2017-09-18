@@ -29,4 +29,10 @@ public class GeneralActivityElement {
 	public static class TimerActivity {
 		
 	}
+	
+	public static class MapperActivity {
+		
+	}
+	
+	
 }
