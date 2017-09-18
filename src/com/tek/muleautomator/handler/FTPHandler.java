@@ -27,7 +27,7 @@ public class FTPHandler {
 		case "com.tibco.plugin.ftp.FTPRenameActivity":
 			System.out.println("com.tibco.plugin.file.FileEventSource-----The File Poller process starter polls for files or directories with the given name and starts a process when the specified change (creation, modification, deletion) is detected. ");
 			FTPElement.FTPRenameFileActivity ftpRenameFileActivity = new FTPElement.FTPRenameFileActivity(activityElement.getTargetNode());
-			ftpService.ftpSysType(muleProjectLocation, ftpRenameFileActivity, flowElement);
+			ftpService.ftpRenameFile(muleProjectLocation, ftpRenameFileActivity, flowElement);
 			break;
 			
 		}

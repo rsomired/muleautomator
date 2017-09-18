@@ -169,7 +169,7 @@ public class FTPElement {
 	}
 	public static class FTPDirActivity
 	{
-		private static String description, activityType;
+		private static String description, activityType, connectionName;
 		private List<String> CONFIG_FTPConnection;
 		private String CONFIG_quit,CONFIG_NLST;
 		private int IN_port,IN_timeout;
@@ -184,36 +184,24 @@ public class FTPElement {
 			FTPDirActivity.activityType=rootActivityElement.getElementsByTagName("NLST").item(0).getTextContent();
 			Element IN_directoryElement=(Element)rootActivityElement.getElementsByTagName("Directory").item(0);
 			if(IN_directoryElement!=null)
-        		this.IN_directory=IN_directoryElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	if(this.IN_directory.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
-        		String x="";
-        		if(this.IN_directory.contains("concat")){
-        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.IN_directory);        			
-        		} else {
-        			x=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.IN_directory);
-        		}
-        		if(x.endsWith("\\"))
-        			x=x.substring(0, x.length()-1);
-        		this.IN_directoryElement=x.substring(x.lastIndexOf("\\")+1);
-        		this.IN_directory=x.substring(0,x.lastIndexOf("\\"));
-        		
-        	} 
+				this.IN_directory=IN_directoryElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	this.IN_directory=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.IN_directory);
+			this.IN_directoryElement=this.IN_directory.substring(this.IN_directory.lastIndexOf("/")+1);
+			
         	Element IN_dirParametersElement=(Element)rootActivityElement.getElementsByTagName("DirParameters").item(0);
 			if(IN_dirParametersElement!=null)
-        		this.IN_dirParametersElement=IN_dirParametersElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	if(this.IN_dirParameters.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
-        		String x="";
-        		if(this.IN_dirParameters.contains("concat")){
-        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.IN_dirParameters);        			
-        		} else {
-        			x=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.IN_dirParameters);
-        		}
-        		if(x.endsWith("\\"))
-        			x=x.substring(0, x.length()-1);
-        		this.IN_dirParametersElement=x.substring(x.lastIndexOf("\\")+1);
-        		this.IN_dirParameters=x.substring(0,x.lastIndexOf("\\"));
-        		
-        	} 
+        		this.IN_dirParameters=IN_dirParametersElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+        	this.IN_dirParameters=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.IN_dirParameters);
+			this.IN_dirParametersElement=this.IN_dirParameters.substring(this.IN_dirParameters.lastIndexOf("/")+1);
+			String con=rootActivityElement.getElementsByTagName("SharedUserData").item(0).getTextContent();
+        	this.connectionName=con.substring(con.lastIndexOf("/")+1, con.lastIndexOf("."));
+        	
+		}
+		public static String getConnectionName() {
+			return connectionName;
+		}
+		public static void setConnectionName(String connectionName) {
+			FTPDirActivity.connectionName = connectionName;
 		}
 		public static String getDescription() {
 			return description;
@@ -392,7 +380,7 @@ public class FTPElement {
 	
 	public static class FTPGetActivity
 	{
-		private static String description,  activityType;
+		private static String description,  activityType, connectionName;
 		private List<String> CONFIG_FTPConnection;
 		private String CONFIG_quit,CONFIG_useProcessData,CONFIG_binary,CONFIG_overwriteExistingFile,CONFIG_maintainCompatibility;
 		private int IN_port,IN_timeout;
@@ -412,36 +400,22 @@ public class FTPElement {
 			Element IN_remoteFileElement=(Element)rootActivityElement.getElementsByTagName("RemoteFileName").item(0);
 			if(IN_remoteFileElement!=null)
         		this.IN_remoteFilename=IN_remoteFileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	if(this.IN_remoteFilename.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
-        		String x="";
-        		if(this.IN_remoteFilename.contains("concat")){
-        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.IN_remoteFilename);        			
-        		} else {
-        			x=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.IN_remoteFilename);
-        		}
-        		if(x.endsWith("\\"))
-        			x=x.substring(0, x.length()-1);
-        		this.IN_remoteFileElement=x.substring(x.lastIndexOf("\\")+1);
-        		this.IN_remoteFilename=x.substring(0,x.lastIndexOf("\\"));
-        		
-        	} 
+			 this.IN_remoteFilename=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.IN_remoteFilename);
+			 this.IN_remoteFileElement=this.IN_remoteFilename.substring(this.IN_remoteFilename.lastIndexOf("/")+1);
         	Element IN_localFileElement=(Element)rootActivityElement.getElementsByTagName("LocalFileName").item(0);
 			if(IN_localFileElement!=null)
         		this.IN_localFilename=IN_localFileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	if(this.IN_localFilename.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
-        		String x="";
-        		if(this.IN_localFilename.contains("concat")){
-        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.IN_localFilename);        			
-        		} else {
-        			x=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.IN_localFilename);
-        		}
-        		if(x.endsWith("\\"))
-        			x=x.substring(0, x.length()-1);
-        		this.IN_localFileElement=x.substring(x.lastIndexOf("\\")+1);
-        		this.IN_localFilename=x.substring(0,x.lastIndexOf("\\"));
-        		
-        	} 
-			
+			this.IN_localFilename=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.IN_localFilename);
+			this.IN_localFileElement=this.IN_localFilename.substring(this.IN_localFilename.lastIndexOf("/")+1);
+			String con=rootActivityElement.getElementsByTagName("SharedUserData").item(0).getTextContent();
+        	this.connectionName=con.substring(con.lastIndexOf("/")+1, con.lastIndexOf("."));
+        	
+		}
+		public static String getConnectionName() {
+			return connectionName;
+		}
+		public static void setConnectionName(String connectionName) {
+			FTPGetActivity.connectionName = connectionName;
 		}
 		public static String getDescription() {
 			return description;
@@ -678,7 +652,7 @@ public class FTPElement {
 	}
 	public static class FTPPutActivity
 	{
-		private static String description, activityType;
+		private static String description, activityType, connectionName;
 		private List<String> CONFIG_FTPConnection;
 		private String CONFIG_quit,CONFIG_useProcessData,CONFIG_binary,CONFIG_overwriteExistingFile,CONFIG_maintainCompatibility,CONFIG_append;
 		private int IN_port,IN_timeout;
@@ -690,43 +664,30 @@ public class FTPElement {
 			FTPPutActivity.description="The FTP Put activity issues an FTP put or mput command to the specified server. You can use process data as the content of the file to send to the remote server or you can send files in local disk storage. If you choose to use process data, you can place only one file on the	remote server (FTP put command).";
 			Element rootActivityElement = (Element)targetNode;
 			FTPPutActivity.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-			FTPPutActivity.activityType=rootActivityElement.getElementsByTagName("append").item(0).getTextContent();
-			FTPPutActivity.activityType=rootActivityElement.getElementsByTagName("Timeout").item(0).getTextContent();
-			FTPPutActivity.activityType=rootActivityElement.getElementsByTagName("isBinary").item(0).getTextContent();
-			FTPPutActivity.activityType=rootActivityElement.getElementsByTagName("Overwrite").item(0).getTextContent();
-			FTPPutActivity.activityType=rootActivityElement.getElementsByTagName("useProcessData").item(0).getTextContent();
+			this.CONFIG_append=rootActivityElement.getElementsByTagName("Append").item(0).getTextContent();
+			this.IN_timeout=Integer.parseInt(rootActivityElement.getElementsByTagName("Timeout").item(0).getTextContent());
+			this.CONFIG_binary=rootActivityElement.getElementsByTagName("isBinary").item(0).getTextContent();
+			this.CONFIG_overwriteExistingFile=rootActivityElement.getElementsByTagName("Overwrite").item(0).getTextContent();
+			this.CONFIG_useProcessData=rootActivityElement.getElementsByTagName("useProcessData").item(0).getTextContent();
 			Element IN_remoteFileElement=(Element)rootActivityElement.getElementsByTagName("RemoteFileName").item(0);
 			if(IN_remoteFileElement!=null)
         		this.IN_remoteFilename=IN_remoteFileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	if(this.IN_remoteFilename.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
-        		String x="";
-        		if(this.IN_remoteFilename.contains("concat")){
-        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.IN_remoteFilename);        			
-        		} else {
-        			x=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.IN_remoteFilename);
-        		}
-        		if(x.endsWith("\\"))
-        			x=x.substring(0, x.length()-1);
-        		this.IN_remoteFileElement=x.substring(x.lastIndexOf("\\")+1);
-        		this.IN_remoteFilename=x.substring(0,x.lastIndexOf("\\"));
-        		
-        	} 
+			this.IN_remoteFilename=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.IN_remoteFilename);
+			this.IN_remoteFileElement=this.IN_remoteFilename.substring(this.IN_remoteFilename.lastIndexOf("/")+1);
         	Element IN_localFileElement=(Element)rootActivityElement.getElementsByTagName("LocalFileName").item(0);
 			if(IN_localFileElement!=null)
         		this.IN_localFilename=IN_localFileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	if(this.IN_localFilename.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
-        		String x="";
-        		if(this.IN_localFilename.contains("concat")){
-        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.IN_localFilename);        			
-        		} else {
-        			x=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.IN_localFilename);
-        		}
-        		if(x.endsWith("\\"))
-        			x=x.substring(0, x.length()-1);
-        		this.IN_localFileElement=x.substring(x.lastIndexOf("\\")+1);
-        		this.IN_localFilename=x.substring(0,x.lastIndexOf("\\"));
-        		
-        	} 
+			this.IN_localFilename=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.IN_localFilename);
+			this.IN_localFileElement=this.IN_localFilename.substring(this.IN_localFilename.lastIndexOf("/")+1);
+			String con=rootActivityElement.getElementsByTagName("SharedUserData").item(0).getTextContent();
+        	this.connectionName=con.substring(con.lastIndexOf("/")+1, con.lastIndexOf("."));
+        	
+		}
+		public static String getConnectionName() {
+			return connectionName;
+		}
+		public static void setConnectionName(String connectionName) {
+			FTPPutActivity.connectionName = connectionName;
 		}
 		public static String getDescription() {
 			return description;
@@ -1047,7 +1008,13 @@ public class FTPElement {
 	}
 	public static class FTPRenameFileActivity
 	{
-		private static String description,  activityType;
+		private static String description,  activityType, connectionName;
+		public static String getConnectionName() {
+			return connectionName;
+		}
+		public static void setConnectionName(String connectionName) {
+			FTPRenameFileActivity.connectionName = connectionName;
+		}
 		private List<String> CONFIG_FTPConnection;
 		private String CONFIG_quit;
 		private int IN_port,IN_timeout;
@@ -1060,35 +1027,16 @@ public class FTPElement {
 			Element IN_oldRemoteFileElement=(Element)rootActivityElement.getElementsByTagName("OldRemoteFileName").item(0);
 			if(IN_oldRemoteFileElement!=null)
         		this.IN_oldRemoteFilename=IN_oldRemoteFileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	if(this.IN_oldRemoteFilename.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
-        		String x="";
-        		if(this.IN_oldRemoteFilename.contains("concat")){
-        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.IN_oldRemoteFilename);        			
-        		} else {
-        			x=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.IN_oldRemoteFilename);
-        		}
-        		if(x.endsWith("\\"))
-        			x=x.substring(0, x.length()-1);
-        		this.IN_oldRemoteFileElement=x.substring(x.lastIndexOf("\\")+1);
-        		this.IN_oldRemoteFilename=x.substring(0,x.lastIndexOf("\\"));
-        		
-        	} 
+        	this.IN_oldRemoteFilename=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.IN_oldRemoteFilename);
+			this.IN_oldRemoteFileElement=this.IN_oldRemoteFilename.substring(this.IN_oldRemoteFilename.lastIndexOf("/")+1);
         	Element IN_newRemoteFileElement=(Element)rootActivityElement.getElementsByTagName("NewRemoteFileName").item(0);
 			if(IN_newRemoteFileElement!=null)
         		this.IN_newRemoteFilename=IN_newRemoteFileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	if(this.IN_newRemoteFilename.contains("_globalVariables")&&MuleAutomatorConstants.globalVarsResolver.getMap().size()>0){
-        		String x="";
-        		if(this.IN_newRemoteFilename.contains("concat")){
-        			x=MuleAutomatorConstants.globalVarsResolver.resolveConcatQuery(this.IN_newRemoteFilename);        			
-        		} else {
-        			x=MuleAutomatorConstants.globalVarsResolver.getValueFromGlobalExpr(this.IN_newRemoteFilename);
-        		}
-        		if(x.endsWith("\\"))
-        			x=x.substring(0, x.length()-1);
-        		this.IN_newRemoteFileElement=x.substring(x.lastIndexOf("\\")+1);
-        		this.IN_newRemoteFilename=x.substring(0,x.lastIndexOf("\\"));
-        		
-        	} 
+			this.IN_newRemoteFilename=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.IN_newRemoteFilename);
+			this.IN_newRemoteFileElement=this.IN_newRemoteFilename.substring(this.IN_newRemoteFilename.lastIndexOf("/")+1);
+			String con=rootActivityElement.getElementsByTagName("SharedUserData").item(0).getTextContent();
+        	this.connectionName=con.substring(con.lastIndexOf("/")+1, con.lastIndexOf("."));
+        	
 		}
 		public static String getDescription() {
 			return description;

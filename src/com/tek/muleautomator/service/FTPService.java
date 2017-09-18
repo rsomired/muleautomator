@@ -3,7 +3,7 @@ package com.tek.muleautomator.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,6 +14,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.tek.muleautomator.config.Connection;
+import com.tek.muleautomator.config.FTPConnection;
+import com.tek.muleautomator.config.JDBCConnection;
 import com.tek.muleautomator.element.FTPElement.FTPGetActivity;
 import com.tek.muleautomator.element.FTPElement.FTPPutActivity;
 import com.tek.muleautomator.element.FTPElement.FTPRenameFileActivity;
@@ -23,8 +26,7 @@ import com.tek.muleautomator.util.MuleConfigConnection;
 
 public class FTPService {
 
-	public static String CONFIG_PORT, CONFIG_USERNAME, CONFIG_PASSWORD, CONFIG_HOST;
-
+	
 	public void ftpConfiguration(String muleConfigPath) throws ParserConfigurationException, SAXException, IOException {
 		Document doc = null;
 		try {
@@ -33,61 +35,45 @@ public class FTPService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		List<File> sharedFtpFiles = new ArrayList<>();
+		ArrayList<FTPConnection> ftpConnections=new ArrayList<>();	
+		for (Map.Entry<String, Connection> entry : MuleAutomatorConstants.connectionConfigs.entrySet()) {
+			if (entry.getValue().getConnectionType().equals("FTP")) {
+				ftpConnections.add((FTPConnection) entry.getValue());
+			}
+		}
 		Element muleTag = (Element) doc.getFirstChild();
-		Element ftpConfigElement = doc.createElement("ftp:connector");
-		MuleAutomatorUtil.fileFinder(new File(MuleAutomatorConstants.TIBCO_PROJECT_ROOT_FOLDER), sharedFtpFiles,
-				new String[] { "sharedftp" });
-		if (sharedFtpFiles.size() == 0) {
+		
+		
+		if (ftpConnections.size() == 0) {
+			Element ftpConfigElement = doc.createElement("ftp:connector");
 			System.err.println("Couldn't find Shared FTP configuration. Using Default FTP Config..");
 			ftpConfigElement.setAttribute("doc:name", "FTP");
 			ftpConfigElement.setAttribute("name", "FTP");
 			ftpConfigElement.setAttribute("validateConnections", "true");
 			ftpConfigElement.setAttribute("pollingFrequency", "1000");
-			CONFIG_PORT = "21";
-			CONFIG_USERNAME = "DEFAULT_USER";
-			CONFIG_PASSWORD = "DEFAULT_PASSWORD";
-			CONFIG_HOST = "localhost";
+			muleTag.appendChild(ftpConfigElement);
 			
 		} else {
 			try {
-				File currFile = sharedFtpFiles.get(0);
-				DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-				Document ftpConfigDoc = documentBuilder.parse(currFile);
-
-				CONFIG_PORT = ftpConfigDoc.getElementsByTagName("Port").item(0).getTextContent();
-				CONFIG_USERNAME = ftpConfigDoc.getElementsByTagName("UserName").item(0).getTextContent();
-				CONFIG_PASSWORD = ftpConfigDoc.getElementsByTagName("Password").item(0).getTextContent();
-				CONFIG_HOST = ftpConfigDoc.getElementsByTagName("Host").item(0).getTextContent();
-				
-				ftpConfigElement.setAttribute("doc:name", "FTP");
-				ftpConfigElement.setAttribute("name",ftpConfigDoc.getElementsByTagName("name").item(0).getTextContent());
-				ftpConfigElement.setAttribute("validateConnections", "true");
-				ftpConfigElement.setAttribute("pollingFrequency", "1000");
-				
+				for(FTPConnection ftp: ftpConnections){
+					Element ftpConfigElement = doc.createElement("ftp:connector");
+					ftpConfigElement.setAttribute("doc:name", "FTP");
+					ftpConfigElement.setAttribute("name",ftp.CONNECTION_NAME.replaceAll(" ","_"));
+					ftpConfigElement.setAttribute("validateConnections", "true");
+					ftpConfigElement.setAttribute("pollingFrequency", "1000");
+					muleTag.appendChild(ftpConfigElement);
+				}
 			} catch (Exception E) {
 			}
 		}
-		muleTag.appendChild(ftpConfigElement);
+		
 	}
 
 	public void ftpGet(String muleConfigPath, FTPGetActivity ftpGetActivity, Element flowElement) {
-		/*
-		 * <ftp:inbound-endpoint host="localhost" port="21" path="in"
-		 * user="user2" password="1234" responseTimeout="10000" doc:name="FTP"/>
-		 * <file:outbound-endpoint path="D:\Newfolder\out"
-		 * outputPattern="#[message.inboundProperties.originalFilename]"
-		 * responseTimeout="10000" doc:name="File"/>
-		 * 
-		
-		 */
-
 		try {
 			if(isFTPConfigRequired(muleConfigPath)){
 				ftpConfiguration(muleConfigPath);
 			}
-			
 			
 			Document doc = null;
 			try {
@@ -96,16 +82,26 @@ public class FTPService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Element muleTag = (Element) doc.getFirstChild();
-			Element ftpEl = doc.createElement("ftp:inbound-endbound");
-			ftpEl.setAttribute("host", ftpGetActivity.getIN_host());
-			ftpEl.setAttribute("port", "" + ftpGetActivity.getIN_port());
-			ftpEl.setAttribute("user", ftpGetActivity.getIN_userName());
+			FTPConnection requiredConnection=null;
+			for(Map.Entry<String, Connection> conEntry: MuleAutomatorConstants.connectionConfigs.entrySet()){
+				if(conEntry.getValue().getConnectionType().equals("FTP")){
+					FTPConnection ftpCon=(FTPConnection)conEntry.getValue();
+					if(ftpCon.CONNECTION_NAME.equals(ftpGetActivity.getConnectionName())){
+						requiredConnection=ftpCon;
+					}
+				}
+			}
+			
+			Element ftpEl = doc.createElement("ftp:inbound-endpoint");
+			ftpEl.setAttribute("host", requiredConnection.HOST);
+			ftpEl.setAttribute("port", "" + requiredConnection.PORT);
+			ftpEl.setAttribute("user", requiredConnection.USERNAME);
+			ftpEl.setAttribute("connector-ref", requiredConnection.CONNECTION_NAME.replaceAll(" ", "_"));
 			ftpEl.setAttribute("path", ftpGetActivity.getIN_remoteFilename());
-			ftpEl.setAttribute("password", ftpGetActivity.getIN_password());
+			ftpEl.setAttribute("password", requiredConnection.PASSWORD);
+			flowElement.appendChild(ftpEl);
 			
 		} catch (ParserConfigurationException | SAXException | IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -114,11 +110,95 @@ public class FTPService {
 	}
 
 	public void ftpPut(String muleConfigPath, FTPPutActivity ftpPutActivity, Element flowElement) {
-
+		try {
+			if(isFTPConfigRequired(muleConfigPath)){
+				ftpConfiguration(muleConfigPath);
+			}
+			
+			Document doc = null;
+			try {
+				doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			FTPConnection requiredConnection=null;
+			for(Map.Entry<String, Connection> conEntry: MuleAutomatorConstants.connectionConfigs.entrySet()){
+				if(conEntry.getValue().getConnectionType().equals("FTP")){
+					FTPConnection ftpCon=(FTPConnection)conEntry.getValue();
+					if(ftpCon.CONNECTION_NAME.equals(ftpPutActivity.getConnectionName())){
+						requiredConnection=ftpCon;
+					}
+				}
+			}
+			
+			Element ftpEl = doc.createElement("ftp:inbound-endpoint");
+			ftpEl.setAttribute("host", requiredConnection.HOST);
+			ftpEl.setAttribute("port", "" + requiredConnection.PORT);
+			ftpEl.setAttribute("user", requiredConnection.USERNAME);
+			ftpEl.setAttribute("connector-ref", requiredConnection.CONNECTION_NAME.replaceAll(" ", "_"));
+			ftpEl.setAttribute("path", ftpPutActivity.getIN_remoteFilename());
+			ftpEl.setAttribute("password", requiredConnection.PASSWORD);
+			flowElement.appendChild(ftpEl);
+			
+			Element fileOut=doc.createElement("file:outbound-endpoint");
+			fileOut.setAttribute("responseTimeout", "10000");
+			fileOut.setAttribute("doc:name", "File");
+			fileOut.setAttribute("path", ftpPutActivity.getIN_localFilename());
+			flowElement.appendChild(fileOut);
+			
+		} catch (ParserConfigurationException | SAXException | IOException e1) {
+			e1.printStackTrace();
+		}
+		
 	}
 
-	public void ftpSysType(String muleConfigPath, FTPRenameFileActivity ftpRenameFileActivity, Element flowElement) {
 
+	
+	public void ftpRenameFile(String muleConfigPath, FTPRenameFileActivity ftpRenameFileActivity, Element flowElement){
+		try {
+			if(isFTPConfigRequired(muleConfigPath)){
+				ftpConfiguration(muleConfigPath);
+			}
+			
+			Document doc = null;
+			try {
+				doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			FTPConnection requiredConnection=null;
+			for(Map.Entry<String, Connection> conEntry: MuleAutomatorConstants.connectionConfigs.entrySet()){
+				if(conEntry.getValue().getConnectionType().equals("FTP")){
+					FTPConnection ftpCon=(FTPConnection)conEntry.getValue();
+					if(ftpCon.CONNECTION_NAME.equals(ftpRenameFileActivity.getConnectionName())){
+						requiredConnection=ftpCon;
+					}
+				}
+			}
+			
+			Element ftpEl = doc.createElement("ftp:inbound-endpoint");
+			ftpEl.setAttribute("host", requiredConnection.HOST);
+			ftpEl.setAttribute("port", "" + requiredConnection.PORT);
+			ftpEl.setAttribute("user", requiredConnection.USERNAME);
+			ftpEl.setAttribute("path", ftpRenameFileActivity.getIN_oldRemoteFilename());
+			ftpEl.setAttribute("password", requiredConnection.PASSWORD);
+			ftpEl.setAttribute("connector-ref", requiredConnection.CONNECTION_NAME.replaceAll(" ", "_"));
+			flowElement.appendChild(ftpEl);
+			
+			Element ftpEl2 = doc.createElement("ftp:outbound-endpoint");
+			ftpEl2.setAttribute("host", requiredConnection.HOST);
+			ftpEl2.setAttribute("port", "" + requiredConnection.PORT);
+			ftpEl2.setAttribute("user", requiredConnection.USERNAME);
+			ftpEl.setAttribute("connector-ref", requiredConnection.CONNECTION_NAME.replaceAll(" ", "_"));
+			ftpEl2.setAttribute("path", ftpRenameFileActivity.getIN_newRemoteFilename());
+			ftpEl2.setAttribute("password", requiredConnection.PASSWORD);
+			flowElement.appendChild(ftpEl2);
+			
+		} catch (ParserConfigurationException | SAXException | IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	public boolean isFTPConfigRequired(String muleConfigPath)

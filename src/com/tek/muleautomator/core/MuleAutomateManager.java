@@ -21,6 +21,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.tek.muleautomator.config.FTPConnection;
 import com.tek.muleautomator.config.HTTPConnection;
 import com.tek.muleautomator.config.JDBCConnection;
 import com.tek.muleautomator.element.ActivityElement;
@@ -51,9 +52,9 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-			String tibcoProjectLocationRootFolder = "C:/Users/asgupta/Desktop/Project Src/tib5.x/tibprgms/HTTP/Retreive Resources/";
-			String tibcoProcessLocation = "C:/Users/asgupta/Desktop/Project Src/tib5.x/tibprgms/HTTP/Retreive Resources/pd.process";
-			String workspace = "D:/muleHTTP";
+			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/FTP";
+			String tibcoProcessLocation = "D:/Tibco_To_Mule/FTP/process/put.process";
+			String workspace = "D:/muleFTP";
 
 			// Loads all the Global Variables into
 			// MuleAutomatorConstants.globalResolver Object
@@ -94,7 +95,7 @@ public class MuleAutomateManager {
 	
 	private static void fetchAllConnections(String tibcoProjectLocationRootFolder){
 		List<File> connFiles=new ArrayList<>();
-        MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), connFiles, new String[]{"sharedjdbc","sharedhttp"});
+        MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), connFiles, new String[]{"sharedjdbc","sharedhttp","sharedftp"});
         for(File file: connFiles){
         	if(file.getPath().contains("jdbc")){
         		JDBCConnection jdbcConnection=new JDBCConnection(file);
@@ -113,6 +114,18 @@ public class MuleAutomateManager {
                 httpCon.CONNECTION_NAME=fileName;
         		MuleAutomatorConstants.connectionConfigs.put(httpCon.CONNECTION_NAME, httpCon);
 
+        	} else if (file.getPath().contains("ftp")){
+        		FTPConnection ftpCon=new FTPConnection(file);
+        		String fileName="";
+        		try {
+					fileName = file.getCanonicalPath().substring(file.getCanonicalPath().lastIndexOf(File.separator)+1);
+					fileName=fileName.substring(0,fileName.indexOf("."));
+				} catch (IOException e) {
+					fileName="HTTP Connection";
+					e.printStackTrace();
+				}
+                ftpCon.CONNECTION_NAME=fileName;
+        		MuleAutomatorConstants.connectionConfigs.put(ftpCon.CONNECTION_NAME, ftpCon);
         	}
        }
 	}
