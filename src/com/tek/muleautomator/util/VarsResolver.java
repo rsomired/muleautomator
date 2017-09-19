@@ -97,7 +97,10 @@ public class VarsResolver {
     	if(this.map.size()==0)
     		return expr;
         String key=expr.substring(expr.indexOf("GlobalVariables")+"GlobalVariables".length()+1,expr.length());
-        return map.get(key);
+        if(map.containsKey(key))
+        	return map.get(key);
+        else	
+        	return "DEFAULT";
     }
     
     public String resolveSingleExpression(String expr){

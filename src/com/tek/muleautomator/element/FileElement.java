@@ -38,7 +38,6 @@ public class FileElement {
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
         	if(fileElement!=null)
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	
         	this.INPUT_filePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_filePath);
     		String varName_fullName=generateTibcoVarName(rootActivityElement.getAttribute("name"))+"/ns:WriteActivityOutputClass/fileInfo/fullName";
         	try{
@@ -47,7 +46,11 @@ public class FileElement {
         		E.printStackTrace();
         	}
     		MuleAutomatorConstants.tibcoLocalVariables.put(varName_fullName, this.INPUT_filePath);
-    		this.INPUT_filePath=this.INPUT_filePath.substring(0,this.INPUT_filePath.lastIndexOf("\\"));
+    		try{
+    			this.INPUT_filePath=this.INPUT_filePath.substring(0,this.INPUT_filePath.lastIndexOf("\\"));
+    		} catch (Exception E){
+    			this.INPUT_filePath="DEFAULT";
+    		}
    	
         	Element textContentElement=(Element)rootActivityElement.getElementsByTagName("textContent").item(0);
         	if(textContentElement!=null){
@@ -184,7 +187,8 @@ public class FileElement {
         		this.INPUT_fileName="DefaultFile";
         	}
     		MuleAutomatorConstants.tibcoLocalVariables.put(varName_fullName, this.INPUT_filePath);
-    		this.INPUT_filePath=this.INPUT_filePath.substring(0,this.INPUT_filePath.lastIndexOf("\\"));       	
+    		if(this.INPUT_filePath.contains("\\"))
+    			this.INPUT_filePath=this.INPUT_filePath.substring(0,this.INPUT_filePath.lastIndexOf("\\"));       	
    
         }
 
@@ -382,7 +386,11 @@ public class FileElement {
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	this.INPUT_filePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_filePath);
     		this.INPUT_fileName=this.INPUT_filePath.substring(this.INPUT_filePath.lastIndexOf("\\")+1);
-    		this.INPUT_filePath=this.INPUT_filePath.substring(0,this.INPUT_filePath.lastIndexOf("\\"));       	
+    		try{
+    			this.INPUT_filePath=this.INPUT_filePath.substring(0,this.INPUT_filePath.lastIndexOf("\\"));       	
+    		} catch (Exception E){
+    			
+    		}
 		}
     	
     }

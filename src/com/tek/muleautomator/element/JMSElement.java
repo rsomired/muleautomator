@@ -162,11 +162,11 @@ public class JMSElement {
 	        	this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
 	        	this.INP_body=rootActivityElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
 	        	this.CONFIG_messageType=rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent();
-	        	this.INP_JMSType=rootActivityElement.getElementsByTagName("conditionType").item(0).getTextContent();
+	        	//this.INP_JMSType=rootActivityElement.getElementsByTagName("conditionType").item(0).getTextContent();
 	       	    this.CONFIG_JMSConnection=rootActivityElement.getElementsByTagName("ConnectionReference").item(0).getTextContent();
 	       	    this.ADV_deliveryMode=rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent();
-	       	    this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
-		        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
+	       	    this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent()):10;
+		        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent()):10;
 		 }
 			public static String getActivityType() {
 				return activityType;
@@ -331,11 +331,11 @@ public class JMSElement {
 	        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
 	        	 this.CONFIG_messageType=rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent();
 	        	 this.CONFIG_JMSConnection=rootActivityElement.getElementsByTagName("ConnectionReference").item(0).getTextContent();
-	        	 this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
+	        	 this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent()):10;
 	        	 this.ADV_deliveryMode=rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent();
 	        	this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
-	        	 this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
-	        	 this.INP_JMSType=rootActivityElement.getElementsByTagName("conditionType").item(0).getTextContent();
+	        	 this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent()):10;
+	        	 //this.INP_JMSType=rootActivityElement.getElementsByTagName("conditionType").item(0).getTextContent();
 	        	 Element cIdTag=(Element)rootActivityElement.getElementsByTagName("JMSCorrelationID").item(0);
 	        	 String value=((Element)cIdTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select");
 	        	 Element bodyTag=(Element)rootActivityElement.getElementsByTagName("JMSCorrelationID").item(0);
@@ -507,8 +507,8 @@ public class JMSElement {
 	        	this.CONFIG_destinationTopic=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
 	       	    this.ADV_deliveryMode=rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent();
 	       	    this.INP_body=rootActivityElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-	       	    this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
-		        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
+	       	    this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent()):10;
+		        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent()):10;
 		 }
 			public static String getActivityType() {
 				return activityType;
@@ -1182,8 +1182,8 @@ public class JMSElement {
        	    String value=((Element)cIdTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select");
        	    Element bodyTag=(Element)rootActivityElement.getElementsByTagName("JMSCorrelationID").item(0);
        	    String bodyValue=((Element)cIdTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select");
-	        this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
-	        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
+	        this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent()):10;
+	        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent()):10;
 		    }
 			public static String getActivityType() {
 				return activityType;
