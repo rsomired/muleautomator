@@ -222,6 +222,10 @@ public class MuleAutomateManager {
 				SOAPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 			case "ftp":
 				FTPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+			case "core":
+			case "mapper":
+			case "timer":
+				GeneralActivityHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 			}
 		}
 	}
