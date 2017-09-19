@@ -29,6 +29,7 @@ import com.tek.muleautomator.element.ConditionalTransition;
 import com.tek.muleautomator.element.TransitionElement;
 import com.tek.muleautomator.handler.FTPHandler;
 import com.tek.muleautomator.handler.FileHandler;
+import com.tek.muleautomator.handler.GeneralActivityHandler;
 import com.tek.muleautomator.handler.HTTPHandler;
 import com.tek.muleautomator.handler.JDBCHandler;
 import com.tek.muleautomator.handler.JMSHandler;

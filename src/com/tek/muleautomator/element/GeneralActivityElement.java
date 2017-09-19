@@ -190,7 +190,11 @@ public class GeneralActivityElement {
 	}
 	
 	public static class MapperActivity {
+	
 		
+		public MapperActivity(Node target){
+			
+		}
 	}
 	
 	
