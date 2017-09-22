@@ -12,7 +12,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.tek.muleautomator.element.JMSElement.JMSQueueEventSource;
@@ -31,7 +30,6 @@ public class JMSService {
 		try {
 			try {
 				Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-				Element muleTag=(Element)doc.getFirstChild();
 				List<File> jmsConnFiles=new ArrayList<>();
 				MuleAutomatorUtil.fileFinder(new File(MuleAutomatorConstants.TIBCO_PROJECT_ROOT_FOLDER), jmsConnFiles, new String[]{"sharedjmscon"});			
 				Element jmsConfig=null;

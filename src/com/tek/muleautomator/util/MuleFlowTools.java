@@ -369,7 +369,6 @@ public class MuleFlowTools {
 	 */
 	public static Element generateMuleFlowFromTibcoProcessOrderByTransitionsWithChoice(String tibcoProcessPath,
 			String muleConfigPath, Element flowElement) {
-		String pluginType = null;
 		try {
 			List<ActivityElement> activityElements = new ArrayList<>();
 			Map<String, ActivityElement> activityCache = new HashMap<>();

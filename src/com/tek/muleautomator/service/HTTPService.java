@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 import com.tek.muleautomator.config.Connection;
 import com.tek.muleautomator.config.HTTPConnection;
 import com.tek.muleautomator.element.HTTPElement;
+import com.tek.muleautomator.element.HTTPElement.HTTPReceiverActivity;
 import com.tek.muleautomator.element.SOAPElement.SOAPEventSourceActivity;
 import com.tek.muleautomator.element.SOAPElement.SOAPSendFaultActivity;
 import com.tek.muleautomator.element.SOAPElement.SOAPSendReceiveActivity;
@@ -86,7 +87,7 @@ public class HTTPService {
 				httpListnerConfiguration(muleConfigPath);
 			}
 			Element httpListnerRecvier = doc.createElement("http:listener");
-			httpListnerRecvier.setAttribute("config-ref", httpReceiverActivity.getConnectionName().replaceAll(" ", "_"));
+			httpListnerRecvier.setAttribute("config-ref", HTTPReceiverActivity.getConnectionName().replaceAll(" ", "_"));
 			httpListnerRecvier.setAttribute("path", "/");
 			httpListnerRecvier.setAttribute("doc:name", "HTTP");
 
