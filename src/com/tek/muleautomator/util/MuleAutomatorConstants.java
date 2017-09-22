@@ -6,7 +6,10 @@
 package com.tek.muleautomator.util;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 import com.tek.muleautomator.config.Connection;
 
@@ -20,6 +23,8 @@ public class MuleAutomatorConstants {
     public static VarsResolver globalVarsResolver;
     public static HashMap<String, String> tibcoLocalVariables=new HashMap<>();
     public static HashMap<String, Connection> connectionConfigs=new HashMap<>();
+    public static List<File> tibcoProcessFiles=new ArrayList<>();
+    public static HashSet<String> generatedFlows=new HashSet<>();
     
     public static void loadGlobalVars(String location) {
     	globalVarsResolver=new VarsResolver(location);

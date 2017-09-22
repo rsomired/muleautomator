@@ -61,7 +61,7 @@ public class GeneralActivityService {
 			Element timer = doc.createElement("quartz:outbound-endpoint");
 			timer.setAttribute("jobName", "myJob");
 			timer.setAttribute("repeatInterval", timerActivity.CONFIG_timeInterval);
-			//timer.setAttribute("cronExpression", "0 0 10 ? * WED");
+			// timer.setAttribute("cronExpression", "0 0 10 ? * WED");
 			timer.setAttribute("doc:name", "Quartz");
 			flow.appendChild(timer);
 		} catch (Exception e) {
@@ -73,10 +73,8 @@ public class GeneralActivityService {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			Element mapper = doc.createElement("dw:transform-message");
-			mapper.setAttribute("metadata:id", "0b127fdc-6abd-40d6-9d9a-a118690ca244");
-			mapper.setAttribute("input-payload mimeType", "application/json");
-			mapper.setAttribute("set-payload",
-					"");
+			mapper.setAttribute("mimeType", "application/json");
+			mapper.setAttribute("set-payload", "");
 			mapper.setAttribute("doc:name", "Transform message");
 			/*
 			 * <dw:transform-message
@@ -91,5 +89,21 @@ public class GeneralActivityService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void sharedVariable(String muleConfigPath, SharedVariableActivity sharedVariableActivity,
+			   Element flow) {
+			  try
+			  {
+			  Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			  Element sharedVariable = doc.createElement("set-session-variable");
+			  sharedVariable.setAttribute("variableName", "Sesion_Variable");
+			  sharedVariable.setAttribute("value","#[payload]");
+			  sharedVariable.setAttribute("doc:name", "Session Variable");
+			  flow.appendChild(sharedVariable);
+			 }
+			   catch (Exception e) {
+			    e.printStackTrace();
+			   }
 	}
 }

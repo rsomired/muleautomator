@@ -121,7 +121,38 @@ public class GeneralActivityElement {
 	}
 	
 	public static class SharedVariableActivity{
-		
+		private static String CONFIG_description,CONFIG_persistent,CONFIG_multiEngine,CONFIG_activityType;
+		  public SharedVariableActivity(Node targetNode)
+		  {
+		   SharedVariableActivity.CONFIG_description=" this activity to retrieve the value of a Shared Variable resource, you may want to use a critical section group to ensure that no other process instances are altering the value of the shared variable at the same time.";
+		   Element rootActivityElement = (Element)targetNode;
+		   SharedVariableActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
+		   
+		  }
+		  public static String getCONFIG_description() {
+		   return CONFIG_description;
+		  }
+		  public static void setCONFIG_description(String cONFIG_description) {
+		   CONFIG_description = cONFIG_description;
+		  }
+		  public static String getCONFIG_persistent() {
+		   return CONFIG_persistent;
+		  }
+		  public static void setCONFIG_persistent(String cONFIG_persistent) {
+		   CONFIG_persistent = cONFIG_persistent;
+		  }
+		  public static String getCONFIG_multiEngine() {
+		   return CONFIG_multiEngine;
+		  }
+		  public static void setCONFIG_multiEngine(String cONFIG_multiEngine) {
+		   CONFIG_multiEngine = cONFIG_multiEngine;
+		  }
+		  public static String getCONFIG_activityType() {
+		   return CONFIG_activityType;
+		  }
+		  public static void setCONFIG_activityType(String cONFIG_activityType) {
+		   CONFIG_activityType = cONFIG_activityType;
+		  }
 	}
 	
 	public static class SleepActivity {
