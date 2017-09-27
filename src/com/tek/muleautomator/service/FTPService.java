@@ -1,12 +1,9 @@
 package com.tek.muleautomator.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
@@ -16,12 +13,10 @@ import org.xml.sax.SAXException;
 
 import com.tek.muleautomator.config.Connection;
 import com.tek.muleautomator.config.FTPConnection;
-import com.tek.muleautomator.config.JDBCConnection;
 import com.tek.muleautomator.element.FTPElement.FTPGetActivity;
 import com.tek.muleautomator.element.FTPElement.FTPPutActivity;
 import com.tek.muleautomator.element.FTPElement.FTPRenameFileActivity;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
-import com.tek.muleautomator.util.MuleAutomatorUtil;
 import com.tek.muleautomator.util.MuleConfigConnection;
 
 public class FTPService {
@@ -86,7 +81,7 @@ public class FTPService {
 			for(Map.Entry<String, Connection> conEntry: MuleAutomatorConstants.connectionConfigs.entrySet()){
 				if(conEntry.getValue().getConnectionType().equals("FTP")){
 					FTPConnection ftpCon=(FTPConnection)conEntry.getValue();
-					if(ftpCon.CONNECTION_NAME.equals(ftpGetActivity.getConnectionName())){
+					if(ftpCon.CONNECTION_NAME.equals(FTPGetActivity.getConnectionName())){
 						requiredConnection=ftpCon;
 					}
 				}
@@ -126,7 +121,7 @@ public class FTPService {
 			for(Map.Entry<String, Connection> conEntry: MuleAutomatorConstants.connectionConfigs.entrySet()){
 				if(conEntry.getValue().getConnectionType().equals("FTP")){
 					FTPConnection ftpCon=(FTPConnection)conEntry.getValue();
-					if(ftpCon.CONNECTION_NAME.equals(ftpPutActivity.getConnectionName())){
+					if(ftpCon.CONNECTION_NAME.equals(FTPPutActivity.getConnectionName())){
 						requiredConnection=ftpCon;
 					}
 				}
@@ -172,7 +167,7 @@ public class FTPService {
 			for(Map.Entry<String, Connection> conEntry: MuleAutomatorConstants.connectionConfigs.entrySet()){
 				if(conEntry.getValue().getConnectionType().equals("FTP")){
 					FTPConnection ftpCon=(FTPConnection)conEntry.getValue();
-					if(ftpCon.CONNECTION_NAME.equals(ftpRenameFileActivity.getConnectionName())){
+					if(ftpCon.CONNECTION_NAME.equals(FTPRenameFileActivity.getConnectionName())){
 						requiredConnection=ftpCon;
 					}
 				}

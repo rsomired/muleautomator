@@ -3,14 +3,7 @@ package com.tek.muleautomator.core;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -18,22 +11,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import com.tek.muleautomator.config.FTPConnection;
 import com.tek.muleautomator.config.HTTPConnection;
 import com.tek.muleautomator.config.JDBCConnection;
-import com.tek.muleautomator.element.ActivityElement;
-import com.tek.muleautomator.element.ConditionalTransition;
-import com.tek.muleautomator.element.TransitionElement;
-import com.tek.muleautomator.handler.FTPHandler;
-import com.tek.muleautomator.handler.FileHandler;
-import com.tek.muleautomator.handler.GeneralActivityHandler;
-import com.tek.muleautomator.handler.HTTPHandler;
-import com.tek.muleautomator.handler.JDBCHandler;
-import com.tek.muleautomator.handler.JMSHandler;
-import com.tek.muleautomator.handler.SOAPHandler;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleAutomatorUtil;
