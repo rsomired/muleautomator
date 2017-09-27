@@ -55,32 +55,58 @@ public class MuleAutomateManager {
 		Element flowElement = null;
 		try {
 			
-			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/prog/Error/Re-throw";
-			String tibcoProcessLocation = "D:/Tibco_To_Mule/prog/Error/Re-throw/Main.process";
-			String workspace = "D:/muleprojects/muleSub2";
-
+			String tibcoProjectLocationRootFolder = "D:/Demo/mail";
+			String workspace = "D:/muleprojects/muleDemo";
+			
 			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), MuleAutomatorConstants.tibcoProcessFiles, new String[]{"process"});
 			// System.out.println("All: "+MuleAutomatorConstants.tibcoProcessFiles);
 			// Loads all the Global Variables into
 			// MuleAutomatorConstants.globalResolver Object
 			MuleAutomatorConstants.TIBCO_PROJECT_ROOT_FOLDER = tibcoProjectLocationRootFolder;
-			String projectName = getProjectName(tibcoProcessLocation);
+			String projectName = getProjectName(tibcoProjectLocationRootFolder);
+
 			createMuleProject(tibcoProjectLocationRootFolder, projectName, workspace);
-			String muleConfigPath = MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName);
-			MuleFlowTools.removeDefaultFlow(muleConfigPath, projectName);
 			
-			if (new File(muleConfigPath).exists()) {
-				flowElement = MuleFlowTools.createMuleFlow(muleConfigPath, projectName);
+			String muleConfigPath = MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName,"mule-config");
+
+			int i=1;
+			
+			List<File> processFiles=MuleAutomatorConstants.tibcoProcessFiles;
+			for(File currProcess: processFiles){
+				String currFileName=currProcess.getName().substring(0,currProcess.getName().indexOf("."));
+				System.out.println("\n***   Process "+i+": "+currFileName+"    ***");
+				if(i==1){
+					MuleAutomatorUtil.renameFile(muleConfigPath,MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName,currFileName));
+					muleConfigPath=MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName,currFileName);
+					MuleConfigConnection.updateConfigDom(muleConfigPath);
+					MuleFlowTools.removeDefaultFlow(muleConfigPath, projectName);
+
+				} else {
+					muleConfigPath=MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName,currFileName);
+					File file=new File(muleConfigPath);
+					file.createNewFile();
+					MuleAutomatorUtil.writeToFile(file.getCanonicalPath(),MuleAutomatorConstants.muleConfigTemplate);
+					MuleConfigConnection.updateConfigDom(muleConfigPath);
+				}
+				i++;
+				
+				if (new File(muleConfigPath).exists()) {
+					flowElement = MuleFlowTools.createMuleFlow(muleConfigPath, currFileName);
+				}
+				
+				
+				flowElement=MuleFlowTools.generateMuleFlowFromTibcoProcessOrderByTransitionsWithChoice(currProcess.getCanonicalPath(), muleConfigPath,
+						flowElement);
+				Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+				doc.getFirstChild().appendChild(flowElement);
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(doc);
+				StreamResult result = new StreamResult(muleConfigPath);
+				transformer.transform(source, result);
+				
 			}
-			flowElement=MuleFlowTools.generateMuleFlowFromTibcoProcessOrderByTransitionsWithChoice(tibcoProcessLocation, muleConfigPath,
-					flowElement);
-			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-			doc.getFirstChild().appendChild(flowElement);
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(muleConfigPath);
-			transformer.transform(source, result);
+			
 			
 			//System.out.println("Vars: "+ MuleAutomatorConstants.tibcoVariables);
 		} catch (Exception e) {
@@ -141,11 +167,29 @@ public class MuleAutomateManager {
 	private static void createMuleProject(String tibcoProjectLocationRootFolder, String projectName, String directory)
 			throws IOException {
 		fetchAllConnections(tibcoProjectLocationRootFolder);
+		if(MuleAutomatorConstants.removeExistingProject)
+			renameExistingFiles(directory+"//"+projectName);
 		MuleProjectSetup muleProjectSetup = new MuleProjectSetup();
+		System.out.println("* * Creating Mule Project using Maven...");
 		muleProjectSetup.createMuleProject(tibcoProjectLocationRootFolder, directory, projectName);
 	}
 	
 	
+
+	private static void renameExistingFiles(String directory) {
+		File dir=new File(directory);
+		if(!dir.exists())
+			return;
+		if(dir.listFiles().length>0){
+			System.out.println("Removing existing project...");
+			MuleAutomatorUtil.deleteDirectory(dir);
+			System.out.println("Removed!");
+		}
+	}
+
+	
+	
+
 
 	/**
 	 * Method to get mule project name.
@@ -156,7 +200,8 @@ public class MuleAutomateManager {
 	 */
 
 	private static String getProjectName(String path) {
-		return path.substring(path.lastIndexOf('/') + 1).split("\\.")[0];
+		return new File(path).getName();
+		
 	}
 	
 }

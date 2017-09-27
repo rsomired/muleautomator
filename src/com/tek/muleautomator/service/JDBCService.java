@@ -35,7 +35,8 @@ public class JDBCService {
 				}
 			}
 			if (connections.size() == 0) {
-				System.err.println("NO JDBC CONFIGURATION FILE FOUND, SETTING DEFAULT CONFIG");
+				System.err.println(">>> No JDBC Configuration file found. Setting default Config");
+				System.err.println(">>> Please make sure the location of TIBCO Root folder is correct and has 'Shared' folder");
 				// Hardcoded values if configuration file not found
 				Element jdbcConfig = doc.createElement("db:oracle-config");
 				jdbcConfig.setAttribute("name", "Oracle_Configuration");
@@ -168,10 +169,11 @@ public class JDBCService {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 
-			/*
-			 * if(isJDBCConfigRequired(muleConfigPath)){
-			 * jdbcConfiguration(muleConfigPath); }
-			 */
+				
+			 if(isJDBCConfigRequired(muleConfigPath)){
+				 jdbcConfiguration(muleConfigPath); 
+			 }
+			 
 
 			Element dbUpdate = doc.createElement("db:update");
 			dbUpdate.setAttribute("config-ref", jdbcUpdateActivity.getConnectionName().replaceAll(" ", "_"));

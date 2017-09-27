@@ -21,9 +21,14 @@ public class MuleConfigConnection {
 		}
 		return doc;
 	}
+	
+	public static boolean updateConfigDom(String filepath) throws Exception{
+		getDomConfig(filepath);
+		return true;
+	}
 
 	private static  Document getDomConfig(String filepath) throws Exception {
-		Document doc = null;
+		doc = null;
 		try {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;

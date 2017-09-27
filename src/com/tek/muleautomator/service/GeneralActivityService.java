@@ -58,10 +58,25 @@ public class GeneralActivityService {
 	public static void timer(String muleConfigPath, TimerActivity timerActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-			Element timer = doc.createElement("quartz:outbound-endpoint");
-			timer.setAttribute("jobName", "myJob");
+			
+			Element connecterRef=doc.createElement("quartz:connector");
+			connecterRef.setAttribute("name", "Quartz");
+			connecterRef.setAttribute("validateConnections", "true");
+			connecterRef.setAttribute("doc:name", "Quartz");
+			doc.getFirstChild().appendChild(connecterRef);
+			Element el=(Element)doc.getFirstChild();
+			el.setAttribute("xmlns:quartz", "http://www.mulesoft.org/schema/mule/quartz");
+					
+			Element timer = doc.createElement("quartz:inbound-endpoint");
+			timer.setAttribute("xsi:schemaLocation", "http://www.mulesoft.org/schema/mule/quartz/current/mule-quartz.xsd");
+            timer.setAttribute("jobName", "myJob");
+			timer.setAttribute("repeatCount", "1");
+			timer.setAttribute("responseTimeout", "10000");
+			timer.setAttribute("connector-ref", "Quartz");
 			timer.setAttribute("repeatInterval", timerActivity.CONFIG_timeInterval);
-			// timer.setAttribute("cronExpression", "0 0 10 ? * WED");
+			Element eventgen=doc.createElement("quartz:event-generator-job");
+			timer.appendChild(eventgen);
+			timer.setAttribute("cronExpression", "0 30 7 1/1 * ?");
 			timer.setAttribute("doc:name", "Quartz");
 			flow.appendChild(timer);
 		} catch (Exception e) {
@@ -72,7 +87,15 @@ public class GeneralActivityService {
 	public static void mapper(String muleConfigPath, MapperActivity mapperActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			
+			Element el=(Element)doc.getFirstChild();
+			el.setAttribute("xmlns:dw", "http://www.mulesoft.org/schema/mule/ee/dw");
+					
+			
+			
+			
 			Element mapper = doc.createElement("dw:transform-message");
+			mapper.setAttribute("xsi:schemaLocation", "http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd");
 			mapper.setAttribute("mimeType", "application/json");
 			mapper.setAttribute("set-payload", "");
 			mapper.setAttribute("doc:name", "Transform message");

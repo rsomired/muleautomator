@@ -25,6 +25,8 @@ import com.tek.muleautomator.handler.GeneralActivityHandler;
 import com.tek.muleautomator.handler.HTTPHandler;
 import com.tek.muleautomator.handler.JDBCHandler;
 import com.tek.muleautomator.handler.JMSHandler;
+import com.tek.muleautomator.handler.JavaHandler;
+import com.tek.muleautomator.handler.MailHandler;
 import com.tek.muleautomator.handler.ParseHandler;
 import com.tek.muleautomator.handler.SOAPHandler;
 
@@ -159,7 +161,7 @@ public class MuleFlowTools {
 			
 			if(activityElement.getActivityType().contains("CallProcessActivity")){
 				
-				System.out.println("Generating Sub-Flow: "+activityElement.getActivityName());
+				System.out.println("* * Generating Sub-Flow: "+activityElement.getActivityName()+"  * *");
 				Element el=(Element)activityElement.getTargetNode();
 				String processFileLoc="";
 				processFileLoc=el.getElementsByTagName("processName").item(0).getTextContent();
@@ -180,7 +182,7 @@ public class MuleFlowTools {
 						flowRef.setAttribute("doc:name", "Flow_Reference");
 						
 						flowElement.appendChild(flowRef);
-						//MuleAutomatorConstants.tibcoProcessFiles.remove(file);
+						MuleAutomatorConstants.tibcoProcessFiles.remove(file);
 						return;
 						
 					}
@@ -212,6 +214,12 @@ public class MuleFlowTools {
 				break;
 			case "parse":
 				ParseHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
+			case "mail":
+				MailHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
+			case "java":
+				JavaHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 			}
 		}
 	}
@@ -412,7 +420,7 @@ public class MuleFlowTools {
 					continue;
 				}
 
-				System.out.println("Working with the Choice in Mule...");
+				System.out.println("* * Working with the Choice in Mule...");
 
 				List<ConditionalTransition> conditionalTransitions = new ArrayList<>();
 

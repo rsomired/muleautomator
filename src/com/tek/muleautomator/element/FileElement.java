@@ -509,9 +509,10 @@ public class FileElement {
     		this.INPUT_toFilePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_toFilePath);
     		try{
     			this.INPUT_toFileName=this.INPUT_toFilePath.substring(this.INPUT_toFilePath.lastIndexOf("\\")+1);
+    			//System.out.println(this.INPUT_toFilePath);
     			this.INPUT_toFilePath=this.INPUT_toFilePath.substring(0,this.INPUT_toFilePath.lastIndexOf("\\"));
     		} catch (Exception E){
-    			E.printStackTrace();
+    			//E.printStackTrace();
     		}
     		
         	String activityName=rootActivityElement.getAttribute("name");

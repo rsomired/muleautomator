@@ -57,7 +57,7 @@ public class VarsResolver {
         List<File> defVarFiles=new ArrayList<>();
         MuleAutomatorUtil.fileFinder(location, defVarFiles, new String[]{"substvar"});
         if(defVarFiles.size()==0){
-            System.err.println("No default Var files found in "+location.getPath());
+            System.err.println(">>> No default Var files found in "+location.getPath());
             return;
         }
         for(File currFile: defVarFiles){
@@ -80,6 +80,7 @@ public class VarsResolver {
             }        
             
         }
+        //System.out.println(map);
         
     }
     
@@ -97,10 +98,13 @@ public class VarsResolver {
     	if(this.map.size()==0)
     		return expr;
         String key=expr.substring(expr.indexOf("GlobalVariables")+"GlobalVariables".length()+1,expr.length());
-        if(map.containsKey(key))
-        	return map.get(key);
-        else	
-        	return "DEFAULT";
+        
+        for(Map.Entry<String, String> entry: map.entrySet()){
+        	if(entry.getKey().contains(key)){
+        		return entry.getValue();
+        	}
+        }
+        return "";
     }
     
     public String resolveSingleExpression(String expr){
