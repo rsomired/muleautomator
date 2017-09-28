@@ -3,6 +3,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.tek.muleautomator.element.JavaElement.JavaCodeActivity;
+import com.tek.muleautomator.element.JavaElement.JavaMethodActivity;
+import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleAutomatorUtil;
 import com.tek.muleautomator.util.MuleConfigConnection;
 
@@ -22,7 +24,7 @@ public class JavaService {
 	        
 	        javaPath=javaPath.replaceAll("/","\\\\");    
 			
-	       MuleAutomatorUtil.writeToFile(javaPath, javaCodeActivity.getCODE_JavaCode());
+	        MuleAutomatorUtil.writeToFile(javaPath, javaCodeActivity.getCODE_JavaCode());
 			
 			javaCode.setAttribute("doc:name", "Java");
 			//String x=JavaCodeActivity.CODE_packageName+JavaCodeActivity.CODE_className;
@@ -34,4 +36,22 @@ public class JavaService {
 			e.printStackTrace();
 		}
 	}
+	
+	public void javaMethod(String muleConfigPath, JavaMethodActivity javaMethodActivity, Element flow){
+		try{
+			if(javaMethodActivity.getCONFIG_classLocation()==null){
+				
+				// Invoke Method from JDK package
+				
+				
+			} else {
+				
+				Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+				
+			}
+		} catch (Exception E){
+			
+		}
+	}
+	
 	}

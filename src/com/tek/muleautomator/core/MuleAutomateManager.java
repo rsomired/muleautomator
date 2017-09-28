@@ -35,7 +35,7 @@ public class MuleAutomateManager {
 		Element flowElement = null;
 		try {
 			
-			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/FTP";
+			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/javaMethod";
 			String workspace = "D:/muleprojects/muleDemo";
 			
 			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), MuleAutomatorConstants.tibcoProcessFiles, new String[]{"process"});
@@ -44,8 +44,9 @@ public class MuleAutomateManager {
 			// MuleAutomatorConstants.globalResolver Object
 			MuleAutomatorConstants.TIBCO_PROJECT_ROOT_FOLDER = tibcoProjectLocationRootFolder;
 			String projectName = getProjectName(tibcoProjectLocationRootFolder);
-
+			
 			createMuleProject(tibcoProjectLocationRootFolder, projectName, workspace);
+			MuleAutomatorUtil.includeLibraries(tibcoProjectLocationRootFolder, workspace+"/"+projectName);
 			
 			String muleConfigPath = MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName,"mule-config");
 

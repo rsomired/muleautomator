@@ -2,20 +2,30 @@ package com.tek.muleautomator.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.tek.muleautomator.element.JavaElement.JavaCodeActivity;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 public class MuleAutomatorUtil {
 
@@ -45,6 +55,72 @@ public class MuleAutomatorUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void includeLibraries(String tibcoPath, String muleBasePath) throws IOException, TransformerException{
+		System.out.println("* *  Looking for external Libraries  * *");
+		List<File> jarFiles=new ArrayList<>();
+		fileFinder(new File(tibcoPath), jarFiles, new String[]{"jar"});
+		File classPathFile=new File(muleBasePath+"/.classPath");
+		
+		Document doc=null;
+		if(!classPathFile.exists()){
+			System.err.println(">> ClassPath file not found! Generating .classpath file");
+			String temp="<?xml version=\"1.0\" encoding=\"UTF-8\"?><classpath></classpath>";
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder;
+			try {
+				docBuilder = docFactory.newDocumentBuilder();
+				InputSource is=new InputSource();
+				is.setCharacterStream(new StringReader(temp));
+				doc = docBuilder.parse(is);
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			classPathFile.createNewFile();
+		
+		} else {
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder;
+			
+			try {
+				docBuilder = docFactory.newDocumentBuilder();
+				doc = docBuilder.parse(classPathFile);
+				
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		for(File currFile: jarFiles){
+			
+			String currFileName=muleBasePath+"/libs/"+currFile.getName();
+			MuleAutomatorUtil.copyFile(currFile, new File(currFileName));
+			Element entry=doc.createElement("classpathentry");
+			entry.setAttribute("kind", "lib");
+			entry.setAttribute("path", currFileName);
+			doc.getFirstChild().appendChild(entry);
+			
+		}
+		
+		TransformerFactory transformerFactory=TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(classPathFile.getCanonicalPath());
+		transformer.transform(source, result);
+		System.out.println("Libraries included!");
+		
+		
+		
 	}
 
 	public static void writeToFile(String filePath, String sourceCode) {
@@ -111,4 +187,26 @@ public class MuleAutomatorUtil {
 		return dir.delete();
 
 	}
+	
+	private static void copyFile(File source, File dest) throws IOException {
+	    InputStream is = null;
+	    OutputStream os = null;
+	    dest.getParentFile().mkdirs();
+	   
+	    if(!dest.exists())
+	    	dest.createNewFile();
+	    try {
+	        is = new FileInputStream(source);
+	        os = new FileOutputStream(dest);
+	        byte[] buffer = new byte[1024];
+	        int length;
+	        while ((length = is.read(buffer)) > 0) {
+	            os.write(buffer, 0, length);
+	        }
+	    } finally {
+	        is.close();
+	        os.close();
+	    }
+	}
+	
 }

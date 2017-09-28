@@ -47,6 +47,8 @@ public class MuleAutomatorConstants {
 	 */
     
     static {
+    	
+    	// Load Mule Config Template
     	File file=new File(muleConfigTemplatePath);
     	
     	try(FileReader reader = new FileReader(file);) {

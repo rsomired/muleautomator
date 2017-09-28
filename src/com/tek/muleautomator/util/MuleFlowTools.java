@@ -29,6 +29,7 @@ import com.tek.muleautomator.handler.JavaHandler;
 import com.tek.muleautomator.handler.MailHandler;
 import com.tek.muleautomator.handler.ParseHandler;
 import com.tek.muleautomator.handler.SOAPHandler;
+import com.tek.muleautomator.handler.XMLHandler;
 
 public class MuleFlowTools {
 
@@ -222,6 +223,9 @@ public class MuleFlowTools {
 			case "mail":
 				MailHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 				break;
+			case "xml":
+			    XMLHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+			     break;
 			case "java":
 				JavaHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 			}
