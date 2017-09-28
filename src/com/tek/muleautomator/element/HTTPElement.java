@@ -242,7 +242,7 @@ public class HTTPElement {
 	
 	public static class HTTPSendRequestActivity
 	{
-	 private static String CONFIG_description;
+	 private static String CONFIG_description, CONFIG_connectionName;
 	 private static String CONFIG_connectionPath;
 	 private static String CONFIG_activityType;
 	 private int CONFIG_port;
@@ -257,7 +257,14 @@ public class HTTPElement {
 	 HTTPSendRequestActivity.CONFIG_description="The Send HTTP Request activity sends a HTTP request to a webserver";
 	 Element rootActivityElement = (Element)targetNode;
 	 HTTPSendRequestActivity.CONFIG_activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-	// HTTPSendRequestActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
+	 try{
+		 HTTPSendRequestActivity.CONFIG_connectionPath=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
+		 String con=rootActivityElement.getElementsByTagName("sharedChannel").item(0).getTextContent();
+		HTTPSendRequestActivity.CONFIG_connectionName=con.substring(con.lastIndexOf("/")+1, con.lastIndexOf("."));
+		   
+	 } catch( Exception E){
+		 HTTPSendRequestActivity.CONFIG_connectionName="HTTP Request Configuration";
+	 }
 	 this.CONFIG_host=(rootActivityElement.getElementsByTagName("host").getLength()>0)?rootActivityElement.getElementsByTagName("host").item(0).getTextContent():"";
 	 this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent()):80;
 	 //this.CONFIG_authentication=((Element)rootActivityElement.getElementsByTagName("Authorization").item(0)).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue();
@@ -270,6 +277,12 @@ public class HTTPElement {
 			 }
 			}
 	 }
+	}
+	public static String getCONFIG_connectionName() {
+		return CONFIG_connectionName;
+	}
+	public static void setCONFIG_connectionName(String cONFIG_connectionName) {
+		CONFIG_connectionName = cONFIG_connectionName;
 	}
 	public static String getDescription() {
 	 return CONFIG_description;

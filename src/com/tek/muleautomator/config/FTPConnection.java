@@ -21,7 +21,7 @@ public class FTPConnection extends Connection {
 	}
 
 	public String USERNAME, PASSWORD, HOST, CONNECTION_NAME, PORT, TIMEOUT;
-	
+	public boolean IS_CONFIGURED;
 	
 	public void fillDetails(Element rootElement){
 		this.CONNECTION_NAME=rootElement.getElementsByTagName("name").item(0).getTextContent();
@@ -38,6 +38,7 @@ public class FTPConnection extends Connection {
 	}
 	
 	public FTPConnection(File currFile){
+		IS_CONFIGURED=false;
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder;
 		try {
@@ -61,5 +62,7 @@ public class FTPConnection extends Connection {
 	public String getConnectionType() {
 		return "FTP";
 	}
+
+	
 
 }

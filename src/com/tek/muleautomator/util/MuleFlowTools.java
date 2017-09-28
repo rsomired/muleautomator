@@ -115,7 +115,11 @@ public class MuleFlowTools {
 			flowElement.appendChild(forEachTag);
 			
 			for(ActivityElement actEl: activityElements){
-				MuleFlowTools.generateFlowForActivity(actEl, muleConfigPath, forEachTag);
+				try{
+					MuleFlowTools.generateFlowForActivity(actEl, muleConfigPath, forEachTag);
+				} catch (Exception E){
+					E.printStackTrace();
+				}
 			}
 			
 		} catch (Exception e) {

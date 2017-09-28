@@ -19,8 +19,7 @@ import com.tek.muleautomator.util.MuleConfigConnection;
 
 public class JDBCService {
 
-
-	public void jdbcConfiguration(String muleConfigPath) {
+	public void jdbcConfiguration(String muleConfigPath, String conName) {
 
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
@@ -33,7 +32,8 @@ public class JDBCService {
 			}
 			if (connections.size() == 0) {
 				System.err.println(">>> No JDBC Configuration file found. Setting default Config");
-				System.err.println(">>> Please make sure the location of TIBCO Root folder is correct and has 'Shared' folder");
+				System.err.println(
+						">>> Please make sure the location of TIBCO Root folder is correct and has 'Shared' folder");
 				// Hardcoded values if configuration file not found
 				Element jdbcConfig = doc.createElement("db:oracle-config");
 				jdbcConfig.setAttribute("name", "Oracle_Configuration");
@@ -47,7 +47,12 @@ public class JDBCService {
 			} else {
 
 				for (JDBCConnection con : connections) {
-					Element jdbcConfig = doc.createElement("db:oracle-config");			
+					if (!con.CONNECTION_NAME.equals(conName))
+						continue;
+					if (con.IS_CONFIGURED)
+						break;
+					con.IS_CONFIGURED = true;
+					Element jdbcConfig = doc.createElement("db:oracle-config");
 					jdbcConfig.setAttribute("name", con.CONNECTION_NAME.replaceAll(" ", "_"));
 					jdbcConfig.setAttribute("host", con.HOST);
 					jdbcConfig.setAttribute("port", con.PORT);
@@ -59,7 +64,6 @@ public class JDBCService {
 				}
 
 			}
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,12 +75,10 @@ public class JDBCService {
 
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 
-			if (isJDBCConfigRequired(muleConfigPath)) {
-				jdbcConfiguration(muleConfigPath);
-			}
+			jdbcConfiguration(muleConfigPath, jdbcCallActivity.getConnectionName());
 
 			Element stordProc = doc.createElement("db:stored-procedure");
-			stordProc.setAttribute("config-ref", "Oracle_Configuration");
+			stordProc.setAttribute("config-ref", jdbcCallActivity.getConnectionName().replaceAll(" ", "_"));
 			stordProc.setAttribute("doc:name", "Database");
 
 			Element dbParamQuery = doc.createElement("db:parameterized-query");
@@ -102,9 +104,7 @@ public class JDBCService {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 
-			if (isJDBCConfigRequired(muleConfigPath)) {
-				jdbcConfiguration(muleConfigPath);
-			}
+			jdbcConfiguration(muleConfigPath, jdbcQueryActivity.getConnectionName());
 
 			Element dbSelect = doc.createElement("db:select");
 			dbSelect.setAttribute("config-ref", jdbcQueryActivity.getConnectionName().replaceAll(" ", "_"));
@@ -133,9 +133,7 @@ public class JDBCService {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 
-			if (isJDBCConfigRequired(muleConfigPath)) {
-				jdbcConfiguration(muleConfigPath);
-			}
+			jdbcConfiguration(muleConfigPath, jdbcUpdateActivity.getConnectionName());
 
 			Element dbInsert = doc.createElement("db:insert");
 			dbInsert.setAttribute("config-ref", jdbcUpdateActivity.getConnectionName().replaceAll(" ", "_"));
@@ -166,11 +164,7 @@ public class JDBCService {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 
-				
-			 if(isJDBCConfigRequired(muleConfigPath)){
-				 jdbcConfiguration(muleConfigPath); 
-			 }
-			 
+			jdbcConfiguration(muleConfigPath, jdbcUpdateActivity.getConnectionName());
 
 			Element dbUpdate = doc.createElement("db:update");
 			dbUpdate.setAttribute("config-ref", jdbcUpdateActivity.getConnectionName().replaceAll(" ", "_"));
@@ -201,9 +195,7 @@ public class JDBCService {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 
-			if (isJDBCConfigRequired(muleConfigPath)) {
-				jdbcConfiguration(muleConfigPath);
-			}
+			jdbcConfiguration(muleConfigPath, jdbcUpdateActivity.getConnectionName());
 
 			Element dbDelete = doc.createElement("db:delete");
 			dbDelete.setAttribute("config-ref", jdbcUpdateActivity.getConnectionName().replaceAll(" ", "_"));
@@ -227,13 +219,19 @@ public class JDBCService {
 		}
 	}
 
-	public boolean isJDBCConfigRequired(String muleConfigPath)
+	public boolean isJDBCConfigRequired(String muleConfigPath, String conName)
 			throws ParserConfigurationException, SAXException, IOException {
 		Document doc;
 		try {
 			doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			NodeList nodeList = doc.getElementsByTagName("db:oracle-config");
-			return nodeList.getLength() == 0 ? true : false;
+			for (int i = 0; i < nodeList.getLength(); ++i) {
+				Element el = (Element) nodeList.item(i);
+				if (el.getAttribute("name").replaceAll("_", " ").equals(conName)) {
+					return false;
+				}
+			}
+			return true;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

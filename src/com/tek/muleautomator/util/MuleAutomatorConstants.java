@@ -39,7 +39,7 @@ public class MuleAutomatorConstants {
 	public static HashMap<String, Connection> connectionConfigs=new HashMap<>();
 	public static List<File> tibcoProcessFiles=new ArrayList<>();
 	public static HashSet<String> generatedFlows=new HashSet<>();
-    
+    public static HashSet<String> configuredConnections=new HashSet<>();
 	
 	
 	/**

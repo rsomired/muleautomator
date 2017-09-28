@@ -35,7 +35,7 @@ public class MuleAutomateManager {
 		Element flowElement = null;
 		try {
 			
-			String tibcoProjectLocationRootFolder = "D:/Demo/mail";
+			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/FTP";
 			String workspace = "D:/muleprojects/muleDemo";
 			
 			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), MuleAutomatorConstants.tibcoProcessFiles, new String[]{"process"});

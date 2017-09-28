@@ -18,6 +18,7 @@ public class JDBCConnection extends Connection {
 	public String CONNECTION_NAME;
 	public String USERNAME,PASSWORD, HOST, INSTANCE, DRIVER_TYPE, PORT;
 	public int MAX_CONNECTIONS;
+	public boolean IS_CONFIGURED;
 	
 	public JDBCConnection(Node target){
 		Element rootElement=(Element)target;

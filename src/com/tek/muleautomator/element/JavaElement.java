@@ -81,4 +81,25 @@ public static class JavaCodeActivity{
 		OUT_parameters = oUT_parameters;
 	}
 }
+
+public static class JavaMethodActivity
+{
+ private String CONFIG_description;
+ private String activityType;
+ private static String CONFIG_javaGlobalInstance,CONFIG_java,CONFIG_library,CONFIG_className,CONFIG_methodName,CONFIG_classLocation;
+ private static String ADV_constructDeclaredClass,ADV_cacheConstructedClass,ADV_invokeCleanupMethod,ADV_cleanupMethod;
+ public  JavaMethodActivity(Node target)
+ {
+  Element rootActivityElement=(Element)target;
+     this.CONFIG_description="The Java Method activity allows you to invoke a method contained in a Java class. You can construct an instance of the specified Java class, if you choose to invoke the constructor for the class. . ";
+     this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
+     this.ADV_constructDeclaredClass=rootActivityElement.getElementsByTagName("ConstructDeclaredClass").item(0).getTextContent();
+     this.ADV_cacheConstructedClass=rootActivityElement.getElementsByTagName("CacheConstructedClass").item(0).getTextContent();
+     this.ADV_invokeCleanupMethod=rootActivityElement.getElementsByTagName("InvokeCleanupMethod").item(0).getTextContent();
+     this.CONFIG_className=rootActivityElement.getElementsByTagName("className").item(0).getTextContent();
+     this.CONFIG_methodName=rootActivityElement.getElementsByTagName("methodName").item(0).getTextContent();
+     this.CONFIG_classLocation=rootActivityElement.getElementsByTagName("classLocation").item(0).getTextContent();   
+}
+}
+
 }

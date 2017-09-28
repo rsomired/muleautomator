@@ -16,6 +16,11 @@ public class JavaHandler {
 				JavaElement.JavaCodeActivity javaCodeActivity=new JavaElement. JavaCodeActivity(activityElement.getTargetNode());
 				javaService.javaCode(muleProjectLocation, javaCodeActivity,flowElement);
 				break;
+			case "com.tibco.plugin.java.JavaMethodActivity":
+			    System.out.println("com.tibco.plugin.java.JavaMethodActivity-----The Java Method activity allows you to invoke a method contained in a Java class. You can construct an instance of the specified Java class, if you choose to invoke the constructor for the class.  ");
+			    JavaElement.JavaMethodActivity javaMethodActivity=new JavaElement. JavaMethodActivity(activityElement.getTargetNode());
+			    //javaService.javaMethod(muleProjectLocation, javaMethodActivity,flowElement);
+			    break;
 }
 		}
 }

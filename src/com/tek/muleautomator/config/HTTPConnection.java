@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 public class HTTPConnection extends Connection {
 
 	public String PORT, HOST, CONNECTION_NAME;
-	
+	public boolean IS_CONFIGURED;
 	@Override
 	public String getConnectionType() {
 		return "HTTP";

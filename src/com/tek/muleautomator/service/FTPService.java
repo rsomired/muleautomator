@@ -22,7 +22,7 @@ import com.tek.muleautomator.util.MuleConfigConnection;
 public class FTPService {
 
 	
-	public void ftpConfiguration(String muleConfigPath) throws ParserConfigurationException, SAXException, IOException {
+	public void ftpConfiguration(String muleConfigPath, String conName) throws ParserConfigurationException, SAXException, IOException {
 		Document doc = null;
 		try {
 			doc = MuleConfigConnection.getDomObj(muleConfigPath);
@@ -51,6 +51,13 @@ public class FTPService {
 		} else {
 			try {
 				for(FTPConnection ftp: ftpConnections){
+					
+					if (!ftp.CONNECTION_NAME.equals(conName))
+						continue;
+					if (ftp.IS_CONFIGURED)
+						break;
+					ftp.IS_CONFIGURED = true;
+					
 					Element ftpConfigElement = doc.createElement("ftp:connector");
 					ftpConfigElement.setAttribute("doc:name", "FTP");
 					ftpConfigElement.setAttribute("name",ftp.CONNECTION_NAME.replaceAll(" ","_"));
@@ -66,9 +73,9 @@ public class FTPService {
 
 	public void ftpGet(String muleConfigPath, FTPGetActivity ftpGetActivity, Element flowElement) {
 		try {
-			if(isFTPConfigRequired(muleConfigPath)){
-				ftpConfiguration(muleConfigPath);
-			}
+			
+			ftpConfiguration(muleConfigPath,FTPGetActivity.getConnectionName());
+			
 			
 			Document doc = null;
 			try {
@@ -106,9 +113,8 @@ public class FTPService {
 
 	public void ftpPut(String muleConfigPath, FTPPutActivity ftpPutActivity, Element flowElement) {
 		try {
-			if(isFTPConfigRequired(muleConfigPath)){
-				ftpConfiguration(muleConfigPath);
-			}
+			
+			ftpConfiguration(muleConfigPath,FTPPutActivity.getConnectionName());
 			
 			Document doc = null;
 			try {
@@ -152,9 +158,8 @@ public class FTPService {
 	
 	public void ftpRenameFile(String muleConfigPath, FTPRenameFileActivity ftpRenameFileActivity, Element flowElement){
 		try {
-			if(isFTPConfigRequired(muleConfigPath)){
-				ftpConfiguration(muleConfigPath);
-			}
+				
+			ftpConfiguration(muleConfigPath,FTPRenameFileActivity.getConnectionName());
 			
 			Document doc = null;
 			try {
