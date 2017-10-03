@@ -1,7 +1,6 @@
 package com.tek.muleautomator.element;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.w3c.dom.Element;

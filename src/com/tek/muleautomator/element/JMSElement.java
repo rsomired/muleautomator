@@ -3,8 +3,6 @@ import java.util.Map;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import com.tek.muleautomator.util.MuleAutomatorConstants;
 public class JMSElement {
 	 public static class JMSQueueEventSource
 	 {//done other2nd msg-selector

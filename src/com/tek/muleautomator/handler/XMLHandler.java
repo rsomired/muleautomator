@@ -2,9 +2,7 @@ package com.tek.muleautomator.handler;
 import org.w3c.dom.Element;
 
 import com.tek.muleautomator.element.ActivityElement;
-import com.tek.muleautomator.element.MailElement;
 import com.tek.muleautomator.element.XMLElement;
-import com.tek.muleautomator.service.MailService;
 import com.tek.muleautomator.service.XMLService;
 public class XMLHandler {
 		public static void generateMuleFlow(ActivityElement activityElement, String muleConfigPath, Element flowElement) {

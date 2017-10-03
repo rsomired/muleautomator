@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -11,6 +12,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
 import com.tek.muleautomator.config.FTPConnection;
 import com.tek.muleautomator.config.HTTPConnection;
 import com.tek.muleautomator.config.JDBCConnection;
@@ -35,8 +37,8 @@ public class MuleAutomateManager {
 		Element flowElement = null;
 		try {
 			
-			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/javaMethod";
-			String workspace = "D:/muleprojects/muleDemo";
+			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/prog/Miscellaneous/transaction/transaction/";
+			String workspace = "D:/muleprojects/muleTransaction";
 			
 			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), MuleAutomatorConstants.tibcoProcessFiles, new String[]{"process"});
 			// System.out.println("All: "+MuleAutomatorConstants.tibcoProcessFiles);
@@ -87,6 +89,7 @@ public class MuleAutomateManager {
 				transformer.transform(source, result);
 				
 			}
+			
 			
 			
 			//System.out.println("Vars: "+ MuleAutomatorConstants.tibcoVariables);

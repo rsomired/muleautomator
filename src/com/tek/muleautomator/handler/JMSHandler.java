@@ -1,10 +1,9 @@
 package com.tek.muleautomator.handler;
 
-import com.tek.muleautomator.element.ActivityElement;
-import com.tek.muleautomator.element.JMSElement;
-
 import org.w3c.dom.Element;
 
+import com.tek.muleautomator.element.ActivityElement;
+import com.tek.muleautomator.element.JMSElement;
 import com.tek.muleautomator.service.JMSService;
 
 public class JMSHandler {

@@ -58,9 +58,11 @@ public class MuleAutomatorUtil {
 	}
 	
 	public static void includeLibraries(String tibcoPath, String muleBasePath) throws IOException, TransformerException{
-		System.out.println("* *  Looking for external Libraries  * *");
+		System.out.println("\n* *  Looking for external Libraries  * *");
 		List<File> jarFiles=new ArrayList<>();
 		fileFinder(new File(tibcoPath), jarFiles, new String[]{"jar"});
+		if(jarFiles.size()==0)
+			return;
 		File classPathFile=new File(muleBasePath+"/.classPath");
 		
 		Document doc=null;

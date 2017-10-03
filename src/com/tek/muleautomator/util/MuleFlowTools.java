@@ -3,10 +3,8 @@ package com.tek.muleautomator.util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -81,31 +79,7 @@ public class MuleFlowTools {
 	}
 	
 	public static void loopGenerator(ActivityElement activityElement, String muleConfigPath, Element flowElement){
-		Element loopElement=(Element)activityElement.getTargetNode();
-		List<ActivityElement> activityElements=new ArrayList<>();
-		List<TransitionElement> transitionElements=new ArrayList<>();
-		
-		NodeList loopActivities=loopElement.getElementsByTagName("pd:activity");
-		NodeList loopTransitions=loopElement.getElementsByTagName("pd:transition");
-		// Get all inner transitions
-		for(int transIndex=0;transIndex<loopTransitions.getLength();++transIndex){
-			Element currTrans=(Element)loopTransitions.item(transIndex);
-			TransitionElement t=new TransitionElement(currTrans.getElementsByTagName("pd:from").item(0).getTextContent(), currTrans.getElementsByTagName("pd:to").item(0).getTextContent(), currTrans.getElementsByTagName("pd:conditionType").item(0).getTextContent());
-			transitionElements.add(t);
-		}
-		// Get ordered activities corresponding to transition
-		for(TransitionElement transitionElement: transitionElements){
-			if(transitionElement.getTo().toLowerCase().equals("end"))
-				break;
-			for(int actIndex=0;actIndex<loopActivities.getLength();++actIndex){
-				Element actElement=(Element)loopActivities.item(actIndex);
-				String actName=actElement.getAttribute("name");
-				if((transitionElement.getTo().equals(actName))){
-					activityElements.add(new ActivityElement(actElement.getElementsByTagName("pd:type").item(0).getTextContent(), actName, actElement,true));
-					break;
-				}
-			}
-		}
+		List<ActivityElement> activityElements=getOrderedActivitiesFromGroup(activityElement);
 		// Append components inside the Loop's forEach flow
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
@@ -129,30 +103,104 @@ public class MuleFlowTools {
 		
 		
 	}
+	
+	/*
+	 * Method to get a List of Activities in sorted order based on its inner Transitions.
+	 * 
+	 * @param Reference to Group activity in TIBCO document
+	 * @return List of Activity Elements
+	 */
+	public static List<ActivityElement> getOrderedActivitiesFromGroup(ActivityElement groupElement){
+		Element loopElement=(Element)groupElement.getTargetNode();
+		List<ActivityElement> activityElements=new ArrayList<>();
+		List<TransitionElement> transitionElements=new ArrayList<>();
+		
+		NodeList loopActivities=loopElement.getElementsByTagName("pd:activity");
+		NodeList loopTransitions=loopElement.getElementsByTagName("pd:transition");
+		
+		// Get all inner transitions
+		for(int transIndex=0;transIndex<loopTransitions.getLength();++transIndex){
+			Element currTrans=(Element)loopTransitions.item(transIndex);
+			TransitionElement t=new TransitionElement(currTrans.getElementsByTagName("pd:from").item(0).getTextContent(), currTrans.getElementsByTagName("pd:to").item(0).getTextContent(), currTrans.getElementsByTagName("pd:conditionType").item(0).getTextContent());
+			transitionElements.add(t);
+		}
+		
+		List<TransitionElement> tranistionsByOrder=null;
+		
+		
+		// Sort Transition list
+		if (transitionElements.size() > 1) {
+			tranistionsByOrder = new ArrayList<>();
+			String activity = "start";
+			while (transitionElements.size() != 0) {
+				for (int count = 0; count < transitionElements.size(); count++) {
+					TransitionElement transition = transitionElements.get(count);
+					if (transition.getFrom().toLowerCase().equals(activity.toLowerCase())) {
+						tranistionsByOrder.add(transition);
+						activity = transition.getTo();
+						transitionElements.remove(transition);
+						break;
+					}
+				}
+				if (activity.equalsIgnoreCase("End")) {
+					break;
+				}
+			}
+			
+		}
 
+		// Get ordered activities corresponding to transition
+		for(TransitionElement transitionElement: tranistionsByOrder){
+			if(transitionElement.getTo().toLowerCase().equals("end"))
+				break;
+			for(int actIndex=0;actIndex<loopActivities.getLength();++actIndex){
+				Element actElement=(Element)loopActivities.item(actIndex);
+				String actName=actElement.getAttribute("name");
+				if((transitionElement.getTo().equals(actName))){
+					activityElements.add(new ActivityElement(actElement.getElementsByTagName("pd:type").item(0).getTextContent(), actName, actElement,true));
+					break;
+				}
+			}
+		}
+		return activityElements;
+	}
+	
 	
 	/**
-	 * Method to check whether Transition Elements has Choice or not
-	 * 
-	 * @param doc
-	 * @return boolean, true if it has choices
+	 * Generates 'Transactional' component if inside flowElement Transaction is detected in TIBCO file.
+	 *  
+	 * @param activityElement
+	 * @param muleConfigPath
+	 * @param flowElement
 	 */
-
-	public static boolean hasConditionalTransitions(Document doc) {
-		NodeList allNodes = doc.getElementsByTagName("pd:transition");
-		Set<String> startPoints = new HashSet<>();
-		for (int count = 0; count < allNodes.getLength(); count++) {
-			Node tempNode = allNodes.item(count);
-			Element tempNodeElement = (Element) tempNode;
-			String from = tempNodeElement.getElementsByTagName("pd:from").item(0).getTextContent();
-			if (startPoints.contains(from)) {
-				return true;
+	
+	public static void transactionElements(ActivityElement activityElement, String muleConfigPath, Element flowElement){
+		
+		List<ActivityElement> activityElements=getOrderedActivitiesFromGroup(activityElement);
+		// Append components inside transaction
+		try {
+			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			
+			Element transactionalTag=doc.createElement("transactional");
+			transactionalTag.setAttribute("doc:name", "Transactional");
+			transactionalTag.setAttribute("action", "ALWAYS_BEGIN");
+			flowElement.appendChild(transactionalTag);
+			
+			for(ActivityElement actEl: activityElements){
+				try{
+					MuleFlowTools.generateFlowForActivity(actEl, muleConfigPath, transactionalTag);
+				} catch (Exception E){
+					E.printStackTrace();
+				}
 			}
-			startPoints.add(from);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return false;
+	
 	}
-
+	
+	
 	
 	
 	public static void generateFlowForActivity(ActivityElement activityElement, String muleConfigPath,
@@ -161,6 +209,9 @@ public class MuleFlowTools {
 			
 			if(activityElement.getActivityType().contains("LoopGroup")){
 				loopGenerator(activityElement, muleConfigPath, flowElement);
+				return;
+			} else if (activityElement.getActivityType().contains("TransactionGroup")){
+				transactionElements(activityElement, muleConfigPath, flowElement);
 				return;
 			}
 			

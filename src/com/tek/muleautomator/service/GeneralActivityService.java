@@ -3,7 +3,13 @@ package com.tek.muleautomator.service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.tek.muleautomator.element.GeneralActivityElement.*;
+import com.tek.muleautomator.element.GeneralActivityElement.AssignActivity;
+import com.tek.muleautomator.element.GeneralActivityElement.CatchActivity;
+import com.tek.muleautomator.element.GeneralActivityElement.InspectorActivity;
+import com.tek.muleautomator.element.GeneralActivityElement.MapperActivity;
+import com.tek.muleautomator.element.GeneralActivityElement.SharedVariableActivity;
+import com.tek.muleautomator.element.GeneralActivityElement.SleepActivity;
+import com.tek.muleautomator.element.GeneralActivityElement.TimerActivity;
 import com.tek.muleautomator.util.MuleConfigConnection;
 
 public class GeneralActivityService {

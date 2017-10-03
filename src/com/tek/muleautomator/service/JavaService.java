@@ -4,7 +4,6 @@ import org.w3c.dom.Element;
 
 import com.tek.muleautomator.element.JavaElement.JavaCodeActivity;
 import com.tek.muleautomator.element.JavaElement.JavaMethodActivity;
-import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleAutomatorUtil;
 import com.tek.muleautomator.util.MuleConfigConnection;
 

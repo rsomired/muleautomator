@@ -2,11 +2,9 @@ package com.tek.muleautomator.service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.tek.muleautomator.util.MuleAutomatorUtil;
-import com.tek.muleautomator.util.MuleConfigConnection;
 import com.tek.muleautomator.element.MailElement;
-import com.tek.muleautomator.element.MailElement.ReceiveMailActivity;
 import com.tek.muleautomator.element.MailElement.SendMailActivity;
+import com.tek.muleautomator.util.MuleConfigConnection;
 public class MailService {
   public void receiveMail(String muleConfigPath,MailElement.ReceiveMailActivity receiveMailActivity, Element flow){
 	  try {

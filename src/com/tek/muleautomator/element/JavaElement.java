@@ -1,15 +1,6 @@
 package com.tek.muleautomator.element;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.tek.muleautomator.util.MuleAutomatorConstants;
 public class JavaElement {
 public static class JavaCodeActivity{
 	private String CONFIG_description;

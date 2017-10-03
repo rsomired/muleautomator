@@ -1,10 +1,8 @@
 package com.tek.muleautomator.element;
 import java.util.HashMap;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.tek.muleautomator.util.MuleAutomatorConstants;
 public class ParseElement {
 	public static class ParseDataActivity{
 		private String CONFIG_dataFormat,CONFIG_inputType,CONFIG_encoding,CONFIG_skipBlankLines,CONFIG_manuallySpecifyStartRecord;
