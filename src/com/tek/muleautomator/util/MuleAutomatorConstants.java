@@ -26,7 +26,7 @@ public class MuleAutomatorConstants {
     public static String muleConfigTemplate="";
     public static String muleConfigTemplatePath="resources\\config-template.xml";
 	public static boolean removeExistingProject=true;
-	
+	public static String muleResourcesPath="";
 	
 	/**
 	 * Declaration of Dynamic Values needed for functioning of Automator

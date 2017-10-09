@@ -3,7 +3,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.tek.muleautomator.element.JavaElement.JavaCodeActivity;
-import com.tek.muleautomator.element.JavaElement.JavaMethodActivity;
 import com.tek.muleautomator.util.MuleAutomatorUtil;
 import com.tek.muleautomator.util.MuleConfigConnection;
 
@@ -36,21 +35,6 @@ public class JavaService {
 		}
 	}
 	
-	public void javaMethod(String muleConfigPath, JavaMethodActivity javaMethodActivity, Element flow){
-		try{
-			if(javaMethodActivity.getCONFIG_classLocation()==null){
-				
-				// Invoke Method from JDK package
-				
-				
-			} else {
-				
-				Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-				
-			}
-		} catch (Exception E){
-			
-		}
-	}
+	
 	
 	}

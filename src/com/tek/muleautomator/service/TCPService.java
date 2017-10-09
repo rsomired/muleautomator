@@ -2,12 +2,8 @@ package com.tek.muleautomator.service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.tek.muleautomator.util.MuleAutomatorUtil;
-import com.tek.muleautomator.util.MuleConfigConnection;
-import com.tek.muleautomator.element.MailElement;
 import com.tek.muleautomator.element.TCPElement;
-import com.tek.muleautomator.element.TCPElement.TCPConnectionActivity;
-import com.tek.muleautomator.element.TCPElement.TCPOpenConnectionActivity;
+import com.tek.muleautomator.util.MuleConfigConnection;
 public class TCPService {
 	 public void tcpConnection(String muleConfigPath,TCPElement.TCPConnectionActivity tcpConnectionActivity, Element flow){
 		 try {

@@ -16,6 +16,7 @@ import org.w3c.dom.Element;
 import com.tek.muleautomator.config.FTPConnection;
 import com.tek.muleautomator.config.HTTPConnection;
 import com.tek.muleautomator.config.JDBCConnection;
+import com.tek.muleautomator.config.WSDLConnection;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleAutomatorUtil;
@@ -36,9 +37,8 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-			
-			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/prog/Miscellaneous/transaction/transaction/";
-			String workspace = "D:/muleprojects/muleTransaction";
+			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/prog/Services";
+			String workspace = "D:/muleprojects/muleServices";
 			
 			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), MuleAutomatorConstants.tibcoProcessFiles, new String[]{"process"});
 			// System.out.println("All: "+MuleAutomatorConstants.tibcoProcessFiles);
@@ -58,6 +58,7 @@ public class MuleAutomateManager {
 			for(File currProcess: processFiles){
 				String currFileName=currProcess.getName().substring(0,currProcess.getName().indexOf("."));
 				System.out.println("\n***   Process "+i+": "+currFileName+"    ***");
+				
 				if(i==1){
 					MuleAutomatorUtil.renameFile(muleConfigPath,MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName,currFileName));
 					muleConfigPath=MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName,currFileName);
@@ -66,6 +67,7 @@ public class MuleAutomateManager {
 
 				} else {
 					muleConfigPath=MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName,currFileName);
+					
 					File file=new File(muleConfigPath);
 					file.createNewFile();
 					MuleAutomatorUtil.writeToFile(file.getCanonicalPath(),MuleAutomatorConstants.muleConfigTemplate);
@@ -102,7 +104,7 @@ public class MuleAutomateManager {
 	
 	private static void fetchAllConnections(String tibcoProjectLocationRootFolder){
 		List<File> connFiles=new ArrayList<>();
-        MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), connFiles, new String[]{"sharedjdbc","sharedhttp","sharedftp"});
+        MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), connFiles, new String[]{"sharedjdbc","sharedhttp","sharedftp","sharedpartner"});
         for(File file: connFiles){
         	if(file.getPath().contains("jdbc")){
         		JDBCConnection jdbcConnection=new JDBCConnection(file);
@@ -133,6 +135,18 @@ public class MuleAutomateManager {
 				}
                 ftpCon.CONNECTION_NAME=fileName;
         		MuleAutomatorConstants.connectionConfigs.put(ftpCon.CONNECTION_NAME, ftpCon);
+        	} else if(file.getPath().contains("partner")){
+        		String fileName;
+        		WSDLConnection wsdlCon=new WSDLConnection(file);
+        		try {
+					fileName = file.getCanonicalPath().substring(file.getCanonicalPath().lastIndexOf(File.separator)+1);
+					fileName=fileName.substring(0,fileName.indexOf("."));
+				} catch (IOException e) {
+					fileName="Partner";
+					e.printStackTrace();
+				}
+        		wsdlCon.CONNECTION_NAME=fileName;
+        		MuleAutomatorConstants.connectionConfigs.put(wsdlCon.CONNECTION_NAME, wsdlCon);
         	}
        }
 	}
@@ -150,12 +164,14 @@ public class MuleAutomateManager {
 
 	private static void createMuleProject(String tibcoProjectLocationRootFolder, String projectName, String directory)
 			throws IOException {
-		fetchAllConnections(tibcoProjectLocationRootFolder);
+		
 		if(MuleAutomatorConstants.removeExistingProject)
 			renameExistingFiles(directory+"//"+projectName);
 		MuleProjectSetup muleProjectSetup = new MuleProjectSetup();
 		System.out.println("* * Creating Mule Project using Maven...");
 		muleProjectSetup.createMuleProject(tibcoProjectLocationRootFolder, directory, projectName);
+		MuleAutomatorConstants.muleResourcesPath=directory+"\\"+projectName+"\\src\\main\\resources\\";
+		fetchAllConnections(tibcoProjectLocationRootFolder);
 	}
 	
 	

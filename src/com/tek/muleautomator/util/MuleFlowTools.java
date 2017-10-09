@@ -27,9 +27,9 @@ import com.tek.muleautomator.handler.JavaHandler;
 import com.tek.muleautomator.handler.MailHandler;
 import com.tek.muleautomator.handler.ParseHandler;
 import com.tek.muleautomator.handler.SOAPHandler;
+import com.tek.muleautomator.handler.ServiceHandler;
 import com.tek.muleautomator.handler.TCPHandler;
 import com.tek.muleautomator.handler.XMLHandler;
-import com.tek.muleautomator.service.ServiceHandler;
 
 public class MuleFlowTools {
 
@@ -281,8 +281,8 @@ public class MuleFlowTools {
 			     break;
 			case "java":
 				JavaHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-			//case "servicepalette":
-			//	ServiceHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+			case "servicepalette":
+				ServiceHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 			case "tcp":
 				TCPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 			}
@@ -559,6 +559,8 @@ public class MuleFlowTools {
 	 */
 
 	private static String getPluginType(String activityType) {
+		if(activityType.contains("servicepalette"))
+			return "servicepalette";
 		return activityType.split("\\.")[3];
 	}
 

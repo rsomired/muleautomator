@@ -1,8 +1,6 @@
 package com.tek.muleautomator.element;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import com.tek.muleautomator.util.MuleAutomatorConstants;
 public class TCPElement {
 public static class TCPConnectionActivity{
 	 private String CONFIG_description;
