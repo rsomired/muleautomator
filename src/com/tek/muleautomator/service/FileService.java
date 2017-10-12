@@ -20,7 +20,7 @@ public class FileService {
 
 			Element fileInBound=doc.createElement("file:inbound-endpoint");
 			fileInBound.setAttribute("responseTimeout", "10000");
-			fileInBound.setAttribute("doc:name", "File");
+			fileInBound.setAttribute("doc:name", "Copy From");
 			fileInBound.setAttribute("path", fileCopyActivity.getINPUT_fromFilePath());
 			flow.appendChild(fileInBound);
 
@@ -28,7 +28,7 @@ public class FileService {
 
 			Element fileOutBound=doc.createElement("file:outbound-endpoint");
 			fileOutBound.setAttribute("responseTimeout", "10000");
-			fileOutBound.setAttribute("doc:name", "File");
+			fileOutBound.setAttribute("doc:name", "Copy To");
 			fileOutBound.setAttribute("path", fileCopyActivity.getINPUT_toFilePath());
 			flow.appendChild(fileOutBound);
 		} catch (Exception e) {
@@ -44,7 +44,7 @@ public class FileService {
 
 			Element fileOutBound=doc.createElement("file:outbound-endpoint");
 			fileOutBound.setAttribute("responseTimeout", "10000");
-			fileOutBound.setAttribute("doc:name", "File");
+			fileOutBound.setAttribute("doc:name", "Create File");
 			fileOutBound.setAttribute("outputPattern", fileCreateActivity.getINPUT_fileName());
 			fileOutBound.setAttribute("path", fileCreateActivity.getINPUT_filePath());
 			flow.appendChild(fileOutBound);
@@ -69,7 +69,7 @@ public class FileService {
 
 			Element fileOutBound=doc.createElement("file:outbound-endpoint");
 			fileOutBound.setAttribute("responseTimeout", "10000");
-			fileOutBound.setAttribute("doc:name", "File");
+			fileOutBound.setAttribute("doc:name", "Write File");
 			fileOutBound.setAttribute("outputPattern", fileWriteActivity.getINPUT_fileName());
 			fileOutBound.setAttribute("path", fileWriteActivity.getINPUT_filePath());
 			flow.appendChild(fileOutBound);
@@ -87,7 +87,7 @@ public class FileService {
 			Element muleTag=(Element)doc.getFirstChild();
 
 			Element fileConnector = doc.createElement("file:connector");
-			fileConnector.setAttribute("name", "File");
+			fileConnector.setAttribute("name", "File_"+fileRemoveActivity.getINPUT_fileName().substring(fileRemoveActivity.getINPUT_fileName().lastIndexOf(".")+1));
 			fileConnector.setAttribute("autoDelete", "true");
 			fileConnector.setAttribute("streaming", "false");
 			fileConnector.setAttribute("validateConnections", "true");
@@ -97,8 +97,8 @@ public class FileService {
 			Element fileInBound=doc.createElement("file:inbound-endpoint");
 			fileInBound.setAttribute("responseTimeout", "10000");
 			fileInBound.setAttribute("moveToPattern", fileRemoveActivity.getINPUT_fileName().substring(fileRemoveActivity.getINPUT_fileName().lastIndexOf(".")+1));
-			fileInBound.setAttribute("connector-ref", "File");
-			fileInBound.setAttribute("doc:name", "File");
+			fileInBound.setAttribute("connector-ref", "File_"+fileRemoveActivity.getINPUT_fileName().substring(fileRemoveActivity.getINPUT_fileName().lastIndexOf(".")+1));
+			fileInBound.setAttribute("doc:name", "Delete File");
 			fileInBound.setAttribute("path", fileRemoveActivity.getINPUT_filePath());
 			flow.appendChild(fileInBound);
 
@@ -116,7 +116,7 @@ public class FileService {
 
 			Element fileInBound=doc.createElement("file:inbound-endpoint");
 			fileInBound.setAttribute("responseTimeout", "10000");
-			fileInBound.setAttribute("doc:name", "File");
+			fileInBound.setAttribute("doc:name", "Read File");
 			fileInBound.setAttribute("path", fileReadActivity.getINPUT_filePath());
 			flow.appendChild(fileInBound);
 
@@ -133,7 +133,7 @@ public class FileService {
 			Element muleTag=(Element)doc.getFirstChild();
 
 			Element fileConnector = doc.createElement("file:connector");
-			fileConnector.setAttribute("name", "File1");
+			fileConnector.setAttribute("name", "Rename_File_"+fileRenameActivity.getINPUT_fromFilePath());
 			fileConnector.setAttribute("autoDelete", "true");
 			fileConnector.setAttribute("streaming", "true");
 			fileConnector.setAttribute("validateConnections", "true");
@@ -144,8 +144,8 @@ public class FileService {
 
 			Element fileInBound=doc.createElement("file:inbound-endpoint");
 			fileInBound.setAttribute("responseTimeout", "10000");
-			fileInBound.setAttribute("doc:name", "File");
-			fileInBound.setAttribute("connector-ref", "File1");
+			fileInBound.setAttribute("doc:name", "Rename File");
+			fileInBound.setAttribute("connector-ref", "Rename_File_"+fileRenameActivity.getINPUT_fromFilePath());
 			fileInBound.setAttribute("path", fileRenameActivity.getINPUT_fromFilePath());
 			fileInBound.setAttribute("moveToDirectory", fileRenameActivity.getINPUT_toFilePath());
 			flow.appendChild(fileInBound);

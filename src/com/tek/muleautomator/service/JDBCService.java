@@ -40,7 +40,7 @@ public class JDBCService {
 				jdbcConfig.setAttribute("host", "localhost");
 				jdbcConfig.setAttribute("port", "1521");
 				jdbcConfig.setAttribute("instance", "xe");
-				jdbcConfig.setAttribute("user", "ashish");
+				jdbcConfig.setAttribute("user", "admin");
 				jdbcConfig.setAttribute("password", "1234");
 				jdbcConfig.setAttribute("doc:name", "Oracle Configuration");
 				muleTag.appendChild(jdbcConfig);

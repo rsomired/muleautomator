@@ -266,7 +266,11 @@ public class HTTPElement {
 		 HTTPSendRequestActivity.CONFIG_connectionName="HTTP Request Configuration";
 	 }
 	 this.CONFIG_host=(rootActivityElement.getElementsByTagName("host").getLength()>0)?rootActivityElement.getElementsByTagName("host").item(0).getTextContent():"";
-	 this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent()):80;
+	 try{
+		 this.CONFIG_port=rootActivityElement.getElementsByTagName("serverport").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("serverport").item(0).getTextContent()):80;
+	 } catch(Exception E){
+		 this.CONFIG_port=8081;
+	 }
 	 //this.CONFIG_authentication=((Element)rootActivityElement.getElementsByTagName("Authorization").item(0)).getChildNodes().item(0).getAttributes().getNamedItem("select").getNodeValue();
 	 NodeList paramTag=rootActivityElement.getElementsByTagName("parameters");
 	 if(paramTag.getLength()>0){

@@ -32,7 +32,7 @@ public class MuleAutomatorConstants {
 	 * Declaration of Dynamic Values needed for functioning of Automator
 	 */
 	
-	public static VarsResolver globalVarsResolver;
+	public static VarsResolver tibcoVarsResolver;
 	public static HashMap<String, String> tibcoLocalVariables=new HashMap<>();
 	public static HashMap<String, Connection> connectionConfigs=new HashMap<>();
 	public static List<File> tibcoProcessFiles=new ArrayList<>();
@@ -73,7 +73,7 @@ public class MuleAutomatorConstants {
      */
     
     public static void loadGlobalVars(String location) {
-    	globalVarsResolver=new VarsResolver(location);
+    	tibcoVarsResolver=new VarsResolver(location);
     }
     
     

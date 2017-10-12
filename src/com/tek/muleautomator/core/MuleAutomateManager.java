@@ -2,10 +2,14 @@ package com.tek.muleautomator.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -16,7 +20,9 @@ import org.w3c.dom.Element;
 import com.tek.muleautomator.config.FTPConnection;
 import com.tek.muleautomator.config.HTTPConnection;
 import com.tek.muleautomator.config.JDBCConnection;
+import com.tek.muleautomator.config.JMSConnection;
 import com.tek.muleautomator.config.WSDLConnection;
+import com.tek.muleautomator.element.GeneralActivityElement.GetSharedVariableActivity;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleAutomatorUtil;
@@ -37,8 +43,8 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/prog/Services";
-			String workspace = "D:/muleprojects/muleServices";
+			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/prog/";
+			String workspace = "D:/muleprojects/muleAll";
 			
 			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), MuleAutomatorConstants.tibcoProcessFiles, new String[]{"process"});
 			// System.out.println("All: "+MuleAutomatorConstants.tibcoProcessFiles);
@@ -55,8 +61,16 @@ public class MuleAutomateManager {
 			int i=1;
 			
 			List<File> processFiles=MuleAutomatorConstants.tibcoProcessFiles;
+			Set<String> filesCreated=new HashSet<>();
 			for(File currProcess: processFiles){
 				String currFileName=currProcess.getName().substring(0,currProcess.getName().indexOf("."));
+				int temp=1;
+				String fileName_temp=new String(currFileName);
+				while(filesCreated.contains(currFileName)){
+					currFileName = new String(fileName_temp);
+					currFileName+=""+ temp++;
+				}
+				filesCreated.add(currFileName);
 				System.out.println("\n***   Process "+i+": "+currFileName+"    ***");
 				
 				if(i==1){
@@ -74,7 +88,7 @@ public class MuleAutomateManager {
 					MuleConfigConnection.updateConfigDom(muleConfigPath);
 				}
 				i++;
-				
+				currFileName=currFileName.replaceAll(" ", "_");
 				if (new File(muleConfigPath).exists()) {
 					flowElement = MuleFlowTools.createMuleFlow(muleConfigPath, currFileName);
 				}
@@ -84,6 +98,7 @@ public class MuleAutomateManager {
 						flowElement);
 				Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 				doc.getFirstChild().appendChild(flowElement);
+				
 				TransformerFactory transformerFactory = TransformerFactory.newInstance();
 				Transformer transformer = transformerFactory.newTransformer();
 				DOMSource source = new DOMSource(doc);
@@ -102,9 +117,10 @@ public class MuleAutomateManager {
 
 	
 	
+	
 	private static void fetchAllConnections(String tibcoProjectLocationRootFolder){
 		List<File> connFiles=new ArrayList<>();
-        MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), connFiles, new String[]{"sharedjdbc","sharedhttp","sharedftp","sharedpartner"});
+        MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), connFiles, new String[]{"sharedjdbc","sharedhttp","sharedftp","sharedpartner","sharedjmscon"});
         for(File file: connFiles){
         	if(file.getPath().contains("jdbc")){
         		JDBCConnection jdbcConnection=new JDBCConnection(file);
@@ -147,6 +163,18 @@ public class MuleAutomateManager {
 				}
         		wsdlCon.CONNECTION_NAME=fileName;
         		MuleAutomatorConstants.connectionConfigs.put(wsdlCon.CONNECTION_NAME, wsdlCon);
+        	} else if(file.getPath().contains("jmscon")){
+        		String fileName;
+        		JMSConnection jmsCon=new JMSConnection(file);
+        		try{
+        			fileName = file.getCanonicalPath().substring(file.getCanonicalPath().lastIndexOf(File.separator)+1);
+					fileName=fileName.substring(0,fileName.indexOf("."));
+        		} catch (IOException E){
+        			fileName="JMS Conncetion";
+					E.printStackTrace();
+        		}
+        		jmsCon.CONNECTION_NAME=fileName;
+        		MuleAutomatorConstants.connectionConfigs.put(jmsCon.CONNECTION_NAME, jmsCon);
         	}
        }
 	}

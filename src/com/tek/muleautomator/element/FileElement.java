@@ -38,7 +38,7 @@ public class FileElement {
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
         	if(fileElement!=null)
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	this.INPUT_filePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_filePath);
+        	this.INPUT_filePath=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.INPUT_filePath);
     		String ns="ns";
     		Element inputBindings=(Element)rootActivityElement.getElementsByTagName("pd:inputBindings").item(0);
     		NodeList nodes=inputBindings.getChildNodes();
@@ -192,7 +192,7 @@ public class FileElement {
         	if(fileElement!=null)
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
 
-        	this.INPUT_filePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_filePath);
+        	this.INPUT_filePath=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.INPUT_filePath);
     		String ns="";
     		Element inputBindings=(Element)rootActivityElement.getElementsByTagName("pd:inputBindings").item(0);
     		NodeList nodes=inputBindings.getChildNodes();
@@ -303,7 +303,7 @@ public class FileElement {
         		this.INPUT_encoding=encodingElement.getTextContent();
         	}
         	
-        	this.INPUT_filePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_filePath);
+        	this.INPUT_filePath=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.INPUT_filePath);
         	try{
         		this.INPUT_fileName=this.INPUT_filePath.substring(this.INPUT_filePath.lastIndexOf("\\")+1);
         	} catch(Exception E){
@@ -410,7 +410,7 @@ public class FileElement {
         	Element fileElement=(Element)rootActivityElement.getElementsByTagName("fileName").item(0);
         	if(fileElement!=null)
         		this.INPUT_filePath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-        	this.INPUT_filePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_filePath);
+        	this.INPUT_filePath=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.INPUT_filePath);
     		this.INPUT_fileName=this.INPUT_filePath.substring(this.INPUT_filePath.lastIndexOf("\\")+1);
     		try{
     			this.INPUT_filePath=this.INPUT_filePath.substring(0,this.INPUT_filePath.lastIndexOf("\\"));       	
@@ -455,7 +455,7 @@ public class FileElement {
         		this.INPUT_directoryPath=fileElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	else 
         		this.INPUT_directoryPath="";
-        	this.INPUT_directoryPath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_directoryPath);
+        	this.INPUT_directoryPath=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.INPUT_directoryPath);
         	String activityName=rootActivityElement.getAttribute("name");
         	String ns="ns";
         	Element inputBindings=(Element)rootActivityElement.getElementsByTagName("pd:inputBindings").item(0);
@@ -498,15 +498,15 @@ public class FileElement {
         	if(filetoElement!=null)
         		this.INPUT_toFilePath=filetoElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
         	
-        	this.INPUT_fromFilePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_fromFilePath);
+        	this.INPUT_fromFilePath=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.INPUT_fromFilePath);
     		try{
     			this.INPUT_fromFileName=this.INPUT_fromFilePath.substring(this.INPUT_fromFilePath.lastIndexOf("\\")+1);
     			this.INPUT_fromFilePath=this.INPUT_fromFilePath.substring(0,this.INPUT_fromFilePath.lastIndexOf("\\"));
     		} catch (Exception E){
-    			E.printStackTrace();
+    			System.out.println(E.getMessage());
     		}
         	
-    		this.INPUT_toFilePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_toFilePath);
+    		this.INPUT_toFilePath=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.INPUT_toFilePath);
     		try{
     			this.INPUT_toFileName=this.INPUT_toFilePath.substring(this.INPUT_toFilePath.lastIndexOf("\\")+1);
     			//System.out.println(this.INPUT_toFilePath);
@@ -610,7 +610,7 @@ public class FileElement {
         	
         	this.CONFIG_overwrite=rootActivityElement.getElementsByTagName("overwrite").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("overwrite").item(0).getTextContent()):false;
         	this.CONFIG_createMissingDirectories=rootActivityElement.getElementsByTagName("createMissingDirectories").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("createMissingDirectories").item(0).getTextContent()):false;
-        	this.INPUT_fromFilePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_fromFilePath);
+        	this.INPUT_fromFilePath=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.INPUT_fromFilePath);
     		
         	try{
     			this.INPUT_fromFileName=this.INPUT_fromFilePath.substring(this.INPUT_fromFilePath.lastIndexOf("\\")+1);
@@ -619,7 +619,7 @@ public class FileElement {
     			E.printStackTrace();
     		}
         	
-    		this.INPUT_toFilePath=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.INPUT_toFilePath);
+    		this.INPUT_toFilePath=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.INPUT_toFilePath);
     		try{
     			this.INPUT_toFileName=this.INPUT_toFilePath.substring(this.INPUT_toFilePath.lastIndexOf("\\")+1);
     			this.INPUT_toFilePath=this.INPUT_toFilePath.substring(0,this.INPUT_toFilePath.lastIndexOf("\\"));

@@ -96,6 +96,7 @@ public class FTPService {
 			
 			Element ftpEl = doc.createElement("ftp:inbound-endpoint");
 			ftpEl.setAttribute("host", requiredConnection.HOST);
+			ftpEl.setAttribute("doc:name", "FTP Get");
 			ftpEl.setAttribute("port", "" + requiredConnection.PORT);
 			ftpEl.setAttribute("user", requiredConnection.USERNAME);
 			ftpEl.setAttribute("connector-ref", requiredConnection.CONNECTION_NAME.replaceAll(" ", "_"));
@@ -140,6 +141,7 @@ public class FTPService {
 			ftpEl.setAttribute("connector-ref", requiredConnection.CONNECTION_NAME.replaceAll(" ", "_"));
 			ftpEl.setAttribute("path", ftpPutActivity.getIN_remoteFilename());
 			ftpEl.setAttribute("password", requiredConnection.PASSWORD);
+			ftpEl.setAttribute("doc:name", "FTP Put");
 			flowElement.appendChild(ftpEl);
 			
 			Element fileOut=doc.createElement("file:outbound-endpoint");

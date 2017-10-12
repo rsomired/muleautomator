@@ -175,15 +175,15 @@ public static void setOut_sentData(String out_sentData) {
 	Element fromElement=(Element)rootActivityElement.getElementsByTagName("from").item(0);
 	if(fromElement!=null)
 		this.In_from=fromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-	this.In_from=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.In_from);	
+	this.In_from=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.In_from);	
 	Element toElement=(Element)rootActivityElement.getElementsByTagName("to").item(0);
 		if(toElement!=null)
 			this.In_to=fromElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-		this.In_to=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.In_to);
+		this.In_to=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.In_to);
 		Element subjectElement=(Element)rootActivityElement.getElementsByTagName("subject").item(0);
 		if(subjectElement!=null)
 			this.In_subject=subjectElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
-		this.In_subject=MuleAutomatorConstants.globalVarsResolver.resolveExpression(this.In_subject);
+		this.In_subject=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(this.In_subject);
   }
 public String getCONFIG_description() {
 	return CONFIG_description;

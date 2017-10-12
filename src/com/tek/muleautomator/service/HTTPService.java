@@ -35,13 +35,13 @@ public class HTTPService {
 			}	
 			if(connections.size()>0){
 				for(HTTPConnection con: connections){
-					System.out.println(con+"  comparing:  "+conName);
+					//System.out.println(con+"  comparing:  "+conName);
 					if(!con.CONNECTION_NAME.equals(conName))
 						continue;
 					if(con.IS_CONFIGURED)
 						break;
 					con.IS_CONFIGURED=true;
-					System.out.println("adding "+con.CONNECTION_NAME);
+					//System.out.println("adding "+con.CONNECTION_NAME);
 					Element httpConfig = doc.createElement("http:listener-config");
 					httpConfig.setAttribute("name", con.CONNECTION_NAME.replaceAll(" ", "_"));
 					httpConfig.setAttribute("host", con.HOST);
@@ -52,7 +52,7 @@ public class HTTPService {
 			} else {
 				System.err.println("NO HTTP Connection file found. Setting default config...");
 				Element httpConfig = doc.createElement("http:listener-config");
-				httpConfig.setAttribute("name", "HTTP_Listener_Configuration");
+				httpConfig.setAttribute("name", conName);
 				httpConfig.setAttribute("host", "0.0.0.0");
 				httpConfig.setAttribute("port", "8081");
 				httpConfig.setAttribute("doc:name", "HTTP Listener Configuration");
@@ -169,30 +169,12 @@ public class HTTPService {
 			Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-			/*if (isHttpRequestConfigRequired(muleConfigPath)) {
-				httpRequestConfiguration(muleConfigPath, flow);
-			}
-			Element httpRequest = doc.createElement("http:request");
-			httpRequest.setAttribute("config-ref", "HTTP_Request_Configuration");
-			httpRequest.setAttribute("path", "/path");
-			httpRequest.setAttribute("method", "GET");
-			httpRequest.setAttribute("doc:name", "HTTP");
-
-			Element requestBuilder = doc.createElement("http:request-builder");
-			Element httpParams = doc.createElement("http:query-param");
-			httpParams.setAttribute("paramName", "value1");
-			requestBuilder.appendChild(httpParams);
-
-			Element httpParams2 = doc.createElement("http:query-param");
-			httpParams2.setAttribute("paramName", "value2");
-			requestBuilder.appendChild(httpParams2);
-
-			httpRequest.appendChild(requestBuilder);
-			flow.appendChild(httpRequest);
-*/
 			Element httpResponse = doc.createElement("set-payload");
-			httpResponse.setAttribute("value", "#[payload]");
-			httpResponse.setAttribute("doc:name", "Set Payload");
+			if(httpSendResponseActivity.getINPUT_content()!=null)
+				httpResponse.setAttribute("value", httpSendResponseActivity.getINPUT_content());
+			else
+				httpResponse.setAttribute("value", "#[payload]");
+			httpResponse.setAttribute("doc:name", "Send Response");
 
 			flow.appendChild(httpResponse);
 
@@ -201,33 +183,9 @@ public class HTTPService {
 		}
 	}
 
-	public boolean isHTTPListenerConfigRequired(String muleConfigPath)
-			throws ParserConfigurationException, SAXException, IOException {
-		/*DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder;
-		docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(muleConfigPath);
-		NodeList nodeList = doc.getElementsByTagName("http:listener-config");
-		for(int i=0;i<nodeList.getLength();++i){
-			Element el=(Element)nodeList.item(i);
-			if(el.getAttribute("name").replaceAll("_", " ").equals(conName)){
-				return false;
-			}
-		}
-		return true;*/
-		return true;
-	}
+	
 
-	public boolean isHttpRequestConfigRequired(String muleConfigPath)
-			throws ParserConfigurationException, SAXException, IOException {
-		/*DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder;
-		docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(muleConfigPath);
-		NodeList nodeList = doc.getElementsByTagName("http:request-config");
-		return nodeList.getLength() == 0 ? true : false;*/
-		return true;
-	}
+	
 
 	// ****************************************SOAP to HTTP starts here***************************************************************
 

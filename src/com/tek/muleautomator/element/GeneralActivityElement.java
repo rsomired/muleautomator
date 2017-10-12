@@ -78,7 +78,7 @@ public class GeneralActivityElement {
 		
 		public InspectorActivity(Node target){
 			Element rootEL=(Element)target;
-			this.INPUT_fileName=MuleAutomatorConstants.globalVarsResolver.resolveExpression(rootEL.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue());
+			this.INPUT_fileName=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootEL.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue());
 			this.CONFIG_append=rootEL.getElementsByTagName("append").item(0).getTextContent();
 			this.CONFIG_activity="";
 			this.OUTPUT_output="";

@@ -3,6 +3,8 @@ import java.util.Map;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import com.tek.muleautomator.util.MuleAutomatorConstants;
 public class JMSElement {
 	 public static class JMSQueueEventSource
 	 {//done other2nd msg-selector
@@ -139,7 +141,7 @@ public class JMSElement {
             this.CONFIG_acknowledgeMode=rootActivityElement.getElementsByTagName("acknowledgeMode").item(0).getTextContent();
        	  //this.CONFIG_maxSessions=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
      	 //this.ADV_JMSApplicationProperties=rootActivityElement.getElementsByTagName("ApplicationProperties").item(0).getTextContent();
-       	 // this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
+       	  this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
 	 }
 	    
 	 }
@@ -154,12 +156,12 @@ public class JMSElement {
 		    private int INP_JMSExpiration;
 		    private Map<String,String>INP_JMSProperties,INP_otherProperties,INP_dynamicProperties;
 		    private String OUT_messageID;
+		    private String bodyValue;
 		    public JMSQueueSendActivity(Node node){
 	        	Element rootActivityElement = (Element)node;
 	        	this.CONFIG_description="This is used to send jms messages to jms/tibco ems servers this is not a blocking activity i.e it will not wait for response from consumer";
 	        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
 	        	this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
-	        	this.INP_body=rootActivityElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
 	        	this.CONFIG_messageType=rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent();
 	        	//this.INP_JMSType=rootActivityElement.getElementsByTagName("conditionType").item(0).getTextContent();
 	        	String x=rootActivityElement.getElementsByTagName("ConnectionReference").item(0).getTextContent();
@@ -167,7 +169,17 @@ public class JMSElement {
 	            this.ADV_deliveryMode=rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent();
 	       	    this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent()):10;
 		        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent()):10;
-		 }
+		        this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
+		        Element bodyTag=(Element)rootActivityElement.getElementsByTagName("Body").item(0);
+	        	this.bodyValue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression((((Element)bodyTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select")));
+
+		    }
+			public String getBodyValue() {
+				return bodyValue;
+			}
+			public void setBodyValue(String bodyValue) {
+				this.bodyValue = bodyValue;
+			}
 			public static String getActivityType() {
 				return activityType;
 			}
@@ -324,7 +336,14 @@ public class JMSElement {
 		    private String INP_destinationQueue,INP_JMSPriority,INP_JMSCorrelationID,INP_JMSType,INP_replyToDestination,INP_body; 
 		    private int INP_requestTimeout,INP_JMSExpiration;
 		    private Map<String,String>INP_dynamicProperties;
-		    private Map<String, String> OUT_JMSHeaders,OUT_JMSProperties,OUT_otherProperties,OUT_body,OUT_dynamicProperties;
+		    private String bodyValue;
+		    public String getBodyValue() {
+				return bodyValue;
+			}
+			public void setBodyValue(String bodyValue) {
+				this.bodyValue = bodyValue;
+			}
+			private Map<String, String> OUT_JMSHeaders,OUT_JMSProperties,OUT_otherProperties,OUT_body,OUT_dynamicProperties;
 		    public JMSQueueRequestReplyActivity(Node node){
 	        	Element rootActivityElement = (Element)node;
 	        	this.CONFIG_description="This activity is used to send request and wait for response,in request reply scenarios we use this activity";
@@ -339,8 +358,8 @@ public class JMSElement {
 	        	 //this.INP_JMSType=rootActivityElement.getElementsByTagName("conditionType").item(0).getTextContent();
 	        	 Element cIdTag=(Element)rootActivityElement.getElementsByTagName("JMSCorrelationID").item(0);
 	        	 String value=((Element)cIdTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select");
-	        	 Element bodyTag=(Element)rootActivityElement.getElementsByTagName("JMSCorrelationID").item(0);
-	        	 String bodyValue=((Element)cIdTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select");
+	        	 Element bodyTag=(Element)rootActivityElement.getElementsByTagName("Body").item(0);
+	        	 this.bodyValue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(((Element)bodyTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select"));
 		 }
 			public static String getActivityType() {
 				return activityType;
@@ -496,7 +515,7 @@ public class JMSElement {
 		    private String ADV_replyToTopic,ADV_deliveryMode,ADV_Type,ADV_JMSApplicationProperties,ADV_overrideTransactionBehavior;
 		    private int ADV_JMSExpiration,ADV_priority;
 		    private String INP_JMSExpiration;
-		    private String INP_destinationTopic,INP_replyToTopic,INP_JMSPriority,INP_JMSDeliveryMode,INP_JMSCorrelationID,INP_JMSType,INP_body;
+		    private String INP_destinationTopic,INP_replyToTopic,INP_JMSPriority,INP_JMSDeliveryMode,INP_JMSCorrelationID,INP_JMSType,bodyValue;
 		    private Map<String,String>INP_JMSProperties,INP_otherProperties,INP_dynamicProperties;
 		    private String OUT_messageID;
 		    public JMSTopicPublishActivity(Node node){
@@ -508,7 +527,7 @@ public class JMSElement {
 	            this.CONFIG_JMSConnection=x.substring(x.lastIndexOf("/")+1,x.lastIndexOf("."));
 	            this.CONFIG_destinationTopic=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
 	       	    this.ADV_deliveryMode=rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent();
-	       	    this.INP_body=rootActivityElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+	       	    this.bodyValue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue());
 	       	    this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent()):10;
 		        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent()):10;
 		 }
@@ -627,10 +646,10 @@ public class JMSElement {
 				INP_JMSType = iNP_JMSType;
 			}
 			public String getINP_body() {
-				return INP_body;
+				return bodyValue;
 			}
 			public void setINP_body(String iNP_body) {
-				INP_body = iNP_body;
+				bodyValue = iNP_body;
 			}
 			public Map<String, String> getINP_JMSProperties() {
 				return INP_JMSProperties;
@@ -673,7 +692,8 @@ public class JMSElement {
 	        	Element rootActivityElement = (Element)node;
 	        	this.CONFIG_description="This activity is used to send request and wait for response.In request reply scenarios we use this activity";
 	        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-		 }
+	        	this.CONFIG_JMSConnection="JMS Connection";
+		    }
 			public static String getActivityType() {
 				return activityType;
 			}

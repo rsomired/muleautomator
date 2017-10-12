@@ -96,7 +96,7 @@ public class VarsResolver {
      * @return String: value for that Global XPATH
      */
     
-    public String getValueFromGlobalExpr(String expr){    
+    private String getValueFromGlobalExpr(String expr){    
     	if(this.map.size()==0)
     		return expr;
         String key=expr.substring(expr.indexOf("GlobalVariables")+"GlobalVariables".length()+1,expr.length());
@@ -109,8 +109,22 @@ public class VarsResolver {
         return "";
     }
     
-    public String resolveSingleExpression(String expr){
+    
+    private String unescapeXML(String x){
+		if(x.startsWith("'"))
+			x=x.substring(1, x.length()-1);
+		x=x.replaceAll("&lt;", "<");
+		x=x.replaceAll("&gt;", ">");
+		x=x.replaceAll("&quot;", "\"");
+		x=x.replaceAll("&#10;", "\n");
+		x=x.replaceAll("&amp;", "&");
+		return x;
+	}
+    
+    
+    private String resolveSingleExpression(String expr){
     	String expr1=new String(expr);
+
     	if(expr1.contains("GlobalVariables")){
             expr1=getValueFromGlobalExpr(expr1);
         } else if(expr1.contains("Output")) {
@@ -145,30 +159,13 @@ public class VarsResolver {
             	result+=expr1;
             }            
             return result;
-            /*expr1=resolveSingleExpression(expr1);
-            expr2=resolveSingleExpression(expr2);
-            if(expr2.contains("GlobalVariables")){
-                expr2=getValueFromGlobalExpr(expr2);
-            } else if(expr2.contains("OutputClass")) {
-            	String temp=expr2.substring(0, expr2.indexOf("/"));
-            	expr2=MuleAutomatorConstants.tibcoVariables.get(temp);
-            } else {
-                if(expr2.contains("/"))
-                    expr2=expr2.replace("/", "");
-            }
-            if(expr2.startsWith("\'")&&expr2.endsWith("\'"))
-                expr2=expr2.replace("\'", "");
-            if(expr1.endsWith("\\") && expr2.startsWith("\\"))
-                return expr1+expr2.substring(1);
-            if(expr1.endsWith("\\") || expr2.startsWith("\\"))
-                return expr1+expr2;
-            return expr1+"\\"+expr2;*/
         }
         System.err.println("NOT A CONCAT QUERY");
         return null;
     }
     
     public String resolveExpression(String expr){
+    	expr=unescapeXML(expr);
     	if(expr.contains("concat")){
     		return resolveConcatQuery(expr);
     	} else{
