@@ -200,6 +200,46 @@ public class MuleFlowTools {
 	}
 	
 	
+	public static void filterTibcoFiles(){
+		List<File> allFiles=MuleAutomatorConstants.allTibcoProcessFiles;
+		List<File> tempFiles=new ArrayList<>(allFiles);
+		System.out.print("\n* * Analysing Tibco Process files in the specified folder...");
+		for(File file: allFiles){
+			try{
+				DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder =factory.newDocumentBuilder();
+				Document doc=builder.parse(file);
+				NodeList activities = doc.getElementsByTagName("pd:activity");
+				NodeList starters = doc.getElementsByTagName("pd:starter");
+				
+				for(int i=0;i<activities.getLength();++i){
+					Element thisEl=(Element)activities.item(i);
+					if(thisEl.getNodeType()==Node.ELEMENT_NODE){
+
+						String type=thisEl.getElementsByTagName("pd:type").item(0).getTextContent();
+						if(type.contains("CallProcessActivity")){
+							String processFileLoc=thisEl.getElementsByTagName("processName").item(0).getTextContent();
+							processFileLoc=processFileLoc.replaceAll("/", "\\\\");
+							
+							for(File file1: allFiles){
+								if(file1.getCanonicalPath().contains(processFileLoc)){
+									tempFiles.remove(file1);
+								}
+							}
+							
+						}
+					}
+				}
+			} catch (Exception E){
+				
+			}
+			
+			
+		}
+		MuleAutomatorConstants.filteredTibcoProcessFiles=tempFiles;
+		System.out.println(" Complete\n");
+	}
+	
 	
 	
 	public static void generateFlowForActivity(ActivityElement activityElement, String muleConfigPath,
@@ -223,12 +263,13 @@ public class MuleFlowTools {
 				String append="";
 				processFileLoc=el.getElementsByTagName("processName").item(0).getTextContent();
 				processFileLoc=processFileLoc.replaceAll("/", "\\\\");
-				for(File file: MuleAutomatorConstants.tibcoProcessFiles){
+				for(File file: MuleAutomatorConstants.allTibcoProcessFiles){
 					if(file.getCanonicalPath().contains(processFileLoc)){
 						
 						int i=1;
 						append="";
 						//System.out.println("00");
+						flowName=activityElement.getActivityName().replaceAll(" ", "_");
 						while(MuleAutomatorConstants.generatedFlows.contains(flowName+append)){
 							append = "" + i++;		
 						}
@@ -240,8 +281,8 @@ public class MuleFlowTools {
 						muleRootElement.appendChild(subFlow);
 						
 						Element flowRef=doc.createElement("flow-ref");
-						flowRef.setAttribute("name", "Sub_Flow"+append);
-						flowRef.setAttribute("doc:name", "Flow_Reference");
+						flowRef.setAttribute("name", flowName+append);
+						flowRef.setAttribute("doc:name", flowName+"_Reference");
 						
 						flowElement.appendChild(flowRef);
 						//System.out.println("Added flow Ref to flowElement");

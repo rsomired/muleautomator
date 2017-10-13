@@ -44,14 +44,19 @@ public class MuleAutomateManager {
 		Element flowElement = null;
 		try {
 			String tibcoProjectLocationRootFolder = "D:/Tibco_To_Mule/prog/";
-			String workspace = "D:/muleprojects/muleAll";
+			String workspace = "D:/muleprojects/muleAll1";
 			
-			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), MuleAutomatorConstants.tibcoProcessFiles, new String[]{"process"});
+			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), MuleAutomatorConstants.allTibcoProcessFiles, new String[]{"process"});
 			// System.out.println("All: "+MuleAutomatorConstants.tibcoProcessFiles);
 			// Loads all the Global Variables into
 			// MuleAutomatorConstants.globalResolver Object
 			MuleAutomatorConstants.TIBCO_PROJECT_ROOT_FOLDER = tibcoProjectLocationRootFolder;
 			String projectName = getProjectName(tibcoProjectLocationRootFolder);
+			
+			// Remove Sub Process files
+			MuleFlowTools.filterTibcoFiles();
+			List<File> processFiles=MuleAutomatorConstants.filteredTibcoProcessFiles;
+			Set<String> filesCreated=new HashSet<>();
 			
 			createMuleProject(tibcoProjectLocationRootFolder, projectName, workspace);
 			MuleAutomatorUtil.includeLibraries(tibcoProjectLocationRootFolder, workspace+"/"+projectName);
@@ -60,8 +65,7 @@ public class MuleAutomateManager {
 
 			int i=1;
 			
-			List<File> processFiles=MuleAutomatorConstants.tibcoProcessFiles;
-			Set<String> filesCreated=new HashSet<>();
+			
 			for(File currProcess: processFiles){
 				String currFileName=currProcess.getName().substring(0,currProcess.getName().indexOf("."));
 				int temp=1;
@@ -209,9 +213,9 @@ public class MuleAutomateManager {
 		if(!dir.exists())
 			return;
 		if(dir.listFiles().length>0){
-			System.out.println("Removing existing project...");
+			System.out.print("* * Removing existing project...");
 			MuleAutomatorUtil.deleteDirectory(dir);
-			System.out.println("Removed!");
+			System.out.println(" Complete\n");
 		}
 	}
 

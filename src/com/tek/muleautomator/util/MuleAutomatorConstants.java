@@ -35,7 +35,8 @@ public class MuleAutomatorConstants {
 	public static VarsResolver tibcoVarsResolver;
 	public static HashMap<String, String> tibcoLocalVariables=new HashMap<>();
 	public static HashMap<String, Connection> connectionConfigs=new HashMap<>();
-	public static List<File> tibcoProcessFiles=new ArrayList<>();
+	public static List<File> allTibcoProcessFiles=new ArrayList<>();
+	public static List<File> filteredTibcoProcessFiles = new ArrayList<>();
 	public static HashSet<String> generatedFlows=new HashSet<>();
     public static HashSet<String> configuredConnections=new HashSet<>();
 	
