@@ -56,7 +56,15 @@ public class WSDLConnection extends Connection {
 			File file = new File(WSDL_LOCATION);
 			Document d=dbuilder.parse(file);
 			Element serviceNode=((Element)d.getElementsByTagName("wsdl:service").item(0));
-			NodeList ports=serviceNode.getElementsByTagName("wsdl:port");
+			NodeList ports=null;
+			try{
+				ports=serviceNode.getElementsByTagName("wsdl:port");
+			} catch (Exception E){
+				System.err.println(">>> Error while reading WSDL configuration. Service Palette may contain invalid values.");
+				this.SERVICE_NAME="AUTOMATER_GENERATED_SERVICE";
+				this.ADDRESS_NAME="AUTOMATER_GENERATED_ADDRESS";
+				return;
+			}
 			for(int i=0;i<ports.getLength();++i){
 				Element currPort=(Element)ports.item(i);
 				if(currPort.getAttribute("name").equals(this.PORT_NAME)){

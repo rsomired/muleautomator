@@ -67,18 +67,13 @@ public class MuleFlowTools {
 	public static Element createMuleSubFlow(String filepath, String flowName) throws Exception {
 		Document docIn;
 		docIn = MuleConfigConnection.getDomObj(filepath);
-		String append="";
-		int i=1;
-		//System.out.println("00");
-		/*while(MuleAutomatorConstants.generatedFlows.contains(flowName+append)){
-			append = "" + i;		
-		}*/
+		
 		//System.out.println("01");
-		MuleAutomatorConstants.generatedFlows.add(flowName+append);
+		MuleAutomatorConstants.generatedFlows.add(flowName);
 		Element muleRootElement = (Element) docIn.getFirstChild();
 		muleRootElement.setAttribute("xmlns:doc", "http://www.mulesoft.org/schema/mule/documentation");
 		Element flowElement = docIn.createElement("sub-flow");
-		flowElement.setAttribute("name", flowName+append);
+		flowElement.setAttribute("name", flowName);
 		return flowElement;
 	}
 	
@@ -224,24 +219,28 @@ public class MuleFlowTools {
 				System.out.println("* * Generating Sub-Flow: "+activityElement.getActivityName()+"  * *");
 				Element el=(Element)activityElement.getTargetNode();
 				String processFileLoc="";
+				String flowName="Sub_Flow";
+				String append="";
 				processFileLoc=el.getElementsByTagName("processName").item(0).getTextContent();
 				processFileLoc=processFileLoc.replaceAll("/", "\\\\");
 				for(File file: MuleAutomatorConstants.tibcoProcessFiles){
 					if(file.getCanonicalPath().contains(processFileLoc)){
-						//System.out.println("0");
-						Element subFlow= MuleFlowTools.createMuleSubFlow(muleConfigPath, "Sub_Flow");
-						//System.out.println("1");
+						
+						int i=1;
+						append="";
+						//System.out.println("00");
+						while(MuleAutomatorConstants.generatedFlows.contains(flowName+append)){
+							append = "" + i++;		
+						}
+						
+						Element subFlow= MuleFlowTools.createMuleSubFlow(muleConfigPath, flowName+append);
 						subFlow=generateMuleFlowFromTibcoProcessOrderByTransitionsWithChoice(file.getCanonicalPath(),muleConfigPath,subFlow);
-						// Sub Flow Created
-						//System.out.println("2");
 						Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 						Element muleRootElement = (Element) doc.getFirstChild();
 						muleRootElement.appendChild(subFlow);
-						//System.out.println("3");
-						// <flow-ref name="flowtestSub_Flow" doc:name="flowtestSub_Flow"/>
 						
 						Element flowRef=doc.createElement("flow-ref");
-						flowRef.setAttribute("name", "Sub_Flow");
+						flowRef.setAttribute("name", "Sub_Flow"+append);
 						flowRef.setAttribute("doc:name", "Flow_Reference");
 						
 						flowElement.appendChild(flowRef);
