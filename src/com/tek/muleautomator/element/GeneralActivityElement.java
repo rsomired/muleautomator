@@ -174,14 +174,15 @@ public class GeneralActivityElement {
 	}
 	
 	public static class TimerActivity {
-		public String CONFIG_startTime, CONFIG_timeInterval;
+		public String CONFIG_startTime;
+		public String CONFIG_timeInterval;
 		public String CONFIG_intervalUnit;
 		public String MISC_seqKey;
 		
 		public TimerActivity(Node target){
 			Element rootEl=(Element)target;
 			this.CONFIG_startTime=rootEl.getElementsByTagName("StartTime").item(0).getTextContent();
-			this.CONFIG_timeInterval=rootEl.getElementsByTagName("TimeInterval").item(0).getTextContent();
+			this.CONFIG_timeInterval=Integer.toString(60000*Integer.parseInt(rootEl.getElementsByTagName("TimeInterval").item(0).getTextContent()));
 			this.MISC_seqKey="";
 			this.CONFIG_intervalUnit="";
 		}

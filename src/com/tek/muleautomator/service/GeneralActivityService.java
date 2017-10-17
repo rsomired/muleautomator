@@ -54,7 +54,8 @@ public class GeneralActivityService {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			Element sleep = doc.createElement("expression-component");
-			sleep.setTextContent("Thread.sleep(10000)");
+			Long t=sleepActivity.getMiliseconds();
+			sleep.setTextContent("Thread.sleep("+t+")");
 			flow.appendChild(sleep);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,7 +65,6 @@ public class GeneralActivityService {
 	public static void timer(String muleConfigPath, TimerActivity timerActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-			
 			Element connecterRef=doc.createElement("quartz:connector");
 			connecterRef.setAttribute("name", "Quartz");
 			connecterRef.setAttribute("validateConnections", "true");
@@ -79,7 +79,9 @@ public class GeneralActivityService {
 			timer.setAttribute("repeatCount", "1");
 			timer.setAttribute("responseTimeout", "10000");
 			timer.setAttribute("connector-ref", "Quartz");
-			timer.setAttribute("repeatInterval", timerActivity.CONFIG_timeInterval);
+			
+			timer.setAttribute("repeatInterval",timerActivity.getCONFIG_timeInterval());
+			timer.setAttribute("startDelay","10000000");
 			Element eventgen=doc.createElement("quartz:event-generator-job");
 			timer.appendChild(eventgen);
 			timer.setAttribute("cronExpression", "0 30 7 1/1 * ?");
