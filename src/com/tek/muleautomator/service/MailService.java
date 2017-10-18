@@ -35,7 +35,7 @@ public class MailService {
 	  try {
 		   Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 		   Element connecterRef=doc.createElement("smtp:connector");
-		   connecterRef.setAttribute("name", "SMTP");
+		   connecterRef.setAttribute("name", "smtp1");
 		   connecterRef.setAttribute("validateConnections", "true");
 		   connecterRef.setAttribute("doc:name", "SMTP");
 		   doc.getFirstChild().appendChild(connecterRef);
@@ -46,9 +46,9 @@ public class MailService {
 		   smtp.setAttribute("xsi:schemaLocation", "http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd");
 		   smtp.setAttribute("host",sendMailActivity.getCONFIG_host());
 		   smtp.setAttribute("port", "465");
-		   smtp.setAttribute("user",sendMailActivity.getCONFIG_userName());
-		   smtp.setAttribute("connector-ref", "SMTP");
-		   smtp.setAttribute("password",sendMailActivity.getCONFIG_password());
+		   smtp.setAttribute("user","not-available");
+		   smtp.setAttribute("connector-ref", "smtp");
+		   smtp.setAttribute("password","not-available");
 		   smtp.setAttribute("to", sendMailActivity.getIn_to());
 		   smtp.setAttribute("from", sendMailActivity.getIn_from());
 		   smtp.setAttribute("subject", sendMailActivity.getIn_subject());

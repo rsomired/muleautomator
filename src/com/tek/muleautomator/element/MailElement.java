@@ -167,7 +167,7 @@ public static void setOut_sentData(String out_sentData) {
   private static String CONFIG_name,CONFIG_host,CONFIG_authenticate,CONFIG_userName,CONFIG_password,CONFIG_upgradeConfiguration;
   private static String Adv_allowNonStandardEmailIds;
   private static String In_userName,In_password,In_from,In_to,In_cc,In_bcc,In_replyTo,In_subject,In_sentData,In_bodyText;
-  public SendMailActivity(Node target){
+  public SendMailActivity(Node target){ 
    Element rootActivityElement=(Element)target;
    this.CONFIG_description="The Send Mail activity sends an email by way of a SMTP server.";
    this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
