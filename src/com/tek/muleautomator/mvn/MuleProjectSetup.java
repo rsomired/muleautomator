@@ -31,7 +31,7 @@ public class MuleProjectSetup {
 			}
 			moveMuleProjectToSpecifiedDirectory(sourceFile, destinationFile);
 			deleteDefaultTestFiles(new File(testclassFilesPath));
-			MuleAutomatorConstants.loadGlobalVars(defaultVarsPath);
+			MuleAutomatorConstants.loadGlobalVars(tibcoProjectLocationRootFolder);
 			List<File> tibcoFiles = new ArrayList<>();
 			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), tibcoFiles, new String[] { "wsdl", "xsd", "xsl", "substvar"});
 			moveTibcoFilesToMuleProject(tibcoFiles, muleResourcesPath);

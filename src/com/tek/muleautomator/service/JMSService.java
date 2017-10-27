@@ -49,7 +49,6 @@ public class JMSService {
 					if(con.IS_CONFIGURED)
 						break;
 					con.IS_CONFIGURED=true;
-					System.out.println("adding "+con.CONNECTION_NAME);
 					jmsConfig = doc.createElement("jms:activemq-connector");
 					jmsConfig.setAttribute("name", con.CONNECTION_NAME.replaceAll(" ", "_"));
 					jmsConfig.setAttribute("brokerURL", con.PROVIDER_URL);

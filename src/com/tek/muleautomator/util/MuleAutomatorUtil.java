@@ -125,7 +125,7 @@ public class MuleAutomatorUtil {
 		
 	}
 
-	public static void writeToFile(String filePath, String sourceCode) {
+	public static void writeToFile(String filePath, String content) {
 		BufferedWriter bufferedWriter = null;
 		try {
 			String folderPath = filePath.substring(0, filePath.lastIndexOf("\\"));
@@ -138,7 +138,7 @@ public class MuleAutomatorUtil {
 
 			Writer writer = new FileWriter(myFile);
 			bufferedWriter = new BufferedWriter(writer);
-			bufferedWriter.write(sourceCode);
+			bufferedWriter.write(content);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

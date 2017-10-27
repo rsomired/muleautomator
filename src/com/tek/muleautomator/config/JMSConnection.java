@@ -13,6 +13,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import com.tek.muleautomator.util.MuleAutomatorConstants;
+
 public class JMSConnection extends Connection {
 
 	public String USERNAME,PASSWORD, PROVIDER_URL, TOPIC_NAME, QUEUE_NAME;
@@ -30,9 +32,7 @@ public class JMSConnection extends Connection {
 	private void fillDetails(Element rootElement) {
 		try{
 			this.CONNECTION_NAME=rootElement.getElementsByTagName("name").item(0).getTextContent();
-			this.PROVIDER_URL=rootElement.getElementsByTagName("ProviderURL").item(0).getTextContent();
-			
-			
+			this.PROVIDER_URL=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("ProviderURL").item(0).getTextContent());
 			try{
 				this.TOPIC_NAME=rootElement.getElementsByTagName("TopicFactoryName").item(0).getTextContent();
 			} catch(Exception E){
@@ -43,8 +43,8 @@ public class JMSConnection extends Connection {
 			} catch(Exception E){
 				
 			}
-			this.USERNAME=rootElement.getElementsByTagName("username").item(0).getTextContent();
-			this.PASSWORD=rootElement.getElementsByTagName("password").item(0).getTextContent();
+			this.USERNAME=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("username").item(0).getTextContent());
+			this.PASSWORD=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("password").item(0).getTextContent());
 			
 		} catch(Exception E){
 			System.err.println(">>> ERROR OCCURED WHILE FILLING JMS CONNECTION  ");

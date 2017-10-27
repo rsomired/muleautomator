@@ -123,33 +123,54 @@ public class MuleFlowTools {
 			TransitionElement t=new TransitionElement(currTrans.getElementsByTagName("pd:from").item(0).getTextContent(), currTrans.getElementsByTagName("pd:to").item(0).getTextContent(), currTrans.getElementsByTagName("pd:conditionType").item(0).getTextContent());
 			transitionElements.add(t);
 		}
-		
-		List<TransitionElement> tranistionsByOrder=null;
-		
-		
+		List<TransitionElement> transitionsByOrder=null;
 		// Sort Transition list
+		int count1=0;
 		if (transitionElements.size() > 1) {
-			tranistionsByOrder = new ArrayList<>();
+			transitionsByOrder = new ArrayList<>();
 			String activity = "start";
-			while (transitionElements.size() != 0) {
-				for (int count = 0; count < transitionElements.size(); count++) {
+			boolean breakNow=false;
+			while (transitionElements.size() != 0 || breakNow) {
+				for (int count = 0; count < transitionElements.size() || breakNow; count++) {
+					count1++;
+					//System.out.println("For: "+activity);
 					TransitionElement transition = transitionElements.get(count);
-					if (transition.getFrom().toLowerCase().equals(activity.toLowerCase())) {
-						tranistionsByOrder.add(transition);
+					if (transition.getFrom().toLowerCase().equals(activity.toLowerCase())&& (transition.getCondition().contains("always")|| !transition.getCondition().contains("error"))) {
+						transitionsByOrder.add(transition);
 						activity = transition.getTo();
 						transitionElements.remove(transition);
 						break;
 					}
+					
+					if(count1==1000){
+						breakNow=true;
+						break ;
+					}
+					
+					
+					/*if(prev.equals(activity)){
+						inf_state++;
+					}
+					if(!prev.equals(activity)){
+						System.out.println(">>> ZEROED: "+inf_state);
+						inf_state=0;
+					}
+					if(inf_state==200){
+						transitionElements.clear();
+						System.err.println(">>> Error! Choice affected: "+inf_state);
+						break;
+					}*/
 				}
+				
 				if (activity.equalsIgnoreCase("End")) {
 					break;
 				}
+				
 			}
 			
 		}
-
 		// Get ordered activities corresponding to transition
-		for(TransitionElement transitionElement: tranistionsByOrder){
+		for(TransitionElement transitionElement: transitionsByOrder){
 			if(transitionElement.getTo().toLowerCase().equals("end"))
 				break;
 			for(int actIndex=0;actIndex<loopActivities.getLength();++actIndex){
@@ -174,7 +195,6 @@ public class MuleFlowTools {
 	 */
 	
 	public static void transactionElements(ActivityElement activityElement, String muleConfigPath, Element flowElement){
-		
 		List<ActivityElement> activityElements=getOrderedActivitiesFromGroup(activityElement);
 		// Append components inside transaction
 		try {
@@ -265,15 +285,12 @@ public class MuleFlowTools {
 				processFileLoc=processFileLoc.replaceAll("/", "\\\\");
 				for(File file: MuleAutomatorConstants.allTibcoProcessFiles){
 					if(file.getCanonicalPath().contains(processFileLoc)){
-						
 						int i=1;
 						append="";
-						//System.out.println("00");
 						flowName=activityElement.getActivityName().replaceAll(" ", "_");
 						while(MuleAutomatorConstants.generatedFlows.contains(flowName+append)){
 							append = "" + i++;		
 						}
-						
 						Element subFlow= MuleFlowTools.createMuleSubFlow(muleConfigPath, flowName+append);
 						subFlow=generateMuleFlowFromTibcoProcessOrderByTransitionsWithChoice(file.getCanonicalPath(),muleConfigPath,subFlow);
 						Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
@@ -285,7 +302,6 @@ public class MuleFlowTools {
 						flowRef.setAttribute("doc:name", flowName+"_Reference");
 						
 						flowElement.appendChild(flowRef);
-						//System.out.println("Added flow Ref to flowElement");
 						try{
 							//MuleAutomatorConstants.tibcoProcessFiles.remove(file);
 						} catch (Exception E){
@@ -295,6 +311,7 @@ public class MuleFlowTools {
 						
 					}
 				}
+				System.err.println(">>> Referenced process file: "+ processFileLoc+" not found!");
 			}
 			
 			String pluginType = getPluginType(activityElement.getActivityType());
@@ -539,11 +556,9 @@ public class MuleFlowTools {
 				List<ConditionalTransition> conditionalTransitions = new ArrayList<>();
 
 				List<String> allSubActivities = getAllSubActivitiesWithXPath(transitionElements, tempActivityName);
-				// System.err.println("All SUB: "+allSubActivities);
 				for (String currSubActivity : allSubActivities) {
 					String tempAct = currSubActivity.split(" -- ")[0];
 					List<ActivityElement> choiceTransitionElement = new ArrayList<>();
-
 					for (int j = 0; j < transitionElements.size(); ++j) {
 						TransitionElement transEl = transitionElements.get(j);
 						if (transEl.getFrom().equals(tempAct)) {
@@ -560,7 +575,6 @@ public class MuleFlowTools {
 							choiceTransitionElement);
 					conditionalTransitions.add(conditionalTransition);
 				}
-				// System.out.println(conditionalTransitions);
 
 				Element choiceTag = docOut.createElement("choice");
 				choiceTag.setAttribute("doc:name", "Choice");
@@ -580,10 +594,8 @@ public class MuleFlowTools {
 					}
 					choiceTag.appendChild(whenTag);
 				}
-
 				flowElement.appendChild(choiceTag);
 				break;
-
 			}
 			return flowElement;
 			/*Document doc = MuleConfigConnection.getDomObj(muleConfigPath);

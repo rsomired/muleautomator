@@ -134,14 +134,18 @@ public class JMSElement {
         	Element rootActivityElement = (Element)node;
         	this.CONFIG_description="This actvity will be used to receive jms messages from jms/tibco ems servers";
         	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-        	this.CONFIG_messageType=rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent();
+        	this.CONFIG_messageType=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent());
         	//this.MISC_sequencingKey=rootActivityElement.getElementsByTagName("_sequenceKey").item(0).getTextContent();
         	String x=rootActivityElement.getElementsByTagName("ConnectionReference").item(0).getTextContent();
             this.CONFIG_JMSConnection=x.substring(x.lastIndexOf("/")+1,x.lastIndexOf("."));
-            this.CONFIG_acknowledgeMode=rootActivityElement.getElementsByTagName("acknowledgeMode").item(0).getTextContent();
+            this.CONFIG_acknowledgeMode=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("acknowledgeMode").item(0).getTextContent());
        	  //this.CONFIG_maxSessions=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
      	 //this.ADV_JMSApplicationProperties=rootActivityElement.getElementsByTagName("ApplicationProperties").item(0).getTextContent();
-       	  this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
+       	  try{
+       		  this.CONFIG_destinationQueue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("destination").item(0).getTextContent());
+       	  } catch (Exception E){
+       		  this.CONFIG_destinationQueue="";
+       	  }
 	 }
 	    
 	 }
@@ -161,17 +165,34 @@ public class JMSElement {
 	        	Element rootActivityElement = (Element)node;
 	        	this.CONFIG_description="This is used to send jms messages to jms/tibco ems servers this is not a blocking activity i.e it will not wait for response from consumer";
 	        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-	        	this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
-	        	this.CONFIG_messageType=rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent();
+	        	try{
+	        		this.CONFIG_destinationQueue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("destination").item(0).getTextContent());
+	        	} catch (Exception E){
+	        		this.CONFIG_destinationQueue="";
+	        	}
+	        	this.CONFIG_messageType=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent());
 	        	//this.INP_JMSType=rootActivityElement.getElementsByTagName("conditionType").item(0).getTextContent();
-	        	String x=rootActivityElement.getElementsByTagName("ConnectionReference").item(0).getTextContent();
-	            this.CONFIG_JMSConnection=x.substring(x.lastIndexOf("/")+1,x.lastIndexOf("."));
-	            this.ADV_deliveryMode=rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent();
-	       	    this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent()):10;
-		        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent()):10;
-		        this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
+	        	try{
+	        		String x=rootActivityElement.getElementsByTagName("ConnectionReference").item(0).getTextContent();
+	        		this.CONFIG_JMSConnection=x.substring(x.lastIndexOf("/")+1,x.lastIndexOf("."));
+		            
+	        	} catch (Exception E){
+	        		this.CONFIG_JMSConnection="";
+	        	}
+	            this.ADV_deliveryMode=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent());
+	       	    this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent())):10;
+		        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent())):10;
+		        try{
+		        	this.CONFIG_destinationQueue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("destination").item(0).getTextContent());
+		        } catch (Exception E){
+		        	this.CONFIG_destinationQueue="";
+		        }
 		        Element bodyTag=(Element)rootActivityElement.getElementsByTagName("Body").item(0);
-	        	this.bodyValue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression((((Element)bodyTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select")));
+	        	try{
+	        		this.bodyValue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression((((Element)bodyTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select")));
+	        	} catch (Exception E){
+	        		this.bodyValue="";
+	        	}
 
 		    }
 			public String getBodyValue() {
@@ -348,13 +369,13 @@ public class JMSElement {
 	        	Element rootActivityElement = (Element)node;
 	        	this.CONFIG_description="This activity is used to send request and wait for response,in request reply scenarios we use this activity";
 	        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-	        	 this.CONFIG_messageType=rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent();
+	        	 this.CONFIG_messageType=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent());
 	        	 String x=rootActivityElement.getElementsByTagName("ConnectionReference").item(0).getTextContent();
 	             this.CONFIG_JMSConnection=x.substring(x.lastIndexOf("/")+1,x.lastIndexOf("."));
-	             this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent()):10;
-	        	 this.ADV_deliveryMode=rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent();
-	        	this.CONFIG_destinationQueue=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
-	        	 this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent()):10;
+	             this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent())):10;
+	        	 this.ADV_deliveryMode=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent());
+	        	 this.CONFIG_destinationQueue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("destination").item(0).getTextContent());
+	        	 this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent())):10;
 	        	 //this.INP_JMSType=rootActivityElement.getElementsByTagName("conditionType").item(0).getTextContent();
 	        	 Element cIdTag=(Element)rootActivityElement.getElementsByTagName("JMSCorrelationID").item(0);
 	        	 String value=((Element)cIdTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select");
@@ -522,14 +543,18 @@ public class JMSElement {
 	        	Element rootActivityElement = (Element)node;
 	        	this.CONFIG_description="This is used to send jms messages to jms/tibco ems servers this is not a blocking activity i.e it will not wait for response from consumer";
 	        	this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-	        	this.CONFIG_messageType=rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent();
+	        	this.CONFIG_messageType=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression((rootActivityElement.getElementsByTagName("PermittedMessageType")).item(0).getTextContent());
 	        	String x=rootActivityElement.getElementsByTagName("ConnectionReference").item(0).getTextContent();
 	            this.CONFIG_JMSConnection=x.substring(x.lastIndexOf("/")+1,x.lastIndexOf("."));
-	            this.CONFIG_destinationTopic=rootActivityElement.getElementsByTagName("destination").item(0).getTextContent();
-	       	    this.ADV_deliveryMode=rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent();
-	       	    this.bodyValue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue());
-	       	    this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent()):10;
-		        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent()):10;
+	            this.CONFIG_destinationTopic=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("destination").item(0).getTextContent());
+	       	    this.ADV_deliveryMode=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent());
+	       	    try{
+	       	    	this.bodyValue=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue());
+	       	    } catch (Exception E){
+	       	    	this.bodyValue = "";
+	       	    }
+	       	 this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent())):10;
+		        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent())):10;
 		 }
 			public static String getActivityType() {
 				return activityType;
@@ -1198,14 +1223,14 @@ public class JMSElement {
 	        Element rootActivityElement = (Element)node;
 	        this.CONFIG_description="This activity is used while impelementing synchronous pattern,inorder to send response back to requestor";
 	        this.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
-	        this.CONFIG_messageType=rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent();
-	        this.ADV_deliveryMode=rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent();
+	        this.CONFIG_messageType=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("PermittedMessageType").item(0).getTextContent());
+	        this.ADV_deliveryMode=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSDeliveryMode").item(0).getTextContent());
 	        Element cIdTag=(Element)rootActivityElement.getElementsByTagName("JMSCorrelationID").item(0);
        	    String value=((Element)cIdTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select");
        	    Element bodyTag=(Element)rootActivityElement.getElementsByTagName("JMSCorrelationID").item(0);
        	    String bodyValue=((Element)cIdTag.getElementsByTagName("xsl:value-of").item(0)).getAttribute("select");
-	        this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent()):10;
-	        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent()):10;
+	        this.ADV_JMSExpiration=rootActivityElement.getElementsByTagName("JMSExpiration").getLength()>0?Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSExpiration").item(0).getTextContent())):10;
+	        this.ADV_priority=rootActivityElement.getElementsByTagName("JMSPriority").getLength()>0?Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("JMSPriority").item(0).getTextContent())):10;
 		    }
 			public static String getActivityType() {
 				return activityType;
@@ -1348,4 +1373,5 @@ public class JMSElement {
 		    
 	 }
 }
+
 

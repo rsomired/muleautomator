@@ -12,6 +12,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import com.tek.muleautomator.util.MuleAutomatorConstants;
+
 public class FTPConnection extends Connection {
 
 	@Override
@@ -24,12 +26,12 @@ public class FTPConnection extends Connection {
 	public boolean IS_CONFIGURED;
 	
 	public void fillDetails(Element rootElement){
-		this.CONNECTION_NAME=rootElement.getElementsByTagName("name").item(0).getTextContent();
-		this.USERNAME=rootElement.getElementsByTagName("UserName").item(0).getTextContent();
-		this.PASSWORD=rootElement.getElementsByTagName("Password").item(0).getTextContent();
-		this.HOST=rootElement.getElementsByTagName("Host").item(0).getTextContent();
-		this.PORT=rootElement.getElementsByTagName("Port").item(0).getTextContent();
-		this.TIMEOUT=rootElement.getElementsByTagName("Timeout").item(0).getTextContent();
+		this.CONNECTION_NAME=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("name").item(0).getTextContent());
+		this.USERNAME=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("UserName").item(0).getTextContent());
+		this.PASSWORD=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("Password").item(0).getTextContent());
+		this.HOST=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("Host").item(0).getTextContent());
+		this.PORT=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("Port").item(0).getTextContent());
+		this.TIMEOUT=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("Timeout").item(0).getTextContent());
 	}
 	
 	public FTPConnection(Node target){

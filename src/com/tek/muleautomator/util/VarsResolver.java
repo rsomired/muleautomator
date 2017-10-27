@@ -71,7 +71,6 @@ public class VarsResolver {
             if(relativePath.length()> "defaultVars.substvar".length()){
                 prefix=relativePath.substring(0,relativePath.indexOf("defaultVars.substvar"));
             }
-            
             NodeList globalVarsNodeList=docIn.getElementsByTagName("globalVariable");
             for(int i=0;i<globalVarsNodeList.getLength();++i){
                 Element currGv=(Element)globalVarsNodeList.item(i);
@@ -80,10 +79,7 @@ public class VarsResolver {
                 String value=currGv.getElementsByTagName("value").item(0).getTextContent();
                 map.put(key, value);
             }        
-            
         }
-        //System.out.println(map);
-        
     }
     
     
@@ -121,14 +117,26 @@ public class VarsResolver {
 		return x;
 	}
     
+    private String percentageGlobalExpr(String expr1){
+    	String key=expr1.split("%%")[1];
+    	for(Map.Entry<String, String> entry: map.entrySet()){
+        	if(entry.getKey().contains(key)){
+        		return entry.getValue();
+        	}
+        }
+    	return "";
+    }
+    
+    
     
     private String resolveSingleExpression(String expr){
     	String expr1=new String(expr);
-
     	if(expr1.contains("GlobalVariables")){
             expr1=getValueFromGlobalExpr(expr1);
         } else if(expr1.contains("Output")) {
         	expr1=MuleAutomatorConstants.tibcoLocalVariables.get(expr);
+        } else if (expr1.startsWith("%%")){
+        	expr1=percentageGlobalExpr(expr1);
         } else 
         	expr1=expr1.replaceAll("'", "");
     	return expr1;
@@ -144,12 +152,11 @@ public class VarsResolver {
      * @return Concatenated String
      */
 
-    public String resolveConcatQuery(String concatQuery){      
+    private String resolveConcatQuery(String concatQuery){      
         // Remove &quot;
         concatQuery=concatQuery.replace("&quot;", "");
         // Remove extra quotes
         concatQuery=concatQuery.replace("\"", "");
-
         String result="";
         if(concatQuery.contains("concat")){           
             String temp_expr=concatQuery.substring(concatQuery.indexOf("(")+1,concatQuery.indexOf(")"));
@@ -163,8 +170,16 @@ public class VarsResolver {
         System.err.println("NOT A CONCAT QUERY");
         return null;
     }
-    
+    /**
+     * Expression Resolver: Can resolve expressions involving Global Variables, '%%' References and concat queries
+     * This method will also resolve HTML escape sequences.
+     * If unable to resolve, method will return the original String.
+     * @param Expression to be resolved
+     * @return Resolved Expression
+     */
     public String resolveExpression(String expr){
+    	if(expr==null)
+    		return "";
     	expr=unescapeXML(expr);
     	if(expr.contains("concat")){
     		return resolveConcatQuery(expr);

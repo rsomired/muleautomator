@@ -10,6 +10,7 @@ import com.tek.muleautomator.element.GeneralActivityElement.MapperActivity;
 import com.tek.muleautomator.element.GeneralActivityElement.SharedVariableActivity;
 import com.tek.muleautomator.element.GeneralActivityElement.SleepActivity;
 import com.tek.muleautomator.element.GeneralActivityElement.TimerActivity;
+import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleConfigConnection;
 
 public class GeneralActivityService {
@@ -54,6 +55,7 @@ public class GeneralActivityService {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			Element sleep = doc.createElement("expression-component");
+			sleep.setAttribute("doc:name", "Sleep");
 			Long t=sleepActivity.getMiliseconds();
 			sleep.setTextContent("Thread.sleep("+t+")");
 			flow.appendChild(sleep);
@@ -98,24 +100,26 @@ public class GeneralActivityService {
 			
 			Element el=(Element)doc.getFirstChild();
 			el.setAttribute("xmlns:dw", "http://www.mulesoft.org/schema/mule/ee/dw");
-					
-			
-			
 			
 			Element mapper = doc.createElement("dw:transform-message");
-			mapper.setAttribute("xsi:schemaLocation", "http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd");
-			mapper.setAttribute("mimeType", "application/json");
+			boolean skip=false;		
+			if(MuleAutomatorConstants.specifiedSchema.containsKey(muleConfigPath)){
+				String val=MuleAutomatorConstants.specifiedSchema.get(muleConfigPath);
+				for(String temp: val.split(";")){
+					if(temp.contains("dw:transform-message")){
+						skip=true;
+					}
+				}
+			}
+			if(!skip){
+				//mapper.setAttribute("xsi:schemaLocation", "http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd");
+				String val=MuleAutomatorConstants.specifiedSchema.get(muleConfigPath);
+				val+=";dw:transform-message";
+				MuleAutomatorConstants.specifiedSchema.put(muleConfigPath, val);
+			}mapper.setAttribute("mimeType", "application/json");
 			mapper.setAttribute("set-payload", "");
 			mapper.setAttribute("doc:name", "Transform message");
-			/*
-			 * <dw:transform-message
-			 * metadata:id="0b127fdc-6abd-40d6-9d9a-a118690ca244" doc:name=
-			 * "Transform Message"> <dw:input-payload
-			 * mimeType="application/json"/> <dw:set-payload><![CDATA[%dw 1.0
-			 * %output application/java --- [{ Age__c: payload.Age, Phone__c:
-			 * payload.Phone as :string, ID__c: payload.ID
-			 * }]]]></dw:set-payload> </dw:transform-message>
-			 */
+			
 			flow.appendChild(mapper);
 		} catch (Exception e) {
 			e.printStackTrace();

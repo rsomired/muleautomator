@@ -27,7 +27,8 @@ public class MuleAutomatorConstants {
     public static String muleConfigTemplatePath="resources\\config-template.xml";
 	public static boolean removeExistingProject=true;
 	public static String muleResourcesPath="";
-	
+	public static String tibcoProcessPath="";
+
 	/**
 	 * Declaration of Dynamic Values needed for functioning of Automator
 	 */
@@ -38,6 +39,7 @@ public class MuleAutomatorConstants {
 	public static List<File> allTibcoProcessFiles=new ArrayList<>();
 	public static List<File> filteredTibcoProcessFiles = new ArrayList<>();
 	public static HashSet<String> generatedFlows=new HashSet<>();
+	public static HashMap<String, String> specifiedSchema = new HashMap<>();
     public static HashSet<String> configuredConnections=new HashSet<>();
 	
 	

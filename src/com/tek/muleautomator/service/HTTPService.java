@@ -41,7 +41,6 @@ public class HTTPService {
 					if(con.IS_CONFIGURED)
 						break;
 					con.IS_CONFIGURED=true;
-					//System.out.println("adding "+con.CONNECTION_NAME);
 					Element httpConfig = doc.createElement("http:listener-config");
 					httpConfig.setAttribute("name", con.CONNECTION_NAME.replaceAll(" ", "_"));
 					httpConfig.setAttribute("host", con.HOST);
@@ -50,6 +49,9 @@ public class HTTPService {
 					muleTag.appendChild(httpConfig);
 				}
 			} else {
+				if(MuleAutomatorConstants.configuredConnections.contains("HTTP Listener Configuration")){
+					return;
+				}
 				System.err.println("NO HTTP Connection file found. Setting default config...");
 				Element httpConfig = doc.createElement("http:listener-config");
 				httpConfig.setAttribute("name", conName);
@@ -57,6 +59,7 @@ public class HTTPService {
 				httpConfig.setAttribute("port", "8081");
 				httpConfig.setAttribute("doc:name", "HTTP Listener Configuration");
 				muleTag.appendChild(httpConfig);
+				MuleAutomatorConstants.configuredConnections.add("HTTP Listener Configuration");
 			}
 			
 		} catch (Exception e) {
@@ -97,7 +100,10 @@ public class HTTPService {
 				}
 			}
 			
-			if(!added){
+			
+				if(MuleAutomatorConstants.configuredConnections.contains("HTTP Request Configuration")){
+					return;
+				}
 				System.err.println("NO HTTP Connection file found. Setting default config...");
 				Element httpConfig = doc.createElement("http:request-config");
 				httpConfig.setAttribute("name", "HTTP_Request_Configuration");
@@ -105,7 +111,8 @@ public class HTTPService {
 				httpConfig.setAttribute("port", "8081");
 				httpConfig.setAttribute("doc:name", "HTTP Request Configuration");
 				muleTag.appendChild(httpConfig);
-			}
+				MuleAutomatorConstants.configuredConnections.add("HTTP Request Configuration");
+			
 			
 			
 			
@@ -189,23 +196,31 @@ public class HTTPService {
 
 	// ****************************************SOAP to HTTP starts here***************************************************************
 
-	public void webserviceConsumerConfiguration(String muleConfigPath) {
+	public String webserviceConsumerConfiguration(String muleConfigPath, SOAPSendReceiveActivity soapObj) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 
 			Element muleTag = (Element) doc.getFirstChild();
-
+			String append="";
+			int i=1;
+			while(MuleAutomatorConstants.configuredConnections.contains("Web_Service_Consumer"+append)){
+				append=""+i++;
+			}
+			
 			Element webserviceConsumerConfig = doc.createElement("ws:consumer-config");
-			webserviceConsumerConfig.setAttribute("name", "Web_Service_Consumer");
-			webserviceConsumerConfig.setAttribute("service", "Calculator");
-			webserviceConsumerConfig.setAttribute("port", "CalculatorSoap");
-			webserviceConsumerConfig.setAttribute("serviceAddress", "http://www.dneonline.com/calculator.asmx");
-			webserviceConsumerConfig.setAttribute("wsdlLocation", "http://www.dneonline.com/calculator.asmx?WSDL");
+			webserviceConsumerConfig.setAttribute("name", "Web_Service_Consumer"+append);
+			webserviceConsumerConfig.setAttribute("service", soapObj.getCONFIG_service());
+			webserviceConsumerConfig.setAttribute("port", soapObj.getCONFIG_port());
+			webserviceConsumerConfig.setAttribute("serviceAddress", soapObj.getINPUT_endpointURL());
+			webserviceConsumerConfig.setAttribute("wsdlLocation", soapObj.getINPUT_endpointURL()+"?WSDL");
 			webserviceConsumerConfig.setAttribute("doc:name", "Web Service Consumer");
 			muleTag.appendChild(webserviceConsumerConfig);
+			MuleAutomatorConstants.configuredConnections.add("Web_Service_Consumer"+append);
+			return "Web_Service_Consumer"+append;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return "Web_Service_Consumer";
 	}
 
 	public void apiKitSoapRouterConfiguration(String muleConfigPath) {
@@ -252,18 +267,20 @@ public class HTTPService {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 
-				httpListnerConfiguration(muleConfigPath,"HTTP_Listener_Configuration");
-			Element httpListnerRecvier = doc.createElement("http:listener");
-			httpListnerRecvier.setAttribute("config-ref", "HTTP_Listener_Configuration");
+			httpRequestConfiguration(muleConfigPath,"HTTP_Request_Configuration");
+			Element httpListnerRecvier = doc.createElement("http:request");
+			httpListnerRecvier.setAttribute("config-ref", "HTTP_Request_Configuration");
 			httpListnerRecvier.setAttribute("path", "/pathName");
+			httpListnerRecvier.setAttribute("method", "GET, POST");
+			
 			httpListnerRecvier.setAttribute("doc:name", "HTTP");
 			flow.appendChild(httpListnerRecvier);
 
-			webserviceConsumerConfiguration(muleConfigPath);
-
+			String config_ref=webserviceConsumerConfiguration(muleConfigPath, soapSendReceiveActivity);
+			
 			Element webserviceConsumer = doc.createElement("ws:consumer");
-			webserviceConsumer.setAttribute("config-ref", "Web_Service_Consumer");
-			webserviceConsumer.setAttribute("operation", "Add");
+			webserviceConsumer.setAttribute("config-ref", config_ref);
+			webserviceConsumer.setAttribute("operation", soapSendReceiveActivity.getCONFIG_operationType());
 			webserviceConsumer.setAttribute("doc:name", "Web Service Consumer");
 			flow.appendChild(webserviceConsumer);
 

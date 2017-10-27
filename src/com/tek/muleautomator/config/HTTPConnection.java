@@ -12,6 +12,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import com.tek.muleautomator.util.MuleAutomatorConstants;
+
 public class HTTPConnection extends Connection {
 
 	public String PORT, HOST, CONNECTION_NAME;
@@ -33,12 +35,12 @@ public class HTTPConnection extends Connection {
 	
 	private void fillDetails(Element rootElement){
 		try{
-			this.PORT=rootElement.getElementsByTagName("Port").item(0).getTextContent();
+			this.PORT=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("Port").item(0).getTextContent());
 		} catch (Exception E){
 			this.PORT="8081";
 		}
 		try{
-			this.HOST=rootElement.getElementsByTagName("Host").item(0).getTextContent();
+			this.HOST=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("Host").item(0).getTextContent());
 		} catch(Exception E){
 			this.HOST="localhost";
 		}

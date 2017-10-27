@@ -84,12 +84,13 @@ public class JDBCService {
 			Element dbParamQuery = doc.createElement("db:parameterized-query");
 			dbParamQuery.setTextContent(jdbcCallActivity.getConnectionName().replaceAll(" ", "_"));
 			stordProc.appendChild(dbParamQuery);
-
-			for (int i = 0; i < jdbcCallActivity.getParams().size(); ++i) {
-				Element dbParam = doc.createElement("db:in-param");
-				dbParam.setAttribute("name", jdbcCallActivity.getParams().get(i));
-				dbParam.setAttribute("value", "#[payload." + jdbcCallActivity.getParams().get(i) + "]");
-				stordProc.appendChild(dbParam);
+			if(jdbcCallActivity.getParams()!=null){
+				for (int i = 0; i < jdbcCallActivity.getParams().size(); ++i) {
+					Element dbParam = doc.createElement("db:in-param");
+					dbParam.setAttribute("name", jdbcCallActivity.getParams().get(i));
+					dbParam.setAttribute("value", "#[payload." + jdbcCallActivity.getParams().get(i) + "]");
+					stordProc.appendChild(dbParam);
+				}
 			}
 
 			flow.appendChild(stordProc);

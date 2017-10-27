@@ -3,6 +3,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.tek.muleautomator.element.XMLElement;
+import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleConfigConnection;
 public class XMLService {
 	public void rendererXML(String muleConfigPath,XMLElement.XMLRendererActivity receiveMailActivity, Element flow){
@@ -31,10 +32,24 @@ public class XMLService {
 			Element parser = doc.createElement("dw:transform-message");
 			
 			Element el=(Element)doc.getFirstChild();
+
 			el.setAttribute("xmlns:dw", "http://www.mulesoft.org/schema/mule/ee/dw");
-					
-			
-			parser.setAttribute("xsi:schemaLocation", "http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd");
+			boolean skip=false;		
+			if(MuleAutomatorConstants.specifiedSchema.containsKey(muleConfigPath)){
+				String val=MuleAutomatorConstants.specifiedSchema.get(muleConfigPath);
+				//System.out.println(" VALUE FOR MULECONFIG: "+val);
+				for(String temp: val.split(";")){
+					if(temp.contains("dw:transform-message")){
+						skip=true;
+					}
+				}
+			}
+			if(!skip){
+				//parser.setAttribute("xsi:schemaLocation", "http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd");
+				String val=MuleAutomatorConstants.specifiedSchema.get(muleConfigPath);
+				val+=";dw:transform-message";
+				MuleAutomatorConstants.specifiedSchema.put(muleConfigPath, val);
+			}
 			parser.setAttribute("set-payload","");
 			parser.setAttribute("doc:name", "Transform message");
 			flow.appendChild(parser);

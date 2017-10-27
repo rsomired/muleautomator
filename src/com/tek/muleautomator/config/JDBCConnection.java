@@ -12,6 +12,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import com.tek.muleautomator.util.MuleAutomatorConstants;
+
 public class JDBCConnection extends Connection {
 
 	
@@ -41,14 +43,33 @@ public class JDBCConnection extends Connection {
 		this.CONNECTION_NAME=rootElement.getElementsByTagName("name").item(0).getTextContent();
 		String drv=rootElement.getElementsByTagName("driver").item(0).getTextContent();
 		this.DRIVER_TYPE=drv.substring(drv.lastIndexOf(".")+1, drv.length());
-		this.MAX_CONNECTIONS=Integer.parseInt(rootElement.getElementsByTagName("maxConnections").item(0).getTextContent());
-		this.USERNAME=rootElement.getElementsByTagName("user").item(0).getTextContent();
-		this.PASSWORD=rootElement.getElementsByTagName("password").item(0).getTextContent();
-		String t=rootElement.getElementsByTagName("location").item(0).getTextContent();
-        t=t.split("//")[1];
-        this.HOST=t.split(":")[0];
-        this.INSTANCE=t.split("=")[1];
-        this.PORT=t.split(":")[1].split(";")[0];
+		this.MAX_CONNECTIONS=Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("maxConnections").item(0).getTextContent()));
+		try{
+			this.USERNAME=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("user").item(0).getTextContent());
+		} catch (Exception E){
+			this.USERNAME="default";
+		}
+		try{
+			this.PASSWORD=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("password").item(0).getTextContent());
+		} catch (Exception E){
+			this.PASSWORD="admin";
+		}
+		String t=null;
+		try{
+			t=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootElement.getElementsByTagName("location").item(0).getTextContent());
+		} catch(Exception E){
+			t="localhost";
+		}
+        try{
+        	t=t.split("//")[1];
+        	this.HOST=t.split(":")[0];
+            this.INSTANCE=t.split("=")[1];
+            this.PORT=t.split(":")[1].split(";")[0];
+        } catch (Exception E){
+        	this.HOST=t;
+        	this.PORT="1521";
+        	this.INSTANCE="XE";
+        }
 	}
 	
 	public JDBCConnection(File currFile){

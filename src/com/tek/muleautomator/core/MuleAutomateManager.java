@@ -2,14 +2,12 @@ package com.tek.muleautomator.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -22,7 +20,6 @@ import com.tek.muleautomator.config.HTTPConnection;
 import com.tek.muleautomator.config.JDBCConnection;
 import com.tek.muleautomator.config.JMSConnection;
 import com.tek.muleautomator.config.WSDLConnection;
-import com.tek.muleautomator.element.GeneralActivityElement.GetSharedVariableActivity;
 import com.tek.muleautomator.mvn.MuleProjectSetup;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleAutomatorUtil;
@@ -43,8 +40,8 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-			String tibcoProjectLocationRootFolder = "C:/Users/vsingh/Desktop/tibprgms/Loops";
-			String workspace = "D:/muleDEMO";
+			String tibcoProjectLocationRootFolder = "D:/Proj/AllegisSalesWorkspace";
+			String workspace = "D:/muleDEMO/Allegis1";
 			
 			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), MuleAutomatorConstants.allTibcoProcessFiles, new String[]{"process"});
 			// System.out.println("All: "+MuleAutomatorConstants.tibcoProcessFiles);
@@ -57,16 +54,15 @@ public class MuleAutomateManager {
 			MuleFlowTools.filterTibcoFiles();
 			List<File> processFiles=MuleAutomatorConstants.filteredTibcoProcessFiles;
 			Set<String> filesCreated=new HashSet<>();
-			
 			createMuleProject(tibcoProjectLocationRootFolder, projectName, workspace);
 			MuleAutomatorUtil.includeLibraries(tibcoProjectLocationRootFolder, workspace+"/"+projectName);
 			
 			String muleConfigPath = MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName,"mule-config");
 
 			int i=1;
-			
-			
+			int skips=0;
 			for(File currProcess: processFiles){
+				MuleAutomatorConstants.tibcoProcessPath=currProcess.getCanonicalPath();
 				String currFileName=currProcess.getName().substring(0,currProcess.getName().indexOf("."));
 				int temp=1;
 				String fileName_temp=new String(currFileName);
@@ -75,7 +71,18 @@ public class MuleAutomateManager {
 					currFileName+=""+ temp++;
 				}
 				filesCreated.add(currFileName);
-				System.out.println("\n***   Process "+i+": "+currFileName+"    ***");
+				
+				System.out.println("\n");
+				int printLen=("***   Process "+i+": "+currFileName+"    ***").length();
+				while(printLen-- > 0)
+					System.out.print("*");
+				System.out.println();
+				System.out.println("***   Process "+i+": "+currFileName+"    ***");
+				printLen=("***   Process "+i+": "+currFileName+"    ***").length();
+				while(printLen-- > 0)
+					System.out.print("*");
+				System.out.println();
+				
 				
 				if(i==1){
 					MuleAutomatorUtil.renameFile(muleConfigPath,MuleAutomatorConstants.generateMuleConfigPath(workspace, projectName,currFileName));
@@ -96,22 +103,25 @@ public class MuleAutomateManager {
 				if (new File(muleConfigPath).exists()) {
 					flowElement = MuleFlowTools.createMuleFlow(muleConfigPath, currFileName);
 				}
-				
-				
-				flowElement=MuleFlowTools.generateMuleFlowFromTibcoProcessOrderByTransitionsWithChoice(currProcess.getCanonicalPath(), muleConfigPath,
-						flowElement);
-				Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
-				doc.getFirstChild().appendChild(flowElement);
-				
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
-				Transformer transformer = transformerFactory.newTransformer();
-				DOMSource source = new DOMSource(doc);
-				StreamResult result = new StreamResult(muleConfigPath);
-				transformer.transform(source, result);
+					try{
+						flowElement=MuleFlowTools.generateMuleFlowFromTibcoProcessOrderByTransitionsWithChoice(currProcess.getCanonicalPath(), muleConfigPath,flowElement);
+						Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+						doc.getFirstChild().appendChild(flowElement);
+						TransformerFactory transformerFactory = TransformerFactory.newInstance();
+						Transformer transformer = transformerFactory.newTransformer();
+						DOMSource source = new DOMSource(doc);
+						StreamResult result = new StreamResult(muleConfigPath);
+						transformer.transform(source, result);
+					} catch (Exception E){
+						skips++;
+						System.out.println(E.getMessage()+" =  " + E.toString());
+						System.out.println("**** >>> ERROR PARSING !!! SKIPPING THIS FILE <<< ****");
+					}
 				
 			}
 			
-			
+			System.out.println("\n\n******************* ALL COMPLETE! *******************");
+			System.out.println("***** SKIPPED: "+skips+" files *****");
 			
 			//System.out.println("Vars: "+ MuleAutomatorConstants.tibcoVariables);
 		} catch (Exception e) {
@@ -179,8 +189,8 @@ public class MuleAutomateManager {
         		}
         		jmsCon.CONNECTION_NAME=fileName;
         		MuleAutomatorConstants.connectionConfigs.put(jmsCon.CONNECTION_NAME, jmsCon);
-        	}
-       }
+        	} 
+        	 }
 	}
 
 	/**

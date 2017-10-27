@@ -7,6 +7,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.tek.muleautomator.util.MuleAutomatorConstants;
+
 public class JDBCElement {
 
 	private static String generateQueryString(String preparedQuery, List<String> params){
@@ -29,13 +31,9 @@ public class JDBCElement {
 			return connectionName;
 		}
 
-
-
 		public void setConnectionName(String connectionName) {
 			this.connectionName = connectionName;
 		}
-
-
 
 		public JDBCUpdateActivity(Node targetNode){
 			queryParams=new ArrayList<>();
@@ -43,7 +41,7 @@ public class JDBCElement {
 			Element rootActivityElement = (Element)targetNode;
         	JDBCUpdateActivity.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	//JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
-        	this.TIMEOUT=rootActivityElement.getElementsByTagName("timeout").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
+        	this.TIMEOUT=rootActivityElement.getElementsByTagName("timeout").getLength()>0?Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent())):10;
         	this.commit=rootActivityElement.getElementsByTagName("commit").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("commit").item(0).getTextContent()):false;
         	this.batchUpdate=rootActivityElement.getElementsByTagName("batchUpdate").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("batchUpdate").item(0).getTextContent()):false;
         	this.emptyStrAsNil=rootActivityElement.getElementsByTagName("emptyStrAsNil").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("emptyStrAsNil").item(0).getTextContent()):false;
@@ -68,9 +66,6 @@ public class JDBCElement {
 		public String getNamedParamsQuery() {
 			return namedParamsQuery;
 		}
-
-
-
 		public static String getDescription() {
 			return description;
 		}
@@ -126,7 +121,11 @@ public class JDBCElement {
 			Element rootActivityElement = (Element)targetNode;
         	JDBCUpdateActivity.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	//JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
-        	this.TIMEOUT=rootActivityElement.getElementsByTagName("timeout").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
+        	try{
+        		this.TIMEOUT=Integer.valueOf(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("timeout").getLength()>0?rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent():"10"));
+        	} catch (Exception E){
+        		this.TIMEOUT=1000;
+        	}
         	this.commit=rootActivityElement.getElementsByTagName("commit").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("commit").item(0).getTextContent()):false;
         	this.batchUpdate=rootActivityElement.getElementsByTagName("batchUpdate").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("batchUpdate").item(0).getTextContent()):false;
         	this.emptyStrAsNil=rootActivityElement.getElementsByTagName("emptyStrAsNil").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("emptyStrAsNil").item(0).getTextContent()):false;
@@ -270,33 +269,35 @@ public class JDBCElement {
 			Element rootActivityElement = (Element)targetNode;
         	JDBCUpdateActivity.activityType=rootActivityElement.getElementsByTagName("pd:type").item(0).getTextContent();
         	//JDBCUpdateActivity.connectionPath=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
-        	this.TIMEOUT=rootActivityElement.getElementsByTagName("timeout").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent()):10;
+        	this.TIMEOUT=rootActivityElement.getElementsByTagName("timeout").getLength()>0?Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootActivityElement.getElementsByTagName("timeout").item(0).getTextContent())):10;
         	this.maxRows=rootActivityElement.getElementsByTagName("maxRows").getLength()>0?Integer.parseInt(rootActivityElement.getElementsByTagName("maxRows").item(0).getTextContent()):10;
         	
         	this.emptyStrAsNil=rootActivityElement.getElementsByTagName("emptyStrAsNil").getLength()>0?Boolean.parseBoolean(rootActivityElement.getElementsByTagName("emptyStrAsNil").item(0).getTextContent()):false;
 			this.procedureName=rootActivityElement.getElementsByTagName("ProcedureName").item(0).getTextContent();
 			
-			NodeList allParamsNodeList=rootActivityElement.getElementsByTagName("inputSet").item(0).getChildNodes();
-			this.params=new ArrayList<>();
-			
-			for(int i=0;i<allParamsNodeList.getLength();++i){
-				if(allParamsNodeList.item(i).getNodeType()==Node.ELEMENT_NODE){
-				Element curr=(Element)allParamsNodeList.item(i);
-				params.add(curr.getNodeName());
-			}
-			}
-			this.namedParamQuery="{call "+this.procedureName+"(";
-			for(int i=0;i<params.size();++i){
-				this.namedParamQuery+=":"+params.get(i);
-				if(i+1<params.size()){
-					this.namedParamQuery+=",";
+			try{
+				NodeList allParamsNodeList=rootActivityElement.getElementsByTagName("inputSet").item(0).getChildNodes();
+				this.params=new ArrayList<>();
+				
+				for(int i=0;i<allParamsNodeList.getLength();++i){
+					if(allParamsNodeList.item(i).getNodeType()==Node.ELEMENT_NODE){
+					Element curr=(Element)allParamsNodeList.item(i);
+					params.add(curr.getNodeName());
 				}
+				}
+				this.namedParamQuery="{call "+this.procedureName+"(";
+				for(int i=0;i<params.size();++i){
+					this.namedParamQuery+=":"+params.get(i);
+					if(i+1<params.size()){
+						this.namedParamQuery+=",";
+					}
+				}
+				this.namedParamQuery+=")}";
+			} catch (Exception E){
+				
 			}
 			String con=rootActivityElement.getElementsByTagName("jdbcSharedConfig").item(0).getTextContent();
         	this.connectionName=con.substring(con.lastIndexOf("/")+1, con.lastIndexOf("."));
-        	
-			this.namedParamQuery+=")}";
-			
 		}
 	}
 

@@ -14,7 +14,11 @@ public class GeneralActivityElement {
 		public AssignActivity(Node target){
 			Element rootActivityElement=(Element)target;
 			this.variableName=rootActivityElement.getElementsByTagName("variableName").item(0).getTextContent();
-			this.variableValue=rootActivityElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+			try{
+				this.variableValue=rootActivityElement.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue();
+			} catch(Exception E){
+				this.variableValue="";
+			}
 			
 		}
 
@@ -161,7 +165,11 @@ public class GeneralActivityElement {
 		public SleepActivity(Node target){
 			Element el=(Element)target;
 			Element intervalEl=(Element)el.getElementsByTagName("IntervalInMillisec").item(0);
-			this.INPUT_miliseconds=Long.parseLong(intervalEl.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue());
+			try{
+				this.INPUT_miliseconds=Long.parseLong(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(intervalEl.getElementsByTagName("xsl:value-of").item(0).getAttributes().getNamedItem("select").getNodeValue()));
+			} catch (Exception E){
+				this.INPUT_miliseconds = 5000;
+			}
 		}
 
 		public long getMiliseconds() {
@@ -181,8 +189,8 @@ public class GeneralActivityElement {
 		
 		public TimerActivity(Node target){
 			Element rootEl=(Element)target;
-			this.CONFIG_startTime=rootEl.getElementsByTagName("StartTime").item(0).getTextContent();
-			this.CONFIG_timeInterval=Integer.toString(60000*Integer.parseInt(rootEl.getElementsByTagName("TimeInterval").item(0).getTextContent()));
+			this.CONFIG_startTime=MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootEl.getElementsByTagName("StartTime").item(0).getTextContent());
+			this.CONFIG_timeInterval=Integer.toString(60000*Integer.parseInt(MuleAutomatorConstants.tibcoVarsResolver.resolveExpression(rootEl.getElementsByTagName("TimeInterval").item(0).getTextContent())));
 			this.MISC_seqKey="";
 			this.CONFIG_intervalUnit="";
 		}
