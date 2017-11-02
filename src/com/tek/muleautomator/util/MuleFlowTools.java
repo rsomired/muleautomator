@@ -57,7 +57,7 @@ public class MuleFlowTools {
 		String append="";
 		int i=1;
 		while(MuleAutomatorConstants.generatedFlows.contains(flowName+append)){
-			append = "" + i;		
+			append = "" + i++;		
 		}
 		MuleAutomatorConstants.generatedFlows.add(flowName+append);
 		flowElement.setAttribute("name", flowName+append);
