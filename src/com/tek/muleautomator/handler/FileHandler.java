@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.FileElement;
 import com.tek.muleautomator.service.FileService;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 
 public class FileHandler {
 
@@ -26,7 +27,7 @@ public class FileHandler {
 			fileService.fileCreate(muleProjectLocation, fileCreateActivity,flowElement);
 			break;
 			
-		case "com.tibco.plugin.file.FileEventSource":
+		/*case "com.tibco.plugin.file.FileEventSource":
 			System.out.println("com.tibco.plugin.file.FileEventSource-----The File Poller process starter polls for files or directories with the given name and starts a process when the specified change (creation, modification, deletion) is detected. ");
 			break;
 			
@@ -35,6 +36,10 @@ public class FileHandler {
 			FileElement.FileListActivity fileListActivity=fileElement.new FileListActivity(activityElement.getTargetNode());
 			//fileService.listFiles(muleProjectLocation, fileListActivity,flowElement);
 			break;
+			
+		case "com.tibco.plugin.file.FileSignalIn":
+			System.out.println("com.tibco.plugin.file.FileSignalIn-----The Wait for File Change activity waits for a file creation, modification, or deletion event to occur during process execution. When this activity is executed, the process instance suspends and waits for the specified change to occur before resuming.");
+			break;*/
 
 		case "com.tibco.plugin.file.FileReadActivity":
 			System.out.println("com.tibco.plugin.file.FileReadActivity-----The Read File activity is used to read a file and place its contents into the activity�s output. ");
@@ -54,14 +59,12 @@ public class FileHandler {
 			fileService.fileRename(muleProjectLocation, fileRenameActivity,flowElement);
 			break;
 
-		case "com.tibco.plugin.file.FileSignalIn":
-			System.out.println("com.tibco.plugin.file.FileSignalIn-----The Wait for File Change activity waits for a file creation, modification, or deletion event to occur during process execution. When this activity is executed, the process instance suspends and waits for the specified change to occur before resuming.");
-			break;
-
 		case "com.tibco.plugin.file.FileWriteActivity":
 			System.out.println("com.tibco.plugin.file.FileWriteActivity-----The Write File activity writes content to the specified file.");
 			FileElement.FileWriteActivity fileWriteActivity=fileElement.new FileWriteActivity(activityElement.getTargetNode());
 			fileService.fileWrite(muleProjectLocation, fileWriteActivity,flowElement);
+			break;
+		default: MuleAutomatorUtil.loggerElement(activityElement, muleProjectLocation, flowElement);
 			break;
 		}
 	}	

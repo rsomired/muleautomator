@@ -7,7 +7,7 @@ import com.tek.muleautomator.element.ParseElement.RenderDataActivity;
 import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleConfigConnection;
 public class ParseService {
-	public  static void parseData(String muleConfigPath, ParseDataActivity parseDataActivity, Element flow) {
+	public  void parseData(String muleConfigPath, ParseDataActivity parseDataActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			Element parser = doc.createElement("dw:transform-message");
@@ -37,7 +37,7 @@ public class ParseService {
 			e.printStackTrace();
 		}
 	}
-		public static  void renderData(String muleConfigPath, RenderDataActivity renderDataActivity, Element flow) {
+		public  void renderData(String muleConfigPath, RenderDataActivity renderDataActivity, Element flow) {
 			try {
 				Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 				Element el=(Element)doc.getFirstChild();

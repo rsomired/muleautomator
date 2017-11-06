@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.JMSElement;
 import com.tek.muleautomator.service.JMSService;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 
 public class JMSHandler {
 
@@ -40,7 +41,7 @@ public class JMSHandler {
 			JMSElement.JMSTopicRequestReplyActivity jmsTopicRequestReplyActivity = new JMSElement.JMSTopicRequestReplyActivity(activityElement.getTargetNode());
 			jmsService.jmsTopicRequestor(muleConfigPath, flowElement, jmsTopicRequestReplyActivity);
 			break;
-		case "com.tibco.plugin.jms.JMSTopicSignalInActivity":
+		/*case "com.tibco.plugin.jms.JMSTopicSignalInActivity":
 			System.out.println("This acitivity is used in scenarios where we have asyncronous pattern.This actvity will wait for messages on a topic");
 			break;
 		case "com.tibco.plugin.jms.JMSQueueSignalInActivity":
@@ -48,13 +49,14 @@ public class JMSHandler {
 			break;
 		case "com.tibco.plugin.jms.JMSQueueGetMessageActivity":
 			System.out.println("This activity is used in scenarios where we need to pull messages from a queue on demand");
-			break;
+			break;*/
 		case "com.tibco.plugin.jms.JMSReplyActivity":
 			System.out.println("com.tibco.plugin.jms.JMSReplyActivity-----This activity is used while impelementing synchronous pattern, inorder to send response back to requestor");
 			JMSElement.JMSReplyActivity jmsReplyActivity = new JMSElement.JMSReplyActivity(activityElement.getTargetNode());
 			jmsService.replyToJmsMessage(muleConfigPath, flowElement, jmsReplyActivity);
 			break;
-		
+		default: MuleAutomatorUtil.loggerElement(activityElement, muleConfigPath, flowElement);
+			break;
 		}
 		
 		

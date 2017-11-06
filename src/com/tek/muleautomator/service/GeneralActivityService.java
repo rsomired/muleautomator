@@ -14,7 +14,7 @@ import com.tek.muleautomator.util.MuleAutomatorConstants;
 import com.tek.muleautomator.util.MuleConfigConnection;
 
 public class GeneralActivityService {
-	public static void assign(String muleConfigPath, AssignActivity assignActivity, Element flow) {
+	public  void assign(String muleConfigPath, AssignActivity assignActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			Element assign = doc.createElement("set-variable");
@@ -27,7 +27,7 @@ public class GeneralActivityService {
 		}
 	}
 
-	public static void catchService(String muleConfigPath, CatchActivity catchActivity, Element flow) {
+	public  void catchService(String muleConfigPath, CatchActivity catchActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			Element catch_Exception_Strategy = doc.createElement("catch-exception-strategy");
@@ -39,7 +39,7 @@ public class GeneralActivityService {
 		}
 	}
 
-	public static void inspector(String muleConfigPath, InspectorActivity inspectorActivity, Element flow) {
+	public  void inspector(String muleConfigPath, InspectorActivity inspectorActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			Element inspector = doc.createElement("logger");
@@ -51,7 +51,7 @@ public class GeneralActivityService {
 		}
 	}
 
-	public static void sleep(String muleConfigPath, SleepActivity sleepActivity, Element flow) {
+	public  void sleep(String muleConfigPath, SleepActivity sleepActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			Element sleep = doc.createElement("expression-component");
@@ -64,7 +64,7 @@ public class GeneralActivityService {
 		}
 	}
 
-	public static void timer(String muleConfigPath, TimerActivity timerActivity, Element flow) {
+	public  void timer(String muleConfigPath, TimerActivity timerActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			Element connecterRef=doc.createElement("quartz:connector");
@@ -94,7 +94,7 @@ public class GeneralActivityService {
 		}
 	}
 
-	public static void mapper(String muleConfigPath, MapperActivity mapperActivity, Element flow) {
+	public  void mapper(String muleConfigPath, MapperActivity mapperActivity, Element flow) {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			
@@ -126,7 +126,7 @@ public class GeneralActivityService {
 		}
 	}
 
-	public static void sharedVariable(String muleConfigPath, SharedVariableActivity sharedVariableActivity,
+	public  void sharedVariable(String muleConfigPath, SharedVariableActivity sharedVariableActivity,
 			   Element flow) {
 			  try
 			  {

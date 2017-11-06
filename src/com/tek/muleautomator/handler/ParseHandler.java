@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.ParseElement;
 import com.tek.muleautomator.service.ParseService;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 
 public class ParseHandler {
 	public static void generateMuleFlow(ActivityElement activityElement, String muleConfigPath, Element flowElement) {
@@ -25,6 +26,8 @@ public class ParseHandler {
 					activityElement.getTargetNode());
 			parseService.renderData(muleConfigPath, renderDataActivity, flowElement);
 			break;
+		default: MuleAutomatorUtil.loggerElement(activityElement, muleConfigPath, flowElement);
+		break;
 		}
 	}
 }

@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.HTTPElement;
 import com.tek.muleautomator.service.HTTPService;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 
 public class HTTPHandler {
 
@@ -31,10 +32,11 @@ public class HTTPHandler {
 			httpService.sendHttpResopnse(muleConfigPath, httpSendResponseActivity, flowElement);
 			break;
 			
-		case "com.tibco.plugin.http.HTTPSignalInActivity":
+		/*case "com.tibco.plugin.http.HTTPSignalInActivity":
 			System.out.println("com.tibco.plugin.http.HTTPResponseActivity-----Waits for an incoming HTTP request in a process definition. The process instance suspends until the incoming HTTP request is received.");
+			break;*/
+		default: MuleAutomatorUtil.loggerElement(activityElement, muleConfigPath, flowElement);
 			break;
-
 		}
 	}
 
