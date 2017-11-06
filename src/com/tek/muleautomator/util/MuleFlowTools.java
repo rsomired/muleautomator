@@ -330,10 +330,12 @@ public class MuleFlowTools {
 				break;
 			case "soap":
 				SOAPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
 			case "ftp":
 				FTPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
-			case "core":
-			case "mapper":
+				break;
+		/*	case "core":
+			case "mapper":*/
 			case "timer":
 				GeneralActivityHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
 				break;
@@ -348,10 +350,15 @@ public class MuleFlowTools {
 			     break;
 			case "java":
 				JavaHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
 			case "servicepalette":
 				ServiceHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
 			case "tcp":
 				TCPHandler.generateMuleFlow(activityElement, muleConfigPath, flowElement);
+				break;
+			default: MuleAutomatorUtil.loggerElement(activityElement, muleConfigPath, flowElement);
+			break;
 			}
 		}
 	}

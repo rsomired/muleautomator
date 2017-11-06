@@ -40,8 +40,8 @@ public class MuleAutomateManager {
 	public static void main(String args[]) {
 		Element flowElement = null;
 		try {
-			String tibcoProjectLocationRootFolder = "D:/Proj/AllegisENSWorkspace";
-			String workspace = "D:/muleDEMO/Allegis2";
+			String tibcoProjectLocationRootFolder = "D:/Migration/Allegis projects/AllegisCornerstoneWorkspace";
+			String workspace = "D:/Migration/Allegis mule projects";
 			
 			MuleAutomatorUtil.fileFinder(new File(tibcoProjectLocationRootFolder), MuleAutomatorConstants.allTibcoProcessFiles, new String[]{"process"});
 			// System.out.println("All: "+MuleAutomatorConstants.tibcoProcessFiles);

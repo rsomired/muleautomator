@@ -4,11 +4,12 @@ import org.w3c.dom.Element;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.TCPElement;
 import com.tek.muleautomator.service.TCPService;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 public class TCPHandler {
 	public static void generateMuleFlow(ActivityElement activityElement, String muleConfigPath, Element flowElement) {
 		TCPService tcpService = new TCPService();
 		String activityType=activityElement.getActivityType();
-		
+
 		switch(activityType){
 		case "com.tibco.plugin.tcp.MailEventSource":
 			System.out.println("com.tibco.plugin.mail.MailEventSource-----The TCP Connection is a shared configuration resource that specifies the connection information for the TCP server. This resource is used when a process definition acts as a TCP client connecting to a remote server or when a process definition acts as a TCP server accepting incoming TCP connections.");
@@ -20,6 +21,8 @@ public class TCPHandler {
 			TCPElement.TCPOpenConnectionActivity tcpOpenConnectionActivity = new TCPElement.TCPOpenConnectionActivity(activityElement.getTargetNode());
 			tcpService.tcpOpenConnection(muleConfigPath,tcpOpenConnectionActivity, flowElement);
 			break;
-}
-}
+		default: MuleAutomatorUtil.loggerElement(activityElement, muleConfigPath, flowElement);
+		break;
+		}
+	}
 }

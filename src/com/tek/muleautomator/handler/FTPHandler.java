@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.FTPElement;
 import com.tek.muleautomator.service.FTPService;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 
 public class FTPHandler {
 
@@ -29,7 +30,8 @@ public class FTPHandler {
 			FTPElement.FTPRenameFileActivity ftpRenameFileActivity = new FTPElement.FTPRenameFileActivity(activityElement.getTargetNode());
 			ftpService.ftpRenameFile(muleProjectLocation, ftpRenameFileActivity, flowElement);
 			break;
-			
+		default: MuleAutomatorUtil.loggerElement(activityElement, muleProjectLocation, flowElement);
+			break;	
 		}
 	}	
 

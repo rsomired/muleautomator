@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.GeneralActivityElement;
 import com.tek.muleautomator.service.GeneralActivityService;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 
 public class GeneralActivityHandler {
 	public static void generateMuleFlow(ActivityElement activityElement, String muleConfigPath, Element flowElement) {
@@ -16,49 +17,51 @@ public class GeneralActivityHandler {
 					"com.tibco.pe.core.AssignActivity-----The Assign activity allows you to assign a value to a user-defined process variable..");
 			GeneralActivityElement.AssignActivity assignActivity = new GeneralActivityElement.AssignActivity(
 					activityElement.getTargetNode());
-			GeneralActivityService.assign(muleConfigPath, assignActivity, flowElement);
+			generalElementService.assign(muleConfigPath, assignActivity, flowElement);
 			break;
 		case "com.tibco.pe.core.CatchActivity":
 			System.out.println(
 					"com.tibco.pe.core.CatchActivity----The Catch activity receives control of execution when an unhandled exception occurs. You can select a specific exception type to catch or you can specify that this activity should catch all unhandled exceptions.");
 			GeneralActivityElement.CatchActivity catchActivity = new GeneralActivityElement.CatchActivity(
 					activityElement.getTargetNode());
-			GeneralActivityService.catchService(muleConfigPath, catchActivity, flowElement);
+			generalElementService.catchService(muleConfigPath, catchActivity, flowElement);
 			break;
 		case "com.tibco.pe.core.InspectorActivity":
 			System.out.println(
 					"com.tibco.pe.core.InspectorActivity---The Inspector activity is used to write the output of any or all activities and process variables to a file and/or stdout.");
 			GeneralActivityElement.InspectorActivity inspectorActivity = new GeneralActivityElement.InspectorActivity(
 					activityElement.getTargetNode());
-			GeneralActivityService.inspector(muleConfigPath, inspectorActivity, flowElement);
+			generalElementService.inspector(muleConfigPath, inspectorActivity, flowElement);
 			break;
 		case "com.tibco.plugin.timer.SleepActivity":
 			System.out.println(
 					"com.tibco.plugin.timer.SleepActivity---The Sleep activity suspends the process on the current transition for the given amount of time");
 			GeneralActivityElement.SleepActivity sleepActivity = new GeneralActivityElement.SleepActivity(
 					activityElement.getTargetNode());
-			GeneralActivityService.sleep(muleConfigPath, sleepActivity, flowElement);
+			generalElementService.sleep(muleConfigPath, sleepActivity, flowElement);
 			break;
 		case "com.tibco.plugin.timer.TimerEventSource":
 			System.out.println(
 					"com.tibco.plugin.timer.TimerEventSource---The Timer process starter starts a process at a specific time.");
 			GeneralActivityElement.TimerActivity timerActivity = new GeneralActivityElement.TimerActivity(
 					activityElement.getTargetNode());
-			GeneralActivityService.timer(muleConfigPath, timerActivity, flowElement);
+			generalElementService.timer(muleConfigPath, timerActivity, flowElement);
 			break;
 		case "com.tibco.plugin.mapper.MapperActivity":
 			System.out.println(
 					"com.tibco.plugin.mapper.MapperActivity--- map data values from the current list of process variables to the elements of the variable added with the Mapper activity. ");
 			GeneralActivityElement.MapperActivity mapperActivity = new GeneralActivityElement.MapperActivity(
 					activityElement.getTargetNode());
-			GeneralActivityService.mapper(muleConfigPath, mapperActivity, flowElement);
+			generalElementService.mapper(muleConfigPath, mapperActivity, flowElement);
 			break;
 		case "com.tibco.pe.core.SetSharedVariableActivity":
 			System.out.println(
 					"com.tibco.pe.core.SetSharedVariableActivity------The Set Shared Variable activity allows you to change the value of a shared variable");
 			GeneralActivityElement.SharedVariableActivity sharedVariableActivity = new GeneralActivityElement.SharedVariableActivity(
 					activityElement.getTargetNode());
-			GeneralActivityService.sharedVariable(muleConfigPath, sharedVariableActivity, flowElement);
+			generalElementService.sharedVariable(muleConfigPath, sharedVariableActivity, flowElement);
+			break;
+		default: MuleAutomatorUtil.loggerElement(activityElement, muleConfigPath, flowElement);
 			break;
 		}
 

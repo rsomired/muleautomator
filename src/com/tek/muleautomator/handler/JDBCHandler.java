@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import com.tek.muleautomator.element.ActivityElement;
 import com.tek.muleautomator.element.JDBCElement;
 import com.tek.muleautomator.service.JDBCService;
+import com.tek.muleautomator.util.MuleAutomatorUtil;
 
 public class JDBCHandler {
 	
@@ -18,9 +19,6 @@ public class JDBCHandler {
 			JDBCElement.JDBCCallActivity jdbcCallActivity = new JDBCElement.JDBCCallActivity(activityElement.getTargetNode());
 			jdbcService.jdbcCallProcedure(muleProjectLocation, jdbcCallActivity, flowElement);
 			break;
-		case "com.tibco.plugin.jdbc.JDBCGetConnectionActivity":
-			System.out.println("com.tibco.plugin.jdbc.JDBCGetConnectionActivity-----The JDBC Get Connection activity retrieves an object reference to a JavaConnectionAccessor object for the specified JDBC Connection from the connection pool.");
-			break;
 		case "com.tibco.plugin.jdbc.JDBCQueryActivity":
 			System.out.println("com.tibco.plugin.jdbc.JDBCQueryActivity-----The JDBC Call Procedure activity calls a database procedure using the specified JDBC connection");
 			JDBCElement.JDBCQueryActivity jdbcQueryActivity = new JDBCElement.JDBCQueryActivity(activityElement.getTargetNode());
@@ -33,9 +31,14 @@ public class JDBCHandler {
 			jdbcService.jdbcUpdate(muleProjectLocation, jdbcUpdateActivity, flowElement);
 			//jdbcService.jdbcDelete(muleProjectLocation, jdbcUpdateActivity, flowElement);
 			break;	
-		case "com.tibco.plugin.jdbc.JDBCGeneralActivity":
+		/*case "com.tibco.plugin.jdbc.JDBCGeneralActivity":
 			System.out.println("com.tibco.plugin.jdbc.JDBCGeneralActivity-----The JDBC Call Procedure activity calls a database procedure using the specified JDBC connection");
 			break;	
+		case "com.tibco.plugin.jdbc.JDBCGetConnectionActivity":
+			System.out.println("com.tibco.plugin.jdbc.JDBCGetConnectionActivity-----The JDBC Get Connection activity retrieves an object reference to a JavaConnectionAccessor object for the specified JDBC Connection from the connection pool.");
+			break;*/
+		default: MuleAutomatorUtil.loggerElement(activityElement, muleProjectLocation, flowElement);
+			break;
 		}
 	}
 	

@@ -27,6 +27,8 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.tek.muleautomator.element.ActivityElement;
+
 public class MuleAutomatorUtil {
 
 	public static void trasfromData(Document doc, String filepath) {
@@ -53,6 +55,20 @@ public class MuleAutomatorUtil {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void loggerElement(ActivityElement activityElement, String muleConfigPath, Element flow) {
+		try {
+			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			Element loggerElement = doc.createElement("logger");
+			loggerElement.setAttribute("message", "Please add "+activityElement.getActivityType()+" logic manually");
+			loggerElement.setAttribute("level", "INFO");
+			loggerElement.setAttribute("doc:name", "Missing Activity");
+			flow.appendChild(loggerElement);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
