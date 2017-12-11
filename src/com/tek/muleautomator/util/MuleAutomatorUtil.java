@@ -63,6 +63,7 @@ public class MuleAutomatorUtil {
 		try {
 			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 			Element loggerElement = doc.createElement("logger");
+			System.out.println("Missing for: "+activityElement.getActivityName()+" - " + activityElement.getActivityType());
 			loggerElement.setAttribute("message", "Please add "+activityElement.getActivityType()+" logic manually");
 			loggerElement.setAttribute("level", "INFO");
 			loggerElement.setAttribute("doc:name", "Missing Activity");

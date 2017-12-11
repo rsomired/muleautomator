@@ -281,6 +281,7 @@ public class MuleFlowTools {
 				String processFileLoc="";
 				String flowName="Sub_Flow";
 				String append="";
+				Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 				processFileLoc=el.getElementsByTagName("processName").item(0).getTextContent();
 				processFileLoc=processFileLoc.replaceAll("/", "\\\\");
 				for(File file: MuleAutomatorConstants.allTibcoProcessFiles){
@@ -293,7 +294,6 @@ public class MuleFlowTools {
 						}
 						Element subFlow= MuleFlowTools.createMuleSubFlow(muleConfigPath, flowName+append);
 						subFlow=generateMuleFlowFromTibcoProcessOrderByTransitionsWithChoice(file.getCanonicalPath(),muleConfigPath,subFlow);
-						Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
 						Element muleRootElement = (Element) doc.getFirstChild();
 						muleRootElement.appendChild(subFlow);
 						
@@ -312,6 +312,12 @@ public class MuleFlowTools {
 					}
 				}
 				System.err.println(">>> Referenced process file: "+ processFileLoc+" not found!");
+				Element logger=doc.createElement("logger");
+				logger.setAttribute("name", flowName+append);
+				logger.setAttribute("doc:name", "SendLog");
+				logger.setAttribute("message","Referenced process file: \\UtilityServices\\CommonLE\\SendLog.process not found!");
+				flowElement.appendChild(logger);
+				return;
 			}
 			
 			String pluginType = getPluginType(activityElement.getActivityType());
