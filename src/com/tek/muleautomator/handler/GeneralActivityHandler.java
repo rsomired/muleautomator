@@ -19,6 +19,8 @@ public class GeneralActivityHandler {
 					activityElement.getTargetNode());
 			generalElementService.assign(muleConfigPath, assignActivity, flowElement);
 			break;
+			
+			
 		case "com.tibco.pe.core.CatchActivity":
 			System.out.println(
 					"com.tibco.pe.core.CatchActivity----The Catch activity receives control of execution when an unhandled exception occurs. You can select a specific exception type to catch or you can specify that this activity should catch all unhandled exceptions.");
@@ -40,6 +42,12 @@ public class GeneralActivityHandler {
 					activityElement.getTargetNode());
 			generalElementService.sleep(muleConfigPath, sleepActivity, flowElement);
 			break;
+			
+			
+		case "com.tibco.plugin.timer.NullActivity":
+			GeneralActivityElement.NullActivity nullActivity = new GeneralActivityElement.NullActivity();
+			generalElementService.nullactivity(muleConfigPath, nullActivity, flowElement);
+			break;	
 		case "com.tibco.plugin.timer.TimerEventSource":
 			System.out.println(
 					"com.tibco.plugin.timer.TimerEventSource---The Timer process starter starts a process at a specific time.");

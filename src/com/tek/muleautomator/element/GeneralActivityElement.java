@@ -237,5 +237,8 @@ public class GeneralActivityElement {
 		}
 	}
 	
+	public static class NullActivity {
+		
+	}
 	
 }

@@ -7,6 +7,7 @@ import com.tek.muleautomator.element.GeneralActivityElement.AssignActivity;
 import com.tek.muleautomator.element.GeneralActivityElement.CatchActivity;
 import com.tek.muleautomator.element.GeneralActivityElement.InspectorActivity;
 import com.tek.muleautomator.element.GeneralActivityElement.MapperActivity;
+import com.tek.muleautomator.element.GeneralActivityElement.NullActivity;
 import com.tek.muleautomator.element.GeneralActivityElement.SharedVariableActivity;
 import com.tek.muleautomator.element.GeneralActivityElement.SleepActivity;
 import com.tek.muleautomator.element.GeneralActivityElement.TimerActivity;
@@ -45,6 +46,18 @@ public class GeneralActivityService {
 			Element inspector = doc.createElement("logger");
 			inspector.setAttribute("message", "Payload:   #[payload]");
 			inspector.setAttribute("doc:name", "Logger");
+			flow.appendChild(inspector);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public  void nullactivity(String muleConfigPath, NullActivity nullActivity, Element flow) {
+		try {
+			Document doc = MuleConfigConnection.getDomObj(muleConfigPath);
+			Element inspector = doc.createElement("logger");
+			inspector.setAttribute("message", "Payload:   #[payload]");
+			inspector.setAttribute("doc:name", "Null Activity");
 			flow.appendChild(inspector);
 		} catch (Exception e) {
 			e.printStackTrace();
